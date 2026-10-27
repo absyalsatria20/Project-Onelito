@@ -1,5 +1,144 @@
 # Project Progress
 
+## 2026-10-27 — Perbaiki posisi dan timer popup toast
+- Change: Toast memakai animasi terpisah yang mempertahankan posisi tengah selama transisi; timer lama dibatalkan saat pesan baru muncul dan dibersihkan saat komponen dilepas.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan center toast sama dengan center viewport ketika animasi aktif; pesan baru bertahan selama 2,6 detik penuh. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Pusatkan konten modal konfirmasi hapus
+- Change: Ikon, teks, dan tombol modal konfirmasi hapus kini rata tengah.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Tambahkan modal konfirmasi hapus data ikan
+- Change: Tombol hapus membuka modal konfirmasi yang menampilkan nama ikan; Batal/backdrop/Escape membatalkan, tombol Hapus menghapus data.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi Batal mempertahankan jumlah baris, Hapus menghapus baris terpilih dan menampilkan notifikasi. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Perbarui deskripsi modal input/edit
+- Change: “Lengkapi informasi untuk mencatat koleksi ikan.” diganti menjadi “Lengkapi informasi untuk mencatat data ikan.”
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Ganti eyebrow modal menjadi DATA IKAN
+- Change: Teks “DATA INVENTARIS” pada modal input/edit diganti menjadi “DATA IKAN”.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Ganti label Harga Dasar pada rincian harga
+- Change: Teks “Nilai Dasar” di ringkasan rincian harga modal diganti menjadi “Harga Dasar”.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Ringkas label status sertifikat pada modal
+- Change: Hapus teks “(Asli / Breeder)” dari label status sertifikat; fungsi toggle sertifikat tetap.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tautan Owner Baru di header field
+- Change: Opsi Owner Baru dipindah keluar dropdown menjadi tautan biru rata kanan di samping label Owner; klik menampilkan input owner baru dan tautan berubah menjadi “Pilih owner lama”.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan dropdown hanya memuat owner tersimpan dan tautan membuka input owner baru. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Dropdown owner pada modal input/edit
+- Change: Owner dipilih dari daftar, dengan validasi nama baru agar tidak duplikat case-insensitive; mode edit memilih owner data tersebut.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan dropdown, penolakan duplikat case-insensitive, dan owner edit terpilih otomatis. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-10-27 — Kunci scroll halaman saat modal input/edit terbuka
+- Change: Body scroll dikunci saat form modal terbuka dan dipulihkan saat modal ditutup; konten modal tetap dapat di-scroll.
+- Changed files: `src/App.tsx`; `PROGRESS.md`.
+- Verification: Browser memastikan body overflow hidden, form modal tetap scrollable, scroll halaman tidak bergerak, dan overflow dipulihkan setelah modal ditutup. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Sesuaikan scrollbar modal dengan tema
+- Change: Scrollbar modal input/edit memakai warna track dan thumb sesuai Light/Dark mode; dibatasi pada `.form-dialog`.
+- Changed files: `src/App.css`; `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus; computed style browser diverifikasi di kedua tema.
+
+## 2026-10-27 — Tampilkan owner di bawah nama ikan saat All Owners
+- Change: Saat filter All Owners, nama owner muncul kecil di bawah nama ikan; tersembunyi saat satu owner dipilih.
+- Changed files: `src/App.tsx`; `src/App.css`; `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus; browser memverifikasi 6 label owner pada All Owners dan 0 label saat Budi Santoso dipilih.
+
+## 2026-10-27 — Tetapkan posisi persentase Dealer Fee di tabel
+- Change: Badge persentase dan nominal Dealer Fee memakai slot grid tetap; badge persen ditempatkan dekat nominal dan tidak bergeser saat panjang nominal berbeda.
+- Changed files: `src/App.css`; `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus; browser mengukur posisi badge tetap sama untuk nominal Rp 21.850.000, Rp 555.000, dan Rp 31.625.000.
+
+
+## 2026-10-27 — Tebalkan garis pemisah grand total PDF
+- Change: Ketebalan garis di atas baris GRAND TOTAL dinaikkan dari 0.25 pt menjadi 0.45 pt.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus.
+
+## 2026-10-27 — Tambahkan garis pemisah grand total PDF
+- Change: Garis atas grand total digambar setelah sel footer selesai, supaya terlihat utuh sepanjang tabel dan tidak tertutup warna latar sel.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; PDF hasil export menunjukkan garis horizontal penuh dari x=28.35 hingga 813.54 pt.
+
+## 2026-10-27 — Perbesar batas foto PDF menjadi 20×20 mm
+- Change: Memperbesar batas maksimum foto PDF menjadi 20×20 mm; gambar tetap proporsional, tidak crop/stretch, dan tanpa latar tambahan. Layout tabel dan data tidak berubah.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; PDF uji menunjukkan portrait 10×20 mm dan landscape 20×10 mm.
+
+## 2026-10-27 — Hapus latar biru foto di PDF
+- Change: Menghapus kotak latar biru di belakang foto PDF. Foto tetap proporsional, tidak terpotong/diregangkan, dan terpusat di sel.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: Build/lint lulus; ekspor uji portrait/landscape menghasilkan 2 gambar dan tidak lagi menggambar bidang biru di belakang thumbnail.
+
+## 2026-10-27 — Sesuaikan latar thumbnail dengan rasio gambar PDF
+- Change: Latar biru di belakang thumbnail kini mengikuti ukuran gambar yang sudah di-fit, bukan ukuran kotak portrait tetap; orientasi landscape tidak lagi punya bidang biru portrait di belakangnya.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; hasil PDF portrait/landscape dirender dan bbox latar landscape diperiksa, bentuknya landscape.
+
+## 2026-10-27 — Pertahankan rasio foto pada export PDF
+- Change: Foto ikan di-fit secara proporsional ke dalam kotak gambar PDF; portrait dan landscape tidak dipotong atau diregangkan, dan tetap rata tengah.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; ekspor uji dengan gambar 20×40 dan 40×20 menghasilkan bbox rasio 0,5 dan 2, tanpa distorsi.
+
+## 2026-10-27 — Ratakan header Kurs dan Total PDF ke tengah
+- Change: Header Kurs dan Total di PDF diratakan ke tengah; alignment isi kolom tidak berubah.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; PDF baru diekspor dan text bbox kedua header diperiksa.
+
+## 2026-10-27 — Ratakan header nominal PDF ke kanan
+- Change: Header Harga (JPY), Harga (IDR), Dealer Fee, Shipping Cost, dan Total di PDF kini rata kanan mengikuti alignment kolom nominal.
+- Changed files: `src/exportPdf.ts`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; PDF hasil ekspor diperiksa lewat text bbox dan ujung teks tiap header nominal sejajar dengan sisi kanan kolom.
+
+## 2026-10-27 — Tambahkan prefix mata uang pada field Rupiah
+- Change: Menambahkan prefix `Rp` di depan field Harga Rupiah dan Shipping Cost di modal tambah/edit, setara dengan prefix `¥` pada Harga Yen.
+- Changed files: `src/App.tsx`; `PROGRESS.md`.
+- Verification: Browser memverifikasi tiga prefix field (`¥`, `Rp`, `Rp`) muncul pada modal input dan edit; build/lint lulus.
+
+## 2026-10-27 — Tambahkan pemisah ribuan pada nominal modal ikan
+- Change: Field Harga Yen, Harga Rupiah, dan Shipping Cost pada modal tambah/edit kini menampilkan pemisah ribuan Indonesia saat input; nilai perhitungan dan penyimpanan tetap numerik. Kurs dan persentase tidak diformat sebagai nominal.
+- Changed files: `src/App.tsx`; `PROGRESS.md`.
+- Verification: `npm run build` dan `npm run lint` lulus; browser memverifikasi input `3800000` tampil `3.800.000`, `18500000` tampil `18.500.000`, ongkir `500000` tampil `500.000`, dan konversi Yen 3.800.000 × 115 tampil Rp 437.000.000.
+
+## 2026-10-27 — Pulihkan layout modal input/edit data ikan
+- Change: Menambahkan styling untuk class baru `calc-preview`, `cert-toggle`, dan `dialog-actions` agar bagian Rincian Harga dan Dokumen & Ketentuan kembali menggunakan grid, toggle sertifikat, kalkulasi, serta footer aksi sesuai desain modal sebelumnya.
+- Changed files: `src/App.css`; `PROGRESS.md`.
+- Verification: Build/lint dan uji modal tambah/edit dijalankan; kedua dialog menampilkan tiga bagian form, kalkulasi grid, toggle sertifikat, serta tombol aksi sticky.
+
+## 2026-10-27 — Samakan layout export PDF dengan contoh PDF
+- Change: Mengganti render HTML ke PDF menjadi gambar PDF vektor/tabel dengan jsPDF AutoTable; ukur halaman A4 landscape, posisi judul/meta, margin, lebar kolom, ukuran font, warna sampel, tinggi baris dan grand-total dari `rekap-ikan-2026-10-24.pdf`. Menyertakan gambar koi referensi lokal agar gambar tidak bergantung pada URL eksternal yang gagal. Memperbarui foto dan T&C data contoh Sanke sesuai contoh; data, tanggal, dan total tetap dinamis berdasarkan record owner terpilih. Menghapus template HTML ekspor lama serta dependency langsung `html2canvas`.
+- Changed files: `package.json`; `package-lock.json`; `src/App.tsx`; `src/exportPdf.ts`; `public/koi-reference.jpeg`; `PROGRESS.md`.
+- Verification: `npm run build` sukses; `npm run lint` sukses; ekspor diuji lewat tombol PDF pada aplikasi; hasil PDF satu halaman A4 landscape, memiliki 3 gambar thumbnail, T&C, serta total yang terbaca; hasil dirender dan diperiksa. Build memberi peringatan ukuran chunk >500 kB, tanpa gagal.
+
+## 2026-10-27 — Ubah Export PDF Menjadi Direct Download via jsPDF & html2canvas
+- Change: Menginstal `jspdf` dan `html2canvas`, serta memperbarui tombol PDF agar langsung mendownload file `.pdf` dengan format laporan persis seperti referensi (header perusahaan, rekapitulasi data ikan, foto thumbnail, rincian biaya lengkap, dan baris grand total).
+- Changed files: `package.json`, `package-lock.json`, `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build` sukses (`tsc -b && vite build` passed tanpa error).
+
+
 ## 2026-10-27 — Ubah Export PDF Menjadi Direct Download via jsPDF & html2canvas
 - Change: Menginstal `jspdf` dan `html2canvas`, serta memperbarui tombol PDF agar langsung mendownload file `.pdf` dengan format laporan persis seperti referensi (header perusahaan, rekapitulasi data ikan, foto thumbnail, rincian biaya lengkap, dan baris grand total).
 - Changed files: `package.json`, `package-lock.json`, `src/App.tsx`, `PROGRESS.md`.
