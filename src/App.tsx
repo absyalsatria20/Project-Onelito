@@ -1,5 +1,7 @@
 import { useMemo, useState } from 'react'
 import { Check, ChevronDown, Fish, FileText, ImagePlus, Menu, Moon, Pencil, Plus, Search, Settings, Sun, Trash2, X } from 'lucide-react'
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 import './App.css'
 
 type FishRecord = { id: number; name: string; owner: string; yen: number | null; rate: number | null; rupiah: number; feePercent: number; shipping: number; certificate: boolean; image: string; tc: string }
@@ -37,7 +39,33 @@ function App() {
   const toast = (message: string) => { setNotice(message); window.setTimeout(() => setNotice(''), 2600) }
   const themeToggle = () => setTheme(value => { const next = value === 'light' ? 'dark' : 'light'; localStorage.setItem('fish-theme', next); return next })
   const remove = (record: FishRecord) => { if (window.confirm(`Hapus data “${record.name}”?`)) { setRecords(items => items.filter(item => item.id !== record.id)); toast('Data ikan berhasil dihapus') } }
-  const printOwner = () => { if (owner === 'All Owners') { toast('Pilih satu owner untuk cetak'); return }; window.print() }
+
+  const exportPdf = async () => {
+    if (owner === 'All Owners') {
+      toast('Pilih satu owner untuk export PDF')
+      return
+    }
+    toast('Menyiapkan file PDF...')
+    const element = document.getElementById('pdf-export-container')
+    if (!element) return
+    element.style.display = 'block'
+    try {
+      const canvas = await html2canvas(element, { scale: 2, useCORS: true })
+      const imgData = canvas.toDataURL('image/png')
+      const pdf = new jsPDF('l', 'mm', 'a4')
+      const pdfWidth = pdf.internal.pageSize.getWidth()
+      const pdfHeight = (canvas.height * pdfWidth) / canvas.width
+      pdf.addImage(imgData, 'PNG', 0, 10, pdfWidth, pdfHeight)
+      pdf.save(`Rekap-Pembelian-${owner}.pdf`)
+      toast('PDF berhasil di-download')
+    } catch (err) {
+      console.error(err)
+      toast('Gagal mengexport PDF')
+    } finally {
+      element.style.display = 'none'
+    }
+  }
+
   return <div className={`app ${theme}`}>
     <div className="app-shell">
       {sidebarOpen&&<button className="sidebar-scrim" aria-label="Tutup navigasi" onClick={()=>setSidebarOpen(false)}/>}
@@ -59,7 +87,7 @@ function App() {
           <label className="search-field"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari ikan atau pemilik..." aria-label="Cari ikan atau pemilik"/></label>
           <label className="select-wrap"><span className="sr-only">Pilih owner</span><select value={owner} onChange={e=>setOwner(e.target.value)}><option>All Owners</option>{owners.map(name=><option key={name}>{name}</option>)}</select><ChevronDown size={15}/></label>
           <label className="select-wrap status-select"><span className="sr-only">Filter status sertifikat</span><select value={certificate} onChange={e=>setCertificate(e.target.value)}><option>All Status</option><option>Ada</option><option>Belum ada</option></select><ChevronDown size={15}/></label>
-          <div className="export-actions"><button className="export-btn pdf-btn" onClick={printOwner}><FileText size={17}/>PDF</button></div>
+          <div className="export-actions"><button className="export-btn pdf-btn" onClick={exportPdf}><FileText size={17}/>PDF</button></div>
         </div>
       <section className="data-panel" aria-label="Daftar inventaris ikan">
         <div className="table-wrap"><table><colgroup><col className="fish-col"/><col className="yen-col"/><col className="rate-col"/><col className="idr-col"/><col className="fee-col"/><col className="shipping-col"/><col className="total-col"/><col className="cert-col"/><col className="tc-col"/><col className="action-col"/></colgroup><thead><tr><th><button onClick={()=>setSort('name')}>FISH</button></th><th className="numeric">HARGA (JPY)</th><th className="numeric">KURS</th><th className="numeric">HARGA (IDR)</th><th className="numeric">DEALER FEE</th><th className="numeric">SHIPPING COST</th><th className="numeric"><button onClick={()=>setSort('total')}>TOTAL</button></th><th>SERTIFIKAT</th><th>TERM &amp; CONDITION</th><th className="action-head">EDIT</th></tr></thead><tbody>{filtered.map(record=><tr key={record.id}>
@@ -73,6 +101,56 @@ function App() {
       </main>
       </div>
     </div>
+
+    {/* Hidden PDF Export Container matching exact screenshot styling */}
+    <div id="pdf-export-container" style={{ display: 'none', position: 'absolute', left: '-9999px', top: 0, width: '1120px', backgroundColor: '#ffffff', color: '#111827', padding: '32px', fontFamily: 'system-ui, sans-serif' }}>
+      <div style={{ marginBottom: '24px', borderBottom: '2px solid #1e3a8a', paddingBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+        <div>
+          <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', color: '#1e3a8a', fontWeight: 700 }}>REKAP PEMBELIAN IKAN JEPANG</h1>
+          <p style={{ margin: 0, fontSize: '14px', color: '#4b5563' }}>Owner: <b>{owner}</b> · Tanggal: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+        </div>
+        <div style={{ fontSize: '14px', color: '#1e3a8a', fontWeight: 600 }}>KOI HOUSE INVENTORY</div>
+      </div>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', marginBottom: '20px' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#1e3a8a', color: '#ffffff', textAlign: 'left' }}>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>FOTO</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>FISH</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>HARGA (JPY)</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>KURS</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>HARGA (IDR)</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>DEALER FEE</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>SHIPPING</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>TOTAL</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'center' }}>SERTIFIKAT</th>
+            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>TERM &amp; CONDITION</th>
+          </tr>
+        </thead>
+        <tbody>
+          {selected.map((r, idx) => (
+            <tr key={r.id} style={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', width: '50px', textAlign: 'center' }}>
+                <img src={r.image} alt={r.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} crossOrigin="anonymous" />
+              </td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', fontWeight: 600, color: '#1f2937' }}>{r.name}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{yenMoney(r.yen)}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{r.rate ?? '—'}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{money(r.rupiah)}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{r.feePercent}% ({money(fee(r))})</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{money(r.shipping)}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 700, color: '#1e3a8a' }}>{money(total(r))}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'center' }}>{r.certificate ? 'Ada' : 'Belum ada'}</td>
+              <td style={{ padding: '8px', border: '1px solid #e5e7eb', fontSize: '11px', color: '#4b5563', whiteSpace: 'pre-line' }}>{r.tc || '—'}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '16px 24px' }}>
+        <div style={{ fontSize: '14px', color: '#1e3a8a' }}>Owner: <b>{owner}</b> · Total Item: {selected.length} ikan</div>
+        <div style={{ fontSize: '16px', color: '#1e3a8a', fontWeight: 700 }}>GRAND TOTAL: <span style={{ fontSize: '20px', color: '#1d4ed8' }}>{money(grand)}</span></div>
+      </div>
+    </div>
+
     {modal&&<FishForm initial={editing} owners={owners} onClose={()=>setModal(false)} onSave={record=>{setRecords(items=>editing?items.map(item=>item.id===editing.id?record:item):[{...record,id:Math.max(0,...items.map(item=>item.id))+1},...items]);setModal(false);toast(editing?'Perubahan berhasil disimpan':'Ikan berhasil ditambahkan')}}/>}
     {preview&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setPreview(null)}} onKeyDown={e=>{if(e.key==='Escape')setPreview(null)}}><section className="image-dialog" role="dialog" aria-modal="true" aria-label={`Foto ${preview.name}`}><button type="button" className="dialog-close" onClick={()=>setPreview(null)} aria-label="Tutup"><X size={20}/></button><img src={preview.image} alt={preview.name}/><div className="image-caption"><b>{preview.name}</b><span>{preview.owner}</span></div></section></div>}
     {termsDetail&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setTermsDetail(null)}} onKeyDown={e=>{if(e.key==='Escape')setTermsDetail(null)}}><section className="terms-dialog" role="dialog" aria-modal="true" aria-label={`Term & Condition ${termsDetail.name}`}><div className="terms-heading"><div><h2>Term &amp; Condition</h2><p>{termsDetail.name}</p></div><button className="dialog-close" onClick={()=>setTermsDetail(null)} aria-label="Tutup"><X size={20}/></button></div><ul>{termsDetail.tc.split('\n').filter(Boolean).map(term=><li key={term}>{term}</li>)}</ul></section></div>}
@@ -87,5 +165,5 @@ function FishForm({initial:existing,owners,onClose,onSave}:FormProps){
   const yenValue=Number(yen)||0;const rateValue=Number(rate)||0;const price=yen&&rate?yenValue*rateValue:Number(rupiah)||0;const feeValue=price*(Number(percent)||0)/100;const totalValue=price+feeValue+(Number(shipping)||0)
   const fileChange=(file?:File)=>{if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){setError('Format gambar harus JPG, JPEG, atau PNG.');return}if(file.size>10*1024*1024){setError('Ukuran gambar maksimal 10 MB.');return}setError('');const reader=new FileReader();reader.onload=()=>setImage(String(reader.result));reader.readAsDataURL(file)}
   const submit=(event:React.FormEvent)=>{event.preventDefault();if(!name.trim()||!owner.trim()){setError('Nama ikan dan owner wajib diisi.');return}if((yen&&Number(yen)<0)||(rate&&Number(rate)<=0)||Number(percent)<0||Number(percent)>100||Number(shipping)<0||(rupiah&&Number(rupiah)<0)){setError('Periksa nilai harga, kurs, persentase fee, dan ongkir.');return}if(yen&&!rate&&!rupiah){setError('Isi kurs atau harga Rupiah manual.');return}if(rate&&!yen&&!rupiah){setError('Isi harga Rupiah manual jika harga Yen kosong.');return}onSave({id:existing?.id??0,name:name.trim(),owner:owner.trim(),yen:yen?yenValue:null,rate:rate?rateValue:null,rupiah:Math.round(price),feePercent:Number(percent)||0,shipping:Number(shipping)||0,certificate,image,tc})}
-  return <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)onClose()}}><form className="form-dialog" onSubmit={submit} noValidate><div className="dialog-heading"><div><span className="eyebrow">DATA INVENTARIS</span><h2>{existing?'Edit data ikan':'Tambah ikan baru'}</h2><p>Lengkapi informasi untuk mencatat koleksi ikan.</p></div><button type="button" className="dialog-close" onClick={onClose} aria-label="Tutup"><X size={20}/></button></div><div className="form-body"><section className="form-section"><div className="section-title"><span>01</span><b>Informasi dasar</b></div><div className="field-grid"><label className="field full"><span>Nama ikan <i>*</i></span><input value={name} onChange={event=>setName(event.target.value)} placeholder="Contoh: Kohaku Nisai 52cm" autoFocus/></label><label className="field"><span>Owner <i>*</i></span><input list="owner-list" value={owner} onChange={event=>setOwner(event.target.value)} placeholder="Nama owner"/><datalist id="owner-list">{owners.map(item=><option key={item}/>)}</datalist></label><div className="field"><span>Foto ikan</span><label className="upload-box">{image?<img src={image} alt="Pratinjau ikan"/>:<><ImagePlus size={22}/><b>Unggah foto</b><small>JPG atau PNG · Maks. 10 MB</small></>}<input type="file" accept="image/jpeg,image/png" onChange={event=>fileChange(event.target.files?.[0])}/></label></div></div></section><section className="form-section"><div className="section-title"><span>02</span><b>Rincian harga</b></div><div className="field-grid three"><label className="field"><span>Harga Yen</span><div className="input-prefix"><b>¥</b><input type="number" min="0" value={yen} onChange={event=>setYen(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Kurs Yen / IDR</span><input type="number" min="0" value={rate} onChange={event=>setRate(event.target.value)} placeholder="Contoh: 115"/></label><label className="field"><span>Harga Rupiah {yen&&rate?<em>Otomatis</em>:<em>Manual</em>}</span><div className="input-prefix"><b>Rp</b><input type="number" min="0" value={yen&&rate?String(yenValue*rateValue):rupiah} disabled={!!(yen&&rate)} onChange={event=>setRupiah(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Dealer fee</span><div className="input-suffix"><input type="number" min="0" max="100" value={percent} onChange={event=>setPercent(event.target.value)} placeholder="0"/><b>%</b></div></label><label className="field"><span>Biaya pengiriman</span><div className="input-prefix"><b>Rp</b><input type="number" min="0" value={shipping} onChange={event=>setShipping(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Sertifikat</span><button type="button" className={`certificate-toggle ${certificate?'checked':''}`} onClick={()=>setCertificate(!certificate)}><span className="fake-check">{certificate&&<Check size={14}/>}</span><span><b>{certificate?'Ada':'Belum ada'}</b><small>Status sertifikat ikan</small></span></button></label></div><div className="calculation"><div><span>Harga ikan</span><b>{money(price)}</b></div><div><span>Dealer fee <small>({Number(percent)||0}%)</small></span><b>{money(feeValue)}</b></div><div><span>Biaya pengiriman</span><b>{money(Number(shipping)||0)}</b></div><div className="calc-total"><span>Total terhitung</span><strong>{money(totalValue)}</strong></div></div></section><section className="form-section last"><div className="section-title"><span>03</span><b>Catatan tambahan</b></div><label className="field"><span>Term &amp; condition <small>Opsional</small></span><textarea value={tc} onChange={event=>setTc(event.target.value)} placeholder="Tambahkan ketentuan atau catatan untuk ikan ini…" rows={3}/></label></section>{error&&<p className="form-error" role="alert">{error}</p>}</div><div className="form-footer"><span><i>*</i> Wajib diisi</span><div><button type="button" className="cancel-btn" onClick={onClose}>Batal</button><button type="submit" className="primary-btn"><Check size={17}/>{existing?'Simpan perubahan':'Simpan ikan'}</button></div></div></form></div>
+  return <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)onClose()}}><form className="form-dialog" onSubmit={submit} noValidate><div className="dialog-heading"><div><span className="eyebrow">DATA INVENTARIS</span><h2>{existing?'Edit data ikan':'Tambah ikan baru'}</h2><p>Lengkapi informasi untuk mencatat koleksi ikan.</p></div><button type="button" className="dialog-close" onClick={onClose} aria-label="Tutup"><X size={20}/></button></div><div className="form-body"><section className="form-section"><div className="section-title"><span>01</span><b>Informasi dasar</b></div><div className="field-grid"><label className="field full"><span>Nama ikan <i>*</i></span><input value={name} onChange={event=>setName(event.target.value)} placeholder="Contoh: Kohaku Nisai 52cm" autoFocus/></label><label className="field"><span>Owner <i>*</i></span><input list="owner-list" value={owner} onChange={event=>setOwner(event.target.value)} placeholder="Nama owner"/><datalist id="owner-list">{owners.map(item=><option key={item}/>)}</datalist></label><div className="field"><span>Foto ikan</span><label className="upload-box">{image?<img src={image} alt="Pratinjau ikan"/>:<><ImagePlus size={22}/><b>Unggah foto</b><small>JPG atau PNG · Maks. 10 MB</small></>}<input type="file" accept="image/jpeg,image/png" onChange={event=>fileChange(event.target.files?.[0])}/></label></div></div></section><section className="form-section"><div className="section-title"><span>02</span><b>Rincian harga</b></div><div className="field-grid three"><label className="field"><span>Harga Yen</span><div className="input-prefix"><b>¥</b><input type="number" min="0" value={yen} onChange={event=>setYen(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Kurs Yen / IDR</span><input type="number" min="0" value={rate} onChange={event=>setRate(event.target.value)} placeholder="Contoh: 115"/></label><label className="field"><span>Harga Rupiah {yen&&rate?<em>(Otomatis)</em>:null}</span><input type="number" min="0" value={rupiah} onChange={event=>setRupiah(event.target.value)} disabled={Boolean(yen&&rate)} placeholder="0"/></label></div><div className="field-grid two" style={{marginTop:12}}><label className="field"><span>Dealer Fee (%)</span><input type="number" min="0" max="100" step="0.1" value={percent} onChange={event=>setPercent(event.target.value)} placeholder="5"/></label><label className="field"><span>Shipping Cost (IDR)</span><input type="number" min="0" value={shipping} onChange={event=>setShipping(event.target.value)} placeholder="0"/></label></div><div className="calc-preview"><div><span>Nilai Dasar</span><b>{money(price)}</b></div><div><span>Dealer Fee</span><b>{money(feeValue)}</b></div><div><span>Shipping</span><b>{money(Number(shipping)||0)}</b></div><div className="grand"><span>Total Harga</span><b>{money(totalValue)}</b></div></div></section><section className="form-section"><div className="section-title"><span>03</span><b>Dokumen &amp; Ketentuan</b></div><div className="field-grid"><label className="field"><span>Sertifikat</span><button type="button" className={`cert-toggle ${certificate?'on':''}`} onClick={()=>setCertificate(value=>!value)}><i>{certificate?<Check size={16}/>:null}</i><span>{certificate?'Sertifikat ada (Asli / Breeder)':'Belum ada sertifikat'}</span></button></label><label className="field full"><span>Term &amp; Condition</span><textarea value={tc} onChange={event=>setTc(event.target.value)} rows={3} placeholder="Tulis ketentuan, garansi, atau azukari per baris..."/></label></div></section></div>{error&&<p className="form-error">{error}</p>}<div className="dialog-actions"><button type="button" className="secondary-btn" onClick={onClose}>Batal</button><button type="submit" className="primary-btn">{existing?'Simpan perubahan':'Tambah ikan'}</button></div></form></div>
 }

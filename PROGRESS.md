@@ -1,5 +1,10 @@
 # Project Progress
 
+## 2026-10-27 — Ubah Export PDF Menjadi Direct Download via jsPDF & html2canvas
+- Change: Menginstal `jspdf` dan `html2canvas`, serta memperbarui tombol PDF agar langsung mendownload file `.pdf` dengan format laporan persis seperti referensi (header perusahaan, rekapitulasi data ikan, foto thumbnail, rincian biaya lengkap, dan baris grand total).
+- Changed files: `package.json`, `package-lock.json`, `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build` sukses (`tsc -b && vite build` passed tanpa error).
+
 ## 2026-10-27 — Setup Git Repository & GitHub Backup
 - Change: Menginisialisasi repositori Git lokal dengan `.gitignore` (mengecualikan `node_modules` dan `dist`), membuat commit pertama, dan menghubungkan serta melakukan push ke repositori GitHub `https://github.com/absyalsatria20/Project-Onelito`.
 - Changed files: `.gitignore`; `PROGRESS.md`.
