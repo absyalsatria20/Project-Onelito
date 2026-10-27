@@ -1,5 +1,52 @@
 # Project Progress
 
+## 2026-10-27 — Samakan ukuran menu aksi dengan tab
+- Change: Menu aksi memakai lebar tab pemicu; tiap opsi memakai tinggi tab, termasuk di layar kecil.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengukur tab 120.86×37.24 px dan tiap opsi 118.86×37.23 px (lebar opsi dikurangi border menu 2 px). `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.22 kB (>500 kB).
+
+## 2026-10-27 — Tutup menu periode dengan klik luar atau Escape
+- Change: Menu tiga titik tutup otomatis saat pointer di luar menu, saat menekan `Escape`, atau setelah memilih aksi.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: Browser memastikan klik luar dan `Escape` menutup menu, aksi ganti nama menutup menu sekaligus membuka dialog. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Sembunyikan scrollbar pada strip tab
+- Change: Sembunyikan scrollbar horizontal/vertikal di bar tab agar tidak tampak seperti scrollbar di samping kontrol mode; area tab tetap bisa digeser bila tab melampaui lebar.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan scrollbar strip bernilai `none` dan setelah berpindah tab halaman tidak overflow (`1249/1249`). `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tambah animasi interaksi tab
+- Change: Tab memberi respons hover yang halus, efek tekan saat diklik, dan transisi singkat saat tab aktif berganti. Menghormati preferensi `prefers-reduced-motion` yang sudah ada.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi animasi `period-tab-select` pada pergantian tab dan tidak ada outline biru setelah klik; `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tambah data contoh untuk Periode 2027
+- Change: Tab baru bernama tepat `Periode 2027` dibuat dengan tiga contoh record koi, harga JPY/kurs/IDR, owner, biaya, sertifikat, dan term. Tab lain tetap mengikuti aturan data kosong; data `Periode 2026` tidak berubah.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: Browser memastikan tab baru menampilkan 3 ikan contoh, owner dan data `Periode 2026` tetap ada setelah berpindah tab. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 611.73 kB (>500 kB).
+
+## 2026-10-27 — Rapikan tab periode dan bagikan daftar owner
+- Change: Perhalus tab aktif/nonaktif bergaya browser. Pindahkan menu aksi ke floating menu berposisi tetap agar tidak terpotong area scroll atau mendorong konten; posisinya dibatasi viewport. Daftar nama owner sekarang global dan tersedia di semua tab; data ikan tetap terpisah. Nama owner baru masuk ke daftar bersama setelah record tersimpan.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan menu tab tampil tanpa mengubah scroll halaman, termasuk mobile 375×812; nama owner baru yang dibuat di satu tab tersedia pada filter tab lain dan pada tab awal. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 610.82 kB (>500 kB).
+
+## 2026-10-27 — Tambah tab periode pada workspace Rekap Ikan
+- Change: Tambahkan tab bergaya browser di samping breadcrumb; tab `Periode 2026` mewarisi data awal. Tambah tab kosong melalui dialog, ganti nama, tolak nama duplikat tanpa membedakan kapitalisasi, dan hapus dengan konfirmasi; tab terakhir tidak bisa dihapus. Data, owner, status sertifikat, pencarian, dan pengurutan disimpan terpisah per tab di memori; reload mengembalikan state awal aplikasi.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan data awal 6 record muncul di `Periode 2026`, tab baru kosong/aktif, nama duplikat ditolak, rename berjalan, penghapusan meminta konfirmasi dan mengembalikan tab sebelumnya. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 610.39 kB (>500 kB).
+
+## 2026-10-27 — Hapus kartu bantuan dan ubah label Setting
+- Change: Hapus kartu “Need a hand?” dari sidebar; ubah label navigasi dan judul halaman menjadi `Setting`.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: Browser memastikan kartu bantuan tidak ada, profil sidebar tetap tampil, label dan judul menunjukkan `Setting`, breadcrumb `Workspace/Setting`. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 605.49 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah halaman prototipe Settings
+- Change: Sidebar membuka halaman Settings dengan kartu Data & Backup, Akun & Akses, dan Mode Tampilan. Aksi backup/akun menampilkan toast penanda prototipe dan tidak menjalankan fungsi nyata; Light/Dark memakai kontrol tema yang sudah ada.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan navigasi Settings, ketiga kartu, toast backup prototipe, penggantian tema Dark tersimpan di `localStorage`, dan kembali ke dashboard. Layout mobile 390×844 tidak overflow horizontal. `npm run build` dan `npm run lint` lulus; build memperingatkan chunk 605.81 kB (>500 kB).
+
+
 ## 2026-10-27 — Perjelas label tombol PDF
 - Change: Tombol export menampilkan ikon dokumen diikuti teks `Export PDF`.
 - Changed files: `src/App.tsx`, `PROGRESS.md`.
