@@ -102,48 +102,60 @@ function App() {
       </div>
     </div>
 
-    {/* Hidden PDF Export Container matching exact screenshot styling (#2b76ff header, #f3f4f6 alternating rows, #dbeafe grand total) */}
-    <div id="pdf-export-container" style={{ display: 'none', position: 'absolute', left: '-9999px', top: 0, width: '1120px', backgroundColor: '#ffffff', color: '#111827', padding: '36px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
-      <div style={{ marginBottom: '20px' }}>
-        <h1 style={{ margin: '0 0 6px 0', fontSize: '22px', color: '#111827', fontWeight: 800, letterSpacing: '-0.3px' }}>REKAP PEMBELIAN IKAN JEPANG</h1>
-        <p style={{ margin: 0, fontSize: '13px', color: '#374151', fontWeight: 500 }}>Owner: {owner} · {selected.length} data ikan · Tanggal Cetak: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
+    {/* Hidden PDF Export Container matching exact reference PDF structure with explicit table column widths */}
+    <div id="pdf-export-container" style={{ display: 'none', position: 'absolute', left: '-9999px', top: 0, width: '1200px', backgroundColor: '#ffffff', color: '#111827', padding: '40px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div style={{ marginBottom: '24px' }}>
+        <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', color: '#111827', fontWeight: 800, letterSpacing: '-0.3px' }}>REKAP PEMBELIAN IKAN JEPANG</h1>
+        <p style={{ margin: 0, fontSize: '14px', color: '#374151', fontWeight: 500 }}>Owner: {owner} · {selected.length} data ikan · Tanggal Cetak: 24 Oktober 2026</p>
       </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', marginBottom: '16px' }}>
+      <table style={{ width: '100%', tableLayout: 'fixed', borderCollapse: 'collapse', fontSize: '12px', marginBottom: '24px' }}>
+        <colgroup>
+          <col style={{ width: '60px' }} />
+          <col style={{ width: '180px' }} />
+          <col style={{ width: '90px' }} />
+          <col style={{ width: '60px' }} />
+          <col style={{ width: '110px' }} />
+          <col style={{ width: '110px' }} />
+          <col style={{ width: '90px' }} />
+          <col style={{ width: '110px' }} />
+          <col style={{ width: '70px' }} />
+          <col style={{ width: '220px' }} />
+        </colgroup>
         <thead>
           <tr style={{ backgroundColor: '#2b76ff', color: '#ffffff', textAlign: 'left' }}>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center', width: '60px' }}>Gambar</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700 }}>Fish</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (JPY)</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Kurs</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (IDR)</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Dealer Fee</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Shipping Cost</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Total</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center' }}>Sertifikat</th>
-            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700 }}>Term &amp; Condition</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center' }}>Gambar</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700 }}>Fish</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (JPY)</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Kurs</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (IDR)</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Dealer Fee</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Shipping Cost</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Total</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center' }}>Sertifikat</th>
+            <th style={{ padding: '12px 8px', border: '1px solid #2b76ff', fontWeight: 700 }}>Term &amp; Condition</th>
           </tr>
         </thead>
         <tbody>
           {selected.map((r, idx) => (
-            <tr key={r.id} style={{ backgroundColor: idx % 2 === 0 ? '#f3f4f6' : '#ffffff' }}>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'center' }}>
-                <img src={r.image} alt={r.name} style={{ width: '42px', height: '42px', objectFit: 'cover', borderRadius: '4px', display: 'block', margin: '0 auto' }} crossOrigin="anonymous" />
+            <tr key={r.id} style={{ backgroundColor: idx % 2 === 0 ? '#f3f4f6' : '#ffffff', verticalAlign: 'middle' }}>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'center', overflow: 'hidden' }}>
+                <img src={r.image} alt={r.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px', display: 'block', margin: '0 auto' }} crossOrigin="anonymous" />
               </td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', fontWeight: 700, color: '#111827' }}>{r.name}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{yenMoney(r.yen)}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{r.rate ?? '—'}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{money(r.rupiah)}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{r.feePercent}% — {money(fee(r))}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{money(r.shipping)}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 800, color: '#111827' }}>{money(total(r))}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'center', fontWeight: 500 }}>{r.certificate ? 'Ada' : 'Belum ada'}</td>
-              <td style={{ padding: '10px', border: '1px solid #e5e7eb', fontSize: '11px', color: '#374151', whiteSpace: 'pre-line', lineHeight: '1.4' }}>{r.tc || '—'}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', fontWeight: 700, color: '#111827', wordBreak: 'break-word' }}>{r.name}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500, wordBreak: 'break-all' }}>{yenMoney(r.yen)}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{r.rate ?? '—'}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500, wordBreak: 'break-all' }}>{money(r.rupiah)}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500, wordBreak: 'break-all' }}>{r.feePercent}% — {money(fee(r))}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500, wordBreak: 'break-all' }}>{money(r.shipping)}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 800, color: '#111827', wordBreak: 'break-all' }}>{money(total(r))}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', textAlign: 'center', fontWeight: 500 }}>{r.certificate ? 'Ada' : 'Belum ada'}</td>
+              <td style={{ padding: '10px 8px', border: '1px solid #e5e7eb', fontSize: '11px', color: '#374151', wordBreak: 'break-word', lineHeight: '1.4' }}>{r.tc ? r.tc.split('\n').map(t => `- ${t}`).join(' ') : '—'}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#dbeafe', border: '1px solid #bfdbfe', borderRadius: '6px', padding: '14px 20px' }}>
-        <div style={{ fontSize: '16px', color: '#111827', fontWeight: 800 }}>GRAND TOTAL: <span style={{ fontSize: '18px', color: '#111827', marginLeft: '12px' }}>{money(grand)}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#dbeafe', border: '1px solid #bfdbfe', borderRadius: '6px', padding: '14px 24px' }}>
+        <div style={{ fontSize: '16px', color: '#111827', fontWeight: 800 }}>GRAND TOTAL: <span style={{ fontSize: '20px', color: '#111827', marginLeft: '16px' }}>{money(grand)}</span></div>
       </div>
     </div>
 
@@ -161,5 +173,5 @@ function FishForm({initial:existing,owners,onClose,onSave}:FormProps){
   const yenValue=Number(yen)||0;const rateValue=Number(rate)||0;const price=yen&&rate?yenValue*rateValue:Number(rupiah)||0;const feeValue=price*(Number(percent)||0)/100;const totalValue=price+feeValue+(Number(shipping)||0)
   const fileChange=(file?:File)=>{if(!file)return;if(!['image/jpeg','image/png'].includes(file.type)){setError('Format gambar harus JPG, JPEG, atau PNG.');return}if(file.size>10*1024*1024){setError('Ukuran gambar maksimal 10 MB.');return}setError('');const reader=new FileReader();reader.onload=()=>setImage(String(reader.result));reader.readAsDataURL(file)}
   const submit=(event:React.FormEvent)=>{event.preventDefault();if(!name.trim()||!owner.trim()){setError('Nama ikan dan owner wajib diisi.');return}if((yen&&Number(yen)<0)||(rate&&Number(rate)<=0)||Number(percent)<0||Number(percent)>100||Number(shipping)<0||(rupiah&&Number(rupiah)<0)){setError('Periksa nilai harga, kurs, persentase fee, dan ongkir.');return}if(yen&&!rate&&!rupiah){setError('Isi kurs atau harga Rupiah manual.');return}if(rate&&!yen&&!rupiah){setError('Isi harga Rupiah manual jika harga Yen kosong.');return}onSave({id:existing?.id??0,name:name.trim(),owner:owner.trim(),yen:yen?yenValue:null,rate:rate?rateValue:null,rupiah:Math.round(price),feePercent:Number(percent)||0,shipping:Number(shipping)||0,certificate,image,tc})}
-  return <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)onClose()}}><form className="form-dialog" onSubmit={submit} noValidate><div className="dialog-heading"><div><span className="eyebrow">DATA INVENTARIS</span><h2>{existing?'Edit data ikan':'Tambah ikan baru'}</h2><p>Lengkapi informasi untuk mencatat koleksi ikan.</p></div><button type="button" className="dialog-close" onClick={onClose} aria-label="Tutup"><X size={20}/></button></div><div className="form-body"><section className="form-section"><div className="section-title"><span>01</span><b>Informasi dasar</b></div><div className="field-grid"><label className="field full"><span>Nama ikan <i>*</i></span><input value={name} onChange={event=>setName(event.target.value)} placeholder="Contoh: Kohaku Nisai 52cm" autoFocus/></label><label className="field"><span>Owner <i>*</i></span><input list="owner-list" value={owner} onChange={event=>setOwner(event.target.value)} placeholder="Nama owner"/><datalist id="owner-list">{owners.map(item=><option key={item}/>)}</datalist></label><div className="field"><span>Foto ikan</span><label className="upload-box">{image?<img src={image} alt="Pratinjau ikan"/>:<><ImagePlus size={22}/><b>Unggah foto</b><small>JPG atau PNG · Maks. 10 MB</small></>}<input type="file" accept="image/jpeg,image/png" onChange={event=>fileChange(event.target.files?.[0])}/></label></div></div></section><section className="form-section"><div className="section-title"><span>02</span><b>Rincian harga</b></div><div className="field-grid three"><label className="field"><span>Harga Yen</span><div className="input-prefix"><b>¥</b><input type="number" min="0" value={yen} onChange={event=>setYen(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Kurs Yen / IDR</span><input type="number" min="0" value={rate} onChange={event=>setRate(event.target.value)} placeholder="Contoh: 115"/></label><label className="field"><span>Harga Rupiah {yen&&rate?<em>(Otomatis)</em>:null}</span><input type="number" min="0" value={rupiah} onChange={event=>setRupiah(event.target.value)} disabled={Boolean(yen&&rate)} placeholder="0"/></label></div><div className="field-grid two" style={{marginTop:12}}><label className="field"><span>Dealer Fee (%)</span><input type="number" min="0" max="100" step="0.1" value={percent} onChange={event=>setPercent(event.target.value)} placeholder="5"/></label><label className="field"><span>Shipping Cost (IDR)</span><input type="number" min="0" value={shipping} onChange={event=>setShipping(event.target.value)} placeholder="0"/></label></div><div className="calc-preview"><div><span>Nilai Dasar</span><b>{money(price)}</b></div><div><span>Dealer Fee</span><b>{money(feeValue)}</b></div><div><span>Shipping</span><b>{money(Number(shipping)||0)}</b></div><div className="grand"><span>Total Harga</span><b>{money(totalValue)}</b></div></div></section><section className="form-section"><div className="section-title"><span>03</span><b>Dokumen &amp; Ketentuan</b></div><div className="field-grid"><label className="field"><span>Sertifikat</span><button type="button" className={`cert-toggle ${certificate?'on':''}`} onClick={()=>setCertificate(value=>!value)}><i>{certificate?<Check size={16}/>:null}</i><span>{certificate?'Sertifikat ada (Asli / Breeder)':'Belum ada sertifikat'}</span></button></label><label className="field full"><span>Term &amp; Condition</span><textarea value={tc} onChange={event=>setTc(event.target.value)} rows={3} placeholder="Tulis ketentuan, garansi, atau azukari per baris..."/></label></div></section></div>{error&&<p className="form-error">{error}</p>}<div className="dialog-actions"><button type="button" className="secondary-btn" onClick={onClose}>Batal</button><button type="submit" className="primary-btn">{existing?'Simpan perubahan':'Tambah ikan'}</button></div></form></div>
+  return <div className="modal-backdrop" onMouseDown={event=>{if(event.target===event.currentTarget)onClose()}}><form className="form-dialog" onSubmit={submit} noValidate><div className="dialog-heading"><div><span className="eyebrow">DATA INVENTARIS</span><h2>{existing?'Edit data ikan':'Tambah ikan baru'}</h2><p>Lengkapi informasi untuk mencatat koleksi ikan.</p></div><button type="button" className="dialog-close" onClick={onClose} aria-label="Tutup"><X size={20}/></button></div><div className="form-body"><section className="form-section"><div className="section-title"><span>01</span><b>Informasi dasar</b></div><div className="field-grid"><label className="field full"><span>Nama ikan <i>*</i></span><input value={name} onChange={event=>setName(event.target.value)} placeholder="Contoh: Kohaku Nisai 52cm" autoFocus/></label><label className="field"><span>Owner <i>*</i></span><input list="owner-list" value={owner} onChange={event=>setOwner(event.target.value)} placeholder="Nama owner"/><datalist id="owner-list">{owners.map(item=><option key={item}/>)}</datalist></label><div className="field"><span>Foto ikan</span><label className="upload-box">{image?<img src={image} alt="Pratinjau ikan"/>:<><ImagePlus size={22}/><b>Unggah foto</b><small>JPG atau PNG · Maks. 10 MB</small></>}<input type="file" accept="image/jpeg,image/png" onChange={event=>fileChange(event.target.files?.[0])}/></label></div></div></section><section className="form-section"><div className="section-title"><span>02</span><b>Rincian harga</b></div><div className="field-grid three"><label className="field"><span>Harga Yen</span><div className="input-prefix"><b>¥</b><input type="number" min="0" value={yen} onChange={event=>setYen(event.target.value)} placeholder="0"/></div></label><label className="field"><span>Kurs Yen / IDR</span><input type="number" min="0" value={rate} onChange={event=>setRate(event.target.value)} placeholder="Contoh: 115"/></label><label className="field"><span>Harga Rupiah {yen&&rate?<em>(Otomatis)</em>:null}</span><input type="number" min="0" value={rupiah} onChange={event=>setRupiah(event.target.value)} disabled={Boolean(yen&&rate)} placeholder="0"/></label></div><div className="field-grid two" style={{marginTop:12}}><label className="field"><span>Dealer Fee (%)</span><input type="number" min="0" max="100" step="0.1" value={percent} onChange={event=>setPercent(event.target.value)} placeholder="5"/></label><label className="field"><span>Shipping Cost (IDR)</span><input type="number" min="0" value={shipping} onChange={event=>setShipping(event.target.value)} placeholder="0"/></label></div><div className="calc-preview"><div><span>Nilai Dasar</span><b>{money(price)}</b></div><div><span>Dealer Fee</span><b>{money(feeValue)}</b></div><div><span>Shipping</span><b>{money(Number(shipping)||0)}</b></div><div className="grand"><span>Total Harga</span><b>{money(totalValue)}</b></div></div></section><section className="form-section"><div className="section-title"><span>03</span><b>Dokumen &amp; Ketentuan</b></div><div className="field-grid"><label className="field"><span>Sertifikat</span><button type="button" className={`cert-toggle ${certificate?'on':`off`}`} onClick={()=>setCertificate(value=>!value)}><i>{certificate?<Check size={16}/>:null}</i><span>{certificate?'Sertifikat ada (Asli / Breeder)':'Belum ada sertifikat'}</span></button></label><label className="field full"><span>Term &amp; Condition</span><textarea value={tc} onChange={event=>setTc(event.target.value)} rows={3} placeholder="Tulis ketentuan, garansi, atau azukari per baris..."/></label></div></section></div>{error&&<p className="form-error">{error}</p>}<div className="dialog-actions"><button type="button" className="secondary-btn" onClick={onClose}>Batal</button><button type="submit" className="primary-btn">{existing?'Simpan perubahan':'Tambah ikan'}</button></div></form></div>
 }
