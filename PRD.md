@@ -2,7 +2,9 @@
 
 > Status implementasi: prototipe UI lokal React + Vite + TypeScript. PRD ini memisahkan perilaku yang sudah ada dari target integrasi online. Jangan anggap autentikasi, Supabase, Cloudinary, persistensi server, atau deployment sudah tersedia.
 >
-> Sudah ada di UI lokal: dashboard responsif, Light/Dark mode, pencarian/filter, CRUD lokal selama sesi, kalkulasi harga, tabel finansial, ringkasan, PDF/print, preview foto, T&C ringkas dengan Detail. Export Excel/CSV bukan bagian dari UI saat ini.
+> Sudah ada di UI lokal: dashboard responsif, Light/Dark mode, pencarian/filter, CRUD dalam memori selama sesi, kalkulasi harga, tabel finansial, owner summary dan grand total, PDF langsung-unduh dengan jsPDF, preview foto, T&C ringkas dengan Detail, modal form/hapus, dan toast. Excel/CSV tidak tersedia.
+>
+> Dokumen membedakan perilaku prototipe lokal dari target MVP online. Persyaratan integrasi di bagian berikut adalah rencana, bukan fitur yang sudah berjalan.
 
 ## Catatan status
 
@@ -10,7 +12,7 @@ Bagian berlabel perilaku lokal menjelaskan implementasi yang sudah ada. Bagian p
 
 ## 1. Ringkasan
 
-Project ini membantu admin mencatat data ikan, menghitung harga otomatis, mengelompokkan pembelian berdasarkan owner, dan mencetak tampilan terpilih ke PDF. Dokumen ini mencakup prototipe lokal saat ini serta kebutuhan target produk; status implementasi dijelaskan terpisah.
+Project ini membantu admin mencatat data ikan, menghitung harga otomatis, mengelompokkan pembelian berdasarkan owner, dan mengunduh PDF per owner. Dokumen ini mencakup prototipe lokal saat ini serta kebutuhan target produk; status implementasi dijelaskan terpisah.
 
 Target utama: input cepat, perhitungan akurat, data mudah difilter, dan dokumen owner-specific siap dibagikan.
 
@@ -58,9 +60,9 @@ Setiap record ikan memiliki field berikut:
 
 | Field | Tipe | Wajib | Perilaku |
 |---|---|---:|---|
-| Gambar | Upload image | Tidak | JPG/JPEG/PNG, maksimal 10 MB saat upload; dikompresi sebelum dikirim ke Cloudinary; gambar ditampilkan utuh dan dapat dibuka dalam modal detail |
+| Gambar | File/data URL | Tidak | UI lokal menerima JPG/JPEG/PNG sampai 10 MB; preview tabel dan detail mempertahankan gambar utuh; tidak ada kompresi atau upload cloud saat ini |
 | Nama ikan | Text | Ya | Contoh: `Ginrin Kohaku Torazo Nisai Female 52cm` |
-| Owner | Text/select | Ya | Nama owner; dapat dipakai untuk filter dan export |
+| Owner | Dropdown + input owner baru | Ya | Owner lama dipilih dari dropdown; tautan `+ Owner Baru` membuka input; nama baru yang duplikat tanpa membedakan kapitalisasi ditolak |
 | Harga Yen | Numeric currency | Tidak | Opsional; kosong jika ikan tidak memakai harga Yen |
 | Kurs | Numeric | Kondisional | Kurs per ikan; wajib jika Harga Yen diisi dan harga Rupiah ingin dihitung dari konversi |
 | Harga Rupiah | Numeric currency | Kondisional | Otomatis dari `Harga Yen × Kurs`; boleh diisi manual jika Harga Yen atau Kurs kosong |
@@ -86,7 +88,7 @@ Tabel menampilkan kolom dalam urutan saat ini:
 9. Term & Condition (cuplikan singkat dan tombol Detail; dialog menampilkan seluruh isi).
 10. Edit (aksi edit dan hapus).
 
-Owner ditampilkan pada filter dan ringkasan; tidak menjadi kolom tabel saat ini.
+Owner bukan kolom tabel. Saat filter `All Owners`, nama owner ditampilkan kecil di bawah nama ikan; saat satu owner dipilih, baris owner tersebut disembunyikan.
 
 T&C awal pada data contoh:
 
@@ -105,32 +107,21 @@ Tabel harus mendukung:
 - Target tap minimal `44 × 44px`; body text minimal `16px`; input dan tombol minimal tinggi `44px`.
 - Desktop dan laptop memakai sidebar serta tabel medium-density tanpa mengecilkan teks untuk memaksa semua kolom masuk.
 
-### 4.3 Grand total owner
+### 4.3 Owner summary dan grand total — perilaku lokal saat ini
 
-Saat owner dipilih atau difilter, sistem menampilkan ringkasan:
+- Filter owner menyediakan `All Owners` dan owner yang sudah ada.
+- Ringkasan bawah tabel menampilkan owner terpilih/semua owner, jumlah record yang sedang tampil, dan grand total.
+- Grand total adalah jumlah `Total` dari record untuk owner terpilih; pada `All Owners`, grand total menjumlahkan seluruh record.
+- Breakdown terpisah untuk total harga dasar, dealer fee, dan shipping belum ditampilkan.
+- Di `All Owners`, nama owner juga muncul di bawah nama ikan.
 
-- Nama owner.
-- Jumlah ikan.
-- Total Harga Rupiah.
-- Total dealer fee.
-- Total shipping cost.
-- Grand total.
+### 4.4 PDF export — perilaku lokal saat ini
 
-Rumus:
-
-`Grand Total Owner = jumlah Total semua ikan milik owner tersebut`
-
-Jika tidak ada owner dipilih, sistem dapat menampilkan grand total seluruh data.
-
-### 4.4 Cetak/PDF — perilaku lokal saat ini
-
-- Tombol PDF meminta satu owner dipilih; kondisi All Owners menampilkan pesan dan tidak membuka print.
-- Setelah owner dipilih, aplikasi memanggil dialog cetak browser (`window.print()`); pengguna memilih printer atau Save as PDF.
-- Data yang ditampilkan mengikuti owner terpilih.
-- Print stylesheet menyembunyikan thumbnail dan aksi edit/hapus; jangan menyatakan PDF berisi gambar.
-- Excel/CSV tidak tersedia dan tidak menjadi target aktif.
-
-Penyempurnaan PDF (layout, judul, tanggal, ringkasan, T&C lengkap, gambar bila diminta) belum dianggap selesai sampai diuji hasil print nyata. Tanggal dan tata letak output masih perlu dikonfirmasi.
+- Tombol PDF meminta satu owner dipilih; `All Owners` menampilkan toast dan export diblokir.
+- `src/exportPdf.ts` menggunakan jsPDF + jspdf-autotable untuk menghasilkan dan mengunduh A4 landscape secara langsung; tidak memakai browser print.
+- PDF mencakup nama owner, jumlah record, tanggal cetak, tabel, T&C lengkap, gambar yang proporsional dengan batas 20 × 20 mm, sertifikat, dan grand total.
+- PDF satu-satunya aksi export saat ini. Excel/CSV tidak tersedia dan jangan ditambahkan tanpa permintaan eksplisit.
+- Perubahan generator perlu diverifikasi dengan membuka/memeriksa PDF hasil unduh, bukan hanya mengandalkan tampilan aplikasi.
 
 ## 5. Aturan Perhitungan
 
@@ -255,7 +246,7 @@ Input angka boleh menerima angka mentah, lalu sistem menampilkan format mata uan
 10. Admin dapat mencari dan memfilter berdasarkan owner.
 11. Grand total berubah sesuai owner yang dipilih.
 12. Export owner tidak mencampur data owner lain.
-13. Print/PDF menampilkan total owner dengan benar; hasil akhir harus diuji di dialog print browser.
+13. PDF hasil unduh menampilkan grand total owner dengan benar; verifikasi file PDF aktual setiap kali generator berubah.
 14. Data invalid ditolak dengan pesan error yang jelas.
 15. Data uang tidak kehilangan nilai karena format tampilan.
 16. Tabel tetap dapat digunakan pada ukuran layar yang ditargetkan.
@@ -269,9 +260,9 @@ Input angka boleh menerima angka mentah, lalu sistem menampilkan format mata uan
 24. Layout desktop pada `1440 × 900 CSS px` dan laptop pada `1366 × 768 CSS px` tetap lengkap, proporsional, dan estetis.
 25. UI diuji pada mobile portrait, mobile landscape, laptop, dan desktop sebelum fase database.
 
-## 10. Penyimpanan Gambar
+## 10. Target integrasi penyimpanan gambar — belum diimplementasikan
 
-Data utama disimpan dalam database PostgreSQL. File gambar disimpan di Cloudinary, bukan di kolom database dan bukan di Supabase Storage.
+Bagian ini adalah rancangan masa depan, bukan gambaran implementasi saat ini. Jika integrasi disetujui, data utama direncanakan memakai PostgreSQL dan file gambar memakai Cloudinary, bukan di kolom database atau Supabase Storage.
 
 Supabase menyimpan metadata dan referensi asset:
 
@@ -319,8 +310,8 @@ Fitur tersebut dapat ditambahkan setelah alur input, perhitungan, dan export sta
 7. Shipping cost berlaku per ikan dan kosong dianggap `Rp0`.
 8. Term & condition berlaku per ikan.
 9. Satu ikan memiliki satu gambar.
-10. Print stylesheet lokal saat ini menyembunyikan thumbnail; penyertaan gambar pada dokumen PDF belum disepakati dan belum diimplementasikan.
-11. Owner berupa text bebas.
+10. PDF lokal digenerate langsung dan menyertakan gambar proporsional; UI tabel menyembunyikan gambar hanya pada konteks print browser, bukan pada PDF hasil ekspor.
+11. Owner yang tersimpan dipilih dari dropdown; penambahan owner baru dilakukan lewat kontrol terpisah dan nama duplikat case-insensitive ditolak.
 12. Web diakses online dari berbagai perangkat.
 13. Login diperlukan.
 14. MVP memakai satu akun dengan akses penuh.

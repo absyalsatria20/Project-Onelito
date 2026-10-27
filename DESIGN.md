@@ -1,7 +1,7 @@
 ---
 version: local-ui-prototype
 name: Koi House — Rekap Pembelian Ikan Jepang
-description: Local finance dashboard prototype for fish purchase records, pricing, owner totals, and browser print/PDF.
+description: Local finance dashboard prototype for fish purchase records, pricing, owner totals, and direct PDF export.
 project_status: local UI prototype; no connected backend or deployment.
 colors:
   primary: "#111827"
@@ -227,12 +227,15 @@ Do not mix sharp corners and highly rounded pill shapes without a semantic reaso
 
 ### Fish entry form
 
-Group fields by purpose: identity, pricing, fees, delivery, and documentation. Show currency prefixes or suffixes clearly. Recalculate dealer fee and total immediately when source values change. Preserve dealer fee decimals; do not round. When Yen or Kurs is missing, make manual Rupiah input explicit and show whether the value is manual or conversion-based.
+Group fields by purpose: identity, pricing, fees, delivery, and documentation. Show currency prefixes clearly. Recalculate derived price, dealer fee, and total from current form state. In the current UI, price is Yen × Kurs when both are supplied; otherwise Rupiah can be entered manually. The current form displays whole Rupiah amounts; do not describe fractional fee display as implemented. Owner selection uses existing-owner dropdown plus a separate `+ Owner Baru` link; reject new names that match existing owners ignoring case. Editing selects the record's owner by default.
 
-### Fish images
+### Fish images — current behavior and future integration
 
-Accept JPG, JPEG, and PNG files up to 10 MB before client-side compression. Preserve original aspect ratio for square, portrait, and landscape images. Use `object-fit: contain` in thumbnails, form preview, and detail modal; never crop fish imagery by default. Keep thumbnail containers at fixed dimensions to prevent layout shift. Clicking a thumbnail opens a detail modal/lightbox with a larger whole-image preview, close button, outside-click close, Escape support, and descriptive alt text. Load table thumbnails lazily; load larger detail image only when requested. Store image files in Cloudinary and keep only asset metadata/reference in Supabase.
+Current local UI accepts JPG/JPEG/PNG up to 10 MB, stores the selected image as a data URL in in-memory React state, and does not compress or upload it to a service. Use `object-fit: contain` in thumbnails, form preview, detail modal, and generated PDF; preserve aspect ratio and do not crop. Table thumbnails load lazily; clicking opens a detail dialog. The generated PDF embeds available images proportionally within a 20 × 20 mm box. Cloudinary/Supabase storage is a future target only and requires separate approval and implementation.
 
+### Dialogs and feedback
+
+Input/edit form dialogs use theme-aware scrollbars and lock background-page scrolling while open; the dialog remains scrollable. Delete uses an in-app confirmation dialog, with cancel/outside click/Escape closing without deletion. Toasts remain horizontally centered during entry animation; a new toast resets its visible duration.
 ### Financial table
 
 Use medium row height, thumbnail image, clear column headings, right-aligned numeric values, and visible edit/delete actions. Long fish names may clamp within the row. T&C uses a short single-line preview and adjacent Detail button; full value opens in a dialog. Keep both controls within T&C column and clear of Edit. Dealer Fee percentage and amount form one compact, right-aligned group with stable alignment. Do not hide critical totals behind hover.
@@ -245,9 +248,9 @@ Current UI places owner, record count, and grand total below the table, not in s
 
 Use text plus visual status. Certificate checkbox state must be understandable without color. Use labels such as `Ada` and `Belum ada`.
 
-### Print/PDF controls
+### PDF export
 
-The current PDF button requires one owner to be selected, then opens the browser print dialog. It is print-to-PDF, not a dedicated PDF generator. Current print styles hide thumbnails and edit/delete actions; do not promise included images. Keep the selected owner visible and explain why printing is blocked when All Owners is selected. Test actual print output before calling PDF layout complete.
+The current PDF button requires one owner to be selected; when `All Owners` is selected it shows a toast and does not export. It uses jsPDF + jspdf-autotable to download a generated A4 landscape PDF directly, not the browser print dialog. The PDF includes fish images contained proportionally within a 20 × 20 mm area, full T&C, certificate status, owner, print date, and grand total. Preserve the dedicated PDF layout and test the downloaded output when changing it. PDF is the only export action; do not add Excel/CSV without explicit request.
 
 ### Theme switch
 

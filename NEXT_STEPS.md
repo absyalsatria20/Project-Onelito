@@ -21,8 +21,11 @@ Jangan langsung coding hanya karena sesi baru dimulai.
 - Data/CRUD masih lokal selama sesi; backend dan persistensi server belum terhubung.
 - Tidak ada bukti login/Auth, Supabase, Cloudinary, atau deployment aktif di aplikasi ini.
 - Kolom tabel saat ini: Fish, Harga (JPY), Kurs, Harga (IDR), Dealer Fee, Shipping Cost, Total, Sertifikat, Term & Condition, Edit.
-- T&C punya cuplikan di tabel dan dialog Detail. Data contoh memuat tiga ketentuan dari PRD.
-- Export yang tersedia hanya tombol PDF yang memanggil print browser setelah owner dipilih; print stylesheet menyembunyikan gambar.
+- T&C punya cuplikan di tabel dan dialog Detail.
+- Owner form: dropdown owner tersimpan, tautan `+ Owner Baru`, penolakan duplikat tanpa membedakan kapitalisasi; saat `All Owners`, nama owner tampil di bawah nama ikan.
+- Form input/edit: theme-aware scrollbar dan body scroll lock. Hapus: modal konfirmasi native aplikasi. Toast: animasi tetap center dan timer pesan baru menggantikan timer sebelumnya.
+- Export yang tersedia hanya PDF langsung-unduh via jsPDF + jspdf-autotable; satu owner wajib dipilih. PDF A4 landscape mencakup gambar proporsional (batas 20×20 mm) dan T&C lengkap.
+- Data ikan/CRUD masih in-memory dan hilang setelah reload; tema disimpan di localStorage.
 
 ## Target MVP
 
@@ -30,7 +33,7 @@ Selesaikan UI lokal terlebih dahulu, review perilaku tabel/form/print, lalu renc
 
 Alur target setelah integrasi disetujui:
 
-`Login → lihat tabel → tambah ikan → hitung harga → simpan online → filter owner → lihat grand total → cetak/Save as PDF`.
+`Login (future) → lihat tabel → tambah ikan → hitung harga → simpan online (future) → filter owner → lihat grand total → unduh PDF`.
 
 ## Ruang lingkup MVP
 
@@ -53,7 +56,7 @@ Alur target setelah integrasi disetujui:
 
 - Gambar: satu gambar, JPG/JPEG/PNG, maksimal 10 MB sebelum kompresi, upload + preview utuh + modal detail.
 - Nama ikan: wajib.
-- Owner: text bebas, wajib.
+- Owner: wajib; saat ini pilih owner dari dropdown atau tambahkan melalui tautan khusus. Nama duplikat case-insensitive ditolak.
 - Harga Yen: opsional.
 - Kurs: disimpan per ikan, opsional jika tidak memakai Yen.
 - Harga Rupiah: otomatis jika Harga Yen dan Kurs tersedia; manual jika salah satu kosong.
@@ -113,7 +116,7 @@ Simpan nilai uang sebagai angka, bukan string berformat. Simpan sumber Harga Rup
 - Database: Supabase PostgreSQL.
 - Database lokal: Supabase lokal untuk pengujian fase berikutnya.
 - Gambar: Cloudinary Storage/CDN; Supabase hanya menyimpan metadata dan referensi asset.
-- PDF: print stylesheet dulu; generator PDF bila diperlukan.
+- PDF UI aktif: generator jsPDF + jspdf-autotable, langsung unduh; jangan ganti ke print stylesheet tanpa persetujuan.
 - Excel/CSV: tidak ada pada UI aktif; tidak dikerjakan tanpa permintaan baru.
 - Hosting: pilih layanan yang sesuai penggunaan personal/komersial setelah deployment plan dipastikan.
 
@@ -146,9 +149,9 @@ Backup cloud otomatis dihapus dari MVP. Backup manual dapat dilakukan dari provi
 
 ### Fase 1 — UI prototype — aktif, implementasi utama sudah tersedia
 
-Sudah tersedia: React + Vite + TypeScript; dashboard responsif; sidebar desktop dan drawer mobile; Light/Dark mode; tabel dan data contoh; pencarian/filter; form tambah/edit; kalkulasi lokal; hapus; print/PDF via browser; preview foto; T&C ringkas dan Detail.
+Sudah tersedia: React + Vite + TypeScript; dashboard responsif; sidebar desktop dan drawer mobile; Light/Dark mode; tabel dan data contoh; pencarian/filter; form tambah/edit dengan dropdown owner; kalkulasi lokal; konfirmasi hapus; PDF langsung-unduh via jsPDF; preview foto; T&C ringkas dan Detail; notifikasi toast.
 
-Perlu review/validasi: layout cetak/PDF, data persistence selama reload, validasi data dan gambar, aksesibilitas/focus, dan ukuran target desktop/mobile. Jangan klaim data tersimpan lintas reload tanpa uji.
+Perlu review/validasi: hasil PDF yang benar-benar diunduh, perilaku form/validasi, aksesibilitas/focus, dan ukuran target desktop/mobile. Persistence lintas reload belum tersedia; jangan klaim data tersimpan setelah reload.
 
 Tidak ada database/Auth/Supabase/Cloudinary terhubung.
 
@@ -170,10 +173,11 @@ Tidak ada database/Auth/Supabase/Cloudinary terhubung.
 - Sambungkan data dan gambar ke layanan terpilih.
 - Verifikasi CRUD, filter, kalkulasi, dan error network.
 
-### Fase 5 — Cetak/PDF (UI awal ada; verifikasi belum selesai)
+### Fase 5 — PDF langsung-unduh (fitur aktif; uji hasil tetap perlu diulang bila berubah)
 
-- Tombol PDF saat ini memanggil browser print untuk owner terpilih.
-- Uji output cetak: layout kolom, T&C lengkap, grand total, halaman terpotong, dan kebutuhan gambar.
+- Generator aktif: jsPDF + jspdf-autotable; file A4 landscape diunduh langsung untuk satu owner terpilih.
+- Isi aktif: data tabel, T&C lengkap, gambar proporsional maksimum 20 × 20 mm, tanggal, owner, jumlah ikan, dan grand total.
+- Saat mengubah generator, periksa PDF hasil unduh untuk layout kolom, teks terpotong, gambar portrait/landscape, dan grand total.
 - Jangan implementasikan Excel/CSV tanpa permintaan eksplisit.
 
 ### Fase 6 — Deployment dan verifikasi MVP (belum dimulai)

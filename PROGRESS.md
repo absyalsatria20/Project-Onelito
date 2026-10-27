@@ -1,5 +1,41 @@
 # Project Progress
 
+## 2026-10-27 — Perjelas label tombol PDF
+- Change: Tombol export menampilkan ikon dokumen diikuti teks `Export PDF`.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: Browser memastikan ikon muncul, label tepat `Export PDF`, dan tombol tampil 118.8×38 px. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memperingatkan chunk 602.76 kB (>500 kB).
+
+
+## 2026-10-27 — Pertahankan ukuran minimum preview gambar
+- Change: Terapkan lebar minimum 320 px (dibatasi 90vw) pada gambar kecil, pertahankan rasio aspek, dan tetap batasi gambar ke 90vw/960 px serta 75vh agar preview besar tetap muat.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memeriksa gambar landscape kecil 100×50 menjadi area 320×160, portrait kecil 50×100 tetap memenuhi viewport mobile 390×844, dan landscape besar 4000×2250 dibatasi area 833×469 pada desktop 1264×625. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memperingatkan chunk 602.73 kB (>500 kB).
+
+
+## 2026-10-27 — Sesuaikan kotak preview dengan rasio gambar
+- Change: Preview kini mengikuti rasio asli gambar, dibatasi `max-width: min(90vw, 960px)` dan `max-height: 75vh`; kotak tidak memanjang ke area kosong. `object-fit: contain` menjaga gambar utuh.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memeriksa gambar landscape uji 1600×900: preview 833×469 px pada desktop viewport 1264×625, dan 351×197 px pada mobile 390×844; rasio dipertahankan dan dialog muat dalam viewport. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memperingatkan chunk 602.73 kB (>500 kB).
+
+
+## 2026-10-27 — Besarkan gambar pada dialog preview
+- Change: Lebarkan dialog preview sampai 1000 px (dibatasi viewport), tetapkan area gambar selebar dialog dan tinggi responsif sampai 72vh; `object-fit: contain` tetap menjaga gambar landscape/portrait utuh tanpa crop.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser membuka preview pada viewport 1264×625; dialog terukur 1000 px, gambar 964×450, `object-fit: contain`. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memperingatkan chunk 602.73 kB (>500 kB).
+
+
+## 2026-10-27 — Tunjukkan bahwa thumbnail gambar bisa diklik
+- Change: Thumbnail memakai cursor `zoom-in`, transisi hover halus dengan outline/shadow ringan, focus-visible keyboard, dan tooltip “Klik untuk melihat gambar”.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memeriksa 3 thumbnail, tooltip, accessible label, cursor `zoom-in`, dan transisi CSS. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memberi peringatan chunk 602.73 kB (>500 kB).
+
+
+## 2026-10-27 — Sinkronkan dokumen pedoman dengan implementasi
+- Change: Selaraskan status fitur lokal, aturan Owner, modal/scroll/toast, PDF langsung-unduh, serta pemisahan perilaku aktif dari rencana integrasi masa depan pada `.hermes.md`, `DESIGN.md`, `PRD.md`, `NEXT_STEPS.md`, dan `SESSION_MEMORY.md`.
+- Changed files: `.hermes.md`, `DESIGN.md`, `PRD.md`, `NEXT_STEPS.md`, `SESSION_MEMORY.md`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build menampilkan peringatan chunk JavaScript 602.69 kB (>500 kB); build tetap sukses. Pencarian dokumentasi tidak lagi menemukan klaim aktif bahwa PDF memakai `window.print()` atau Owner berupa free text. PDF referensi tak terlacak tidak diubah.
+
+
 ## 2026-10-27 — Perbaiki posisi dan timer popup toast
 - Change: Toast memakai animasi terpisah yang mempertahankan posisi tengah selama transisi; timer lama dibatalkan saat pesan baru muncul dan dibersihkan saat komponen dilepas.
 - Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
