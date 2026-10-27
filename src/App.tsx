@@ -102,52 +102,48 @@ function App() {
       </div>
     </div>
 
-    {/* Hidden PDF Export Container matching exact screenshot styling */}
-    <div id="pdf-export-container" style={{ display: 'none', position: 'absolute', left: '-9999px', top: 0, width: '1120px', backgroundColor: '#ffffff', color: '#111827', padding: '32px', fontFamily: 'system-ui, sans-serif' }}>
-      <div style={{ marginBottom: '24px', borderBottom: '2px solid #1e3a8a', paddingBottom: '16px', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
-        <div>
-          <h1 style={{ margin: '0 0 6px 0', fontSize: '24px', color: '#1e3a8a', fontWeight: 700 }}>REKAP PEMBELIAN IKAN JEPANG</h1>
-          <p style={{ margin: 0, fontSize: '14px', color: '#4b5563' }}>Owner: <b>{owner}</b> · Tanggal: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
-        </div>
-        <div style={{ fontSize: '14px', color: '#1e3a8a', fontWeight: 600 }}>KOI HOUSE INVENTORY</div>
+    {/* Hidden PDF Export Container matching exact screenshot styling (#2b76ff header, #f3f4f6 alternating rows, #dbeafe grand total) */}
+    <div id="pdf-export-container" style={{ display: 'none', position: 'absolute', left: '-9999px', top: 0, width: '1120px', backgroundColor: '#ffffff', color: '#111827', padding: '36px', fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+      <div style={{ marginBottom: '20px' }}>
+        <h1 style={{ margin: '0 0 6px 0', fontSize: '22px', color: '#111827', fontWeight: 800, letterSpacing: '-0.3px' }}>REKAP PEMBELIAN IKAN JEPANG</h1>
+        <p style={{ margin: 0, fontSize: '13px', color: '#374151', fontWeight: 500 }}>Owner: {owner} · {selected.length} data ikan · Tanggal Cetak: {new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' })}</p>
       </div>
-      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', marginBottom: '20px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '12px', marginBottom: '16px' }}>
         <thead>
-          <tr style={{ backgroundColor: '#1e3a8a', color: '#ffffff', textAlign: 'left' }}>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>FOTO</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>FISH</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>HARGA (JPY)</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>KURS</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>HARGA (IDR)</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>DEALER FEE</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>SHIPPING</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'right' }}>TOTAL</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a', textAlign: 'center' }}>SERTIFIKAT</th>
-            <th style={{ padding: '10px 8px', border: '1px solid #1e3a8a' }}>TERM &amp; CONDITION</th>
+          <tr style={{ backgroundColor: '#2b76ff', color: '#ffffff', textAlign: 'left' }}>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center', width: '60px' }}>Gambar</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700 }}>Fish</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (JPY)</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Kurs</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Harga (IDR)</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Dealer Fee</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Shipping Cost</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'right' }}>Total</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700, textAlign: 'center' }}>Sertifikat</th>
+            <th style={{ padding: '12px 10px', border: '1px solid #2b76ff', fontWeight: 700 }}>Term &amp; Condition</th>
           </tr>
         </thead>
         <tbody>
           {selected.map((r, idx) => (
-            <tr key={r.id} style={{ backgroundColor: idx % 2 === 0 ? '#ffffff' : '#f8fafc' }}>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', width: '50px', textAlign: 'center' }}>
-                <img src={r.image} alt={r.name} style={{ width: '40px', height: '40px', objectFit: 'cover', borderRadius: '4px' }} crossOrigin="anonymous" />
+            <tr key={r.id} style={{ backgroundColor: idx % 2 === 0 ? '#f3f4f6' : '#ffffff' }}>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'center' }}>
+                <img src={r.image} alt={r.name} style={{ width: '42px', height: '42px', objectFit: 'cover', borderRadius: '4px', display: 'block', margin: '0 auto' }} crossOrigin="anonymous" />
               </td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', fontWeight: 600, color: '#1f2937' }}>{r.name}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{yenMoney(r.yen)}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{r.rate ?? '—'}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{money(r.rupiah)}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{r.feePercent}% ({money(fee(r))})</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right' }}>{money(r.shipping)}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 700, color: '#1e3a8a' }}>{money(total(r))}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', textAlign: 'center' }}>{r.certificate ? 'Ada' : 'Belum ada'}</td>
-              <td style={{ padding: '8px', border: '1px solid #e5e7eb', fontSize: '11px', color: '#4b5563', whiteSpace: 'pre-line' }}>{r.tc || '—'}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', fontWeight: 700, color: '#111827' }}>{r.name}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{yenMoney(r.yen)}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{r.rate ?? '—'}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{money(r.rupiah)}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{r.feePercent}% — {money(fee(r))}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 500 }}>{money(r.shipping)}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'right', fontWeight: 800, color: '#111827' }}>{money(total(r))}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', textAlign: 'center', fontWeight: 500 }}>{r.certificate ? 'Ada' : 'Belum ada'}</td>
+              <td style={{ padding: '10px', border: '1px solid #e5e7eb', fontSize: '11px', color: '#374151', whiteSpace: 'pre-line', lineHeight: '1.4' }}>{r.tc || '—'}</td>
             </tr>
           ))}
         </tbody>
       </table>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', backgroundColor: '#eff6ff', border: '1px solid #bfdbfe', borderRadius: '8px', padding: '16px 24px' }}>
-        <div style={{ fontSize: '14px', color: '#1e3a8a' }}>Owner: <b>{owner}</b> · Total Item: {selected.length} ikan</div>
-        <div style={{ fontSize: '16px', color: '#1e3a8a', fontWeight: 700 }}>GRAND TOTAL: <span style={{ fontSize: '20px', color: '#1d4ed8' }}>{money(grand)}</span></div>
+      <div style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', backgroundColor: '#dbeafe', border: '1px solid #bfdbfe', borderRadius: '6px', padding: '14px 20px' }}>
+        <div style={{ fontSize: '16px', color: '#111827', fontWeight: 800 }}>GRAND TOTAL: <span style={{ fontSize: '18px', color: '#111827', marginLeft: '12px' }}>{money(grand)}</span></div>
       </div>
     </div>
 
