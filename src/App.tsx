@@ -65,8 +65,8 @@ function App() {
     const activeEl = tabsRef.current[activePeriodId]
     if (activeEl) {
       setIndicatorStyle({
-        left: activeEl.offsetLeft + 10,
-        width: activeEl.offsetWidth - 20
+        left: activeEl.offsetLeft + 12,
+        width: activeEl.offsetWidth - 24
       })
     }
   }, [activePeriodId, periods])
