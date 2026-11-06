@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Proporsi Padding Modal Profil
+- Change:
+  - Menyesuaikan padding bawah modal profil menjadi 24px agar jarak dari tombol "Tutup" ke bawah kotak modal sama persis dengan jarak samping kanan (24px).
+- Changed files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Penyesuaian Posisi Tombol Tutup Modal Profil
 - Change:
   - Menyelaraskan posisi tombol "Tutup" pada modal profil ke sisi kanan agar sejajar dengan batas kanan header text dan elemen kontainer.
