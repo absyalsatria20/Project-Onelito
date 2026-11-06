@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Pembaruan Judul Tab Browser & Favicon Logo
+- Change:
+  - Mengubah judul tab browser menjadi **"Dashboard Onelito"** dan menyetel favicon menggunakan file logo vertikal (`Logo Onelito Vertical-02.png`).
+- Changed files: `index.html`, `public/logo-vertical.png`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Implementasi Custom Scrollbar Halus & Minimalis
 - Change:
   - Mengganti `scrollbar-gutter: stable` dengan custom scrollbar tipis (`width: 6px`) pada elemen `html` untuk mencegah pergeseran layout (*layout shift*) saat refresh/load tanpa menyisakan *gutter* kosong yang kaku.
