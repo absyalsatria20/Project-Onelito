@@ -1,9 +1,428 @@
 # Project Progress
 
+## 2026-11-06 — Perubahan Teks Dropdown & Lebar Presisi Tab Periode
+
+- Change: Mengubah teks tombol hapus pada dropdown tab periode dari "Hapus periode" menjadi "Hapus". Menyamakan lebar dan posisi dropdown menu persis dengan tab periode yang diklik (`rect.left` dan `rect.width`).
+- Changed files: `src/App.tsx`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
+## 2026-11-06 — Perbaikan Layout Dropdown Menu Tab Periode (Absolute Position)
+
+- Change: Memperbaiki tata letak dropdown menu tab periode (`period-tab-menu`):
+  - Mengubah penempatan menu dari `position: fixed` dengan kalkulasi JS ke `position: absolute` di dalam kontainer `.period-tab` (`top: calc(100% + 4px); right: 0; width: 150px;`), serta memastikan `.period-tabs` memiliki `overflow-y: visible`.
+  - Memastikan ukuran dan tinggi tombol di dalam menu dropdown tampil proporsional dan pas di bawah tab periode masing-masing.
+- Changed files: `src/App.tsx`, `src/App.css`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
+## 2026-11-06 — Perbaikan Posisi Fixed Dropdown Menu Tab Periode
+
+- Change: Memperbaiki posisi dropdown menu tab periode dengan mengembalikan rendering berbasis `position: fixed` dan kalkulasi bounding rect tombol titik tiga (`rect.left`, `rect.bottom + 6`), sehingga menu dropdown muncul tepat di bawah tombol tanpa terpotong `overflow: hidden` pada container tab.
+- Changed files: `src/App.tsx`, `src/App.css`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
+## 2026-11-06 — Perbaikan Posisi & Ukuran Dropdown Menu Tab Periode
+
+- Change: Memperbaiki kalkulasi posisi (`left`/`top`) dan lebar dropdown menu pada tab periode (`period-tab-menu`):
+  - Mengganti basis referensi rect dari container tab ke tombol titik tiga (`period-tab-menu-trigger`), sehingga posisi menu dropdown tepat berada di bawah tombol aksi dan tidak bergeser.
+  - Menetapkan lebar menu secara konsisten (160px) alih-alih menyamakan dengan lebar tab yang dinamis.
+- Changed files: `src/App.tsx`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
+## 2026-11-06 — Perbaikan Toast Notification (Ukuran & Animasi Keluar)
+
+- Change: Memperbaiki styling dan animasi toast notification di `src/animations.css`:
+  - Mengubah max-width menjadi responsive (`min(90vw, 420px)`) dengan text-wrap (`word-break: break-word`) agar teks panjang seperti "PDF berhasil di-download" tidak terpotong atau terlalu melebar.
+  - Menambahkan animasi exit (`toastSlideOut`) yang otomatis berjalan pada detik terakhir sebelum toast tertutup, dengan mempertahankan posisi center (`translateX(-50%)`).
+- Changed files: `src/animations.css`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
+## 2026-11-06 — Sistem Animasi Lengkap 30 Area
+
+- Change: Menambahkan file `src/animations.css` berisi 30+ keyframes dan animation rules yang mencakup seluruh 30 area UI:
+  - A. Page entrance: heading stagger, toolbar slide, table row stagger (12 rows), footer fade
+  - B. Setting page: heading stagger, badge pop bounce, card stagger dengan blur
+  - C. Breadcrumb fade-slide, period tabs enhanced (glow, elastic), tab menu drop-in, plus button rotate
+  - D. Sidebar: brand float, nav indicator slide, link hover shift, profile card entrance, mobile enhanced
+  - E. Modals: backdrop blur, form dialog slide-up + section stagger, confirm icon shake, image zoom, terms list stagger, period dialog
+  - F. Buttons: primary lift+glow, secondary, PDF icon flip, row action scale, dialog close rotate, theme toggle rotate, search icon scale, settings buttons, cert toggle, upload box
+  - G. Toast slide-in + progress bar, status dot pulse, empty state bounce, nav badge pop, grand total counter
+  - H. Section transition fade+blur, table row hover highlight, settings card hover lift
+- Changed files: `src/animations.css` (baru), `src/App.tsx` (import animations.css)
+- Verification: `npm run build` sukses, `npm run lint` sukses (0 error)
+
+## 2026-11-05 — Penyempurnaan Tampilan Tombol Brand Sidebar
+- Change: Menghapus border dan latar mencolok pada tombol brand sidebar (`.sidebar-brand-btn`) sehingga menyatu bersih dengan background sidebar, serta menambahkan margin atas pada teks label `WORKSPACE` agar tidak bertumpuk/nabrak.
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` sukses tanpa error.
+
+- Change: Membuat komponen `ThemeSwitchV2` (`theme-switch-v2.tsx`, `theme-switch-v2.css`) dengan pemisahan animasi yang presisi sesuai permintaan: background awan/bintang/langit menggunakan efek crossfade opacity, sementara knob bulat matahari dan bulan bergeser secara sliding horizontal. Mengintegrasikannya ke menu Setting (`src/App.tsx`).
+- Changed files: `src/App.tsx`, `src/theme-switch-v2.tsx`, `src/theme-switch-v2.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` sukses tanpa error.
+
+- Change: Ganti switch lama dengan artwork SVG terintegrasi: scene siang berawan dan matahari, scene malam dengan bulan, bintang, dan bukit berlapis. Terapkan visual serta rasio 154×54 konsisten di Setting dan topbar; tambah transisi silang yang reduced-motion aware.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan artwork SVG tampil pada dua lokasi dan mode Dark menampilkan scene malam. `npm run build`, `npm run lint`, `git diff --check`.
+
+## 2026-11-02 — Samakan toggle mode di topbar dengan referensi
+- Change: Ganti tombol ikon tema di pojok kanan atas dengan versi ringkas switch siang/malam yang sama seperti kartu Setting. Satu `ThemeSwitch` reusable menjaga state dan aksesibilitas konsisten.
+- Changed files: `src/App.tsx`, `src/App.css`, `UI_DESIGN_GUIDELINES.md`, `PROGRESS.md`.
+- Verification: Browser memastikan switch topbar berukuran ringkas, `aria-checked` berubah false ke true, dan tema aplikasi ikut berubah. `npm run build`, `npm run lint`, `git diff --check`.
+
+
+## 2026-11-02 — Ubah kontrol Mode Tampilan mengikuti referensi
+- Change: Ganti tombol Light/Dark menjadi switch ilustratif siang/malam dengan sun, awan, moon, bintang, state label, animasi tema, `role="switch"`, dan dukungan focus/reduced-motion. Topbar tetap berfungsi.
+- Changed files: `src/App.tsx`, `src/App.css`, `UI_DESIGN_GUIDELINES.md`, `PROGRESS.md`.
+- Verification: Browser memastikan switch mengubah label Light mode ke Dark mode dan `aria-checked` false ke true. `npm run build`, `npm run lint`, `git diff --check`.
+
+
+## 2026-11-02 — Haluskan hover avatar akun
+- Change: Kurangi gerak avatar dari 2px menjadi 1px, gunakan easing lembut 280ms untuk hover/warna/bayangan, dan kurangi scale saat ditekan. Hormati reduced motion.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, `git diff --check`.
+
+
+## 2026-11-02 — Hover avatar akun saat sidebar ciut
+- Change: Hapus indikator titik tiga. Avatar akun kini naik 2px dengan highlight saat hover, seperti tombol logo; active state menekan kembali. Label/tooltip akun tetap ada.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, `git diff --check`.
+
+
+## 2026-11-02 — Perjelas ikon akun saat sidebar ciut
+- Change: Saat sidebar ciut, tambahkan indikator elipsis pada avatar akun dan hover/focus outline. Tambahkan label aksesibel serta tooltip “Menu akun”.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan indikator elipsis tampil, sidebar ciut, dan tombol akun punya label/tooltip. `npm run build`, `npm run lint`, `git diff --check`.
+
+
+## 2026-11-02 — Kecilkan teks petunjuk login
+- Change: Atur teks “Masukkan username dan password untuk melanjutkan.” menjadi 12px dan satu baris di layar login.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan teks 12px, tinggi satu baris, dan tidak melampaui lebar area teks.
+
+
+## 2026-11-02 — Perbaiki teks login dan tambah toggle password
+- Change: Ganti keterangan login menjadi “Gunakan akun Onelito Koi Anda untuk masuk.” Tambahkan ikon mata untuk menampilkan/menyembunyikan password dengan label aksesibel.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, `git diff --check`, dan browser check perubahan tipe input serta label ikon mata.
+
+
+## 2026-11-02 — Perbarui teks layar login
+- Change: Ganti keterangan pratinjau/simulasi dengan instruksi username/password dan keterangan akses workspace. Judul menggunakan kapitalisasi “Masuk ke Workspace” sesuai koreksi lanjutan. Perilaku login tetap simulasi lokal di frontend.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check`.
+
+
+## 2026-11-02 — Animasi transisi logout ke layar login
+- Change: Tambahkan fade halus pada layar login dan fade-up/scale ringan pada kartu login saat layar dirender setelah logout. Respect `prefers-reduced-motion`.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser logout mengonfirmasi layar login muncul dengan animasi `demo-login-screen-in` dan `demo-login-card-in`.
+
+
+## 2026-11-02 — Ganti label Peran menjadi Title di modal Profil
+- Change: Ganti label profil saja menjadi `Title`; nilai title tetap memakai nilai peran yang sudah ditampilkan.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check`.
+
+
+## 2026-11-02 — Animasi tutup modal Profil dan Akun & Akses
+- Change: Tambahkan animasi keluar singkat pada modal Profil dan Akun & Akses saat ditutup lewat tombol X, klik backdrop, atau tombol Escape. Timer menjaga modal tetap terpasang saat animasi berjalan, dibatalkan saat dibuka ulang, dan dibersihkan saat unmount.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Animasi keluar menggunakan keyframe yang sudah ada di `src/App.css`, termasuk aturan reduced-motion yang tersedia.
+
+## 2026-11-02 — Sederhanakan pengaturan akun dan tambah toggle password
+- Change: Ubah kartu Akun & Akses menjadi pengelolaan satu akun demo: nama lengkap dan password dapat diubah, username ditampilkan tapi tidak diedit, opsi tambah akun dihilangkan. Akun simulasi `adelia` dibuat sebagai kredensial lokal sementara. Tambahkan tombol ikon mata untuk tampil/sembunyikan password.
+- Scope: Data akun hanya di state halaman dan hilang saat reload; bukan autentikasi aman.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memastikan kartu tidak menampilkan aksi tambah akun, form hanya memuat nama/password, dan tombol mata mengganti input `password` ke `text` serta label aksesibilitas.
+
+
+
+
+## 2026-11-02 — Hapus kotak informasi Akun lokal demo
+- Change: Hapus kotak informasi tambahan dari kartu Akun & Akses; ringkasan profil, total akun, dan tombol pengelolaan tetap ada.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+
+## 2026-11-02 — Lengkapi panel Akun & Akses
+- Change: Tampilkan ringkasan profil aktif (nama, username, peran) dan jumlah akun; formulir tambah/edit kini mengelola nama lengkap, username unik, password, dan pilihan peran Administrator/Manager/Viewer. Daftar kelola akun menampilkan identitas/peran/status aktif; sidebar dan dialog Profil mengikuti profil aktif. Login username tidak peka kapital. Hapus tetap perlu konfirmasi dan akun aktif/terakhir terlindungi.
+- Scope: Peran hanya label UI, belum mengatur izin. Kredensial dan akun hanya ada selama sesi; simulasi bukan autentikasi aman.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memverifikasi tampilan ringkasan, form tambah/edit dengan pilihan peran, update identitas/peran pada daftar, konfirmasi hapus, serta penghapusan akun nonaktif. Kata sandi uji tidak dicatat.
+
+## 2026-11-02 — Hilangkan pergeseran saat dialog Setting dibuka
+- Change: Kunci scroll halaman memakai `useLayoutEffect` dan kompensasi lebar scrollbar dengan padding sementara, agar konten belakang dan dialog tidak bergeser ketika modal Akun & Akses dibuka.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser membuka Setting lalu Kelola akun; scrollbar 15px dikompensasi, dialog tetap terpusat, dan body overflow terkunci selama modal terbuka.
+
+## 2026-11-02 — Kelola akun demo individual
+- Change: Kelola akun membuka daftar semua akun dengan aksi edit dan hapus terpisah. Pengeditan memperbarui kredensial akun terpilih; penghapusan meminta konfirmasi dan akun aktif tidak dapat dihapus. Tambah akun tetap tersedia dari daftar.
+- Scope: Akun tetap berada di state memori; reload mengembalikan akun default `admin` / `admin`. Bukan autentikasi aman.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser check belum dilakukan: sesi browser sebelumnya sudah `about:blank`.
+
+## 2026-11-02 — Tambah beberapa akun demo dari Setting
+- Change: Tampilkan daftar akun demo, tambah akun dengan username/password unik, tolak username duplikat tanpa membedakan kapital, dan terima semua akun pada login demo. Semua akun memakai role Administrator.
+- Scope: Akun hanya berada di state memori; reload mengembalikan akun default `admin` / `admin`. Bukan autentikasi aman.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser membuat akun `staff`, melihat daftar dua akun, logout, lalu login sebagai `staff` berhasil.
+
+## 2026-11-02 — Aktifkan pengelolaan akun demo di Setting
+- Change: Tombol Kelola akun membuka form ubah username/password. Kredensial baru digunakan layar login, dapat ditampilkan sebagai username pada kartu Setting dan dialog Profil; perubahan bertahan selama sesi React terbuka.
+- Scope: Tetap simulasi client-side; tanpa backend/auth aman, dan kembali default setelah reload.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser menyimpan kredensial sementara, menolak `admin`/`admin` setelah diganti, lalu menerima kredensial baru dan kembali ke dashboard.
+
+## 2026-11-02 — Tambah animasi masuk/keluar dialog Profil
+- Change: Dialog Profil dan backdrop kini fade/scale/geser ringan saat buka; saat tutup, exit singkat berlaku untuk tombol X, backdrop, dan Escape. Hormati `prefers-reduced-motion`.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengonfirmasi `profile-dialog-in`, `profile-backdrop-in`, serta `profile-dialog-out` pada penutupan.
+
+## 2026-11-02 — Tambah animasi buka/tutup Profil
+- Change: Dialog dan backdrop profil fade/scale halus saat masuk dan keluar; penutupan via X, backdrop, atau Escape menunggu transisi singkat. `prefers-reduced-motion` menonaktifkan gerak.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengonfirmasi `profile-dialog-in`, `profile-backdrop-in`, dan `profile-dialog-out`.
+
+## 2026-11-02 — Aktifkan dialog menu Profil
+- Change: Menu Profil kini membuka dialog identitas dengan avatar, Admin Sistem, username `admin`, dan peran Workspace admin. Dialog tutup melalui X, backdrop, atau Escape.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengonfirmasi isi dialog dan penutupan via Escape.
+
+## 2026-11-02 — Tutup menu akun saat klik di luar
+- Change: Menu profil otomatis tertutup saat pointer ditekan di luar card/menu; Escape juga menutup menu. Interaksi dalam menu tetap berfungsi.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser membuka menu lalu klik luar; menu tertutup dan `aria-expanded` kembali false.
+
+## 2026-11-02 — Balik arah gradasi dan putihkan card/avatar akun
+- Change: Card bergerak dari biru gelap di kiri ke biru terang di kanan; avatar berlatar putih, nama/subjudul putih. Terapkan arah konsisten pada tema gelap.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengonfirmasi gradient 110deg dari #214eae ke #3478f6, avatar putih, teks putih.
+
+## 2026-11-02 — Lengkapi kredensial simulasi dan gradien card akun
+- Change: Card Admin Sistem memakai gradien biru dan status sesi dihapus. Layar login demo meminta username/password; validasi menerima `admin` / `admin`.
+- Scope: Kredensial dan sesi ditangani di frontend/memori saja; bukan auth sungguhan dan tidak melindungi data.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memverifikasi gradien card, status dihapus, kredensial salah ditolak, dan `admin`/`admin` mengembalikan dashboard.
+
+## 2026-11-02 — Jangkar footer sidebar dan cegah overlap di viewport pendek
+- Change: Tempatkan Preferences, Setting, dan akun dalam footer normal-flow yang tetap; pendekkan viewport menampilkan scroll sidebar, bukan overlap/geser elemen.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Uji browser pada ukuran rekaman 360×302 memastikan footer non-absolute, overflow-y auto, dengan Preferences y=170, Setting y=208, akun y=269 dalam urutan normal tanpa overlap.
+
+
+## 2026-11-02 — Pendekkan label Workspace dan Preferences pada rail
+- Change: Pertahankan ukuran font normal dan potong label dengan ellipsis saat rail ciut; atur ulang flex-shrink pada grup nav, label, spacer, dan akun untuk mencegah area Preferences melompat.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser ukur posisi Preferences (y=441), Setting (y=479), spacer (290 px), dan akun (y=552) tetap sama sebelum/sesudah collapsed. Menu icons x=26 px.
+
+## 2026-11-02 — Perhalus teks dan alignment sidebar collapsed
+- Change: Jaga font Workspace/Preferences tetap normal dan gunakan ellipsis; atur avatar akun agar sejajar menu pada rail.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus; browser cek ukuran teks 9 px, overflow ellipsis, dan koordinat ikon/avatar.
+
+
+## 2026-11-02 — Selaraskan ikon akun dengan ikon menu sidebar
+- Change: Ratakan avatar akun dengan ikon Rekap Ikan dan Setting pada sidebar terbuka maupun collapsed.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengukur avatar pada x=26 px expanded dan x=25.5 px collapsed; ikon menu tetap x=26 px.
+
+
+## 2026-11-02 — Pertahankan posisi menu Rekap saat sidebar ciut
+- Change: Sisakan ruang label Workspace yang tersembunyi saat sidebar collapsed supaya posisi nav tidak naik.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser ukur tombol Rekap Ikan tetap y=108 px expanded dan collapsed.
+
+
+## 2026-11-02 — Koreksi garis Workspace dan sejajarkan ikon rail
+- Change: Pindahkan garis pembatas ke atas label Workspace; kunci ikon menu pada posisi horizontal sama saat sidebar expanded/collapsed.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memastikan kedua ikon tetap x=26 px pada expanded/collapsed; border 1 px berada di atas label Workspace, termasuk mobile.
+
+
+## 2026-11-02 — Haluskan transisi sidebar PC dan mobile
+- Change: Gunakan animasi grid 280 ms untuk rail PC, slide drawer 280 ms di mobile, dan matikan gerakan saat `prefers-reduced-motion` aktif. Hapus inline sizing yang mencegah CSS rail mengecil.
+- Changed files: `src/App.css`, `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengonfirmasi layout rail 72 px saat collapsed dengan reduced motion; stylesheet PC/mobile memakai transisi 280 ms. Pergerakan visual saat tab browser tidak aktif tidak dapat diverifikasi.
+
+## 2026-11-02 — Samakan lebar area klik brand dan navigasi
+- Change: Lebarkan area klik/hover brand hingga memenuhi lebar konten sidebar, sejajar dengan tombol `Rekap Ikan`; mobile tetap berbagi ruang dengan tombol X.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser mengukur lebar area brand dan tombol `Rekap Ikan` sama-sama 215 px; mobile menjaga area brand 206 px di samping tombol X.
+
+## 2026-11-02 — Beri affordance klik pada brand sidebar
+- Change: Tambah respons hover berupa highlight, bayangan lembut, dan kenaikan 1 px; active memberi efek tekan. Reduced-motion mematikan transisi.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memastikan stylesheet memuat state hover/active/focus-visible dan aturan `prefers-reduced-motion`; simulasi pointer browser gagal timeout, jadi state visual pointer belum diuji langsung.
+
+## 2026-11-02 — Jadikan brand sidebar sebagai kontrol toggle
+- Change: Hilangkan chevron terpisah; klik logo/nama Onelito Koi untuk ciut/perluas sidebar di PC, dan tutup drawer di mobile. Perbaiki rail agar logo tetap utuh dan tampilkan tombol menu mobile di header.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser PC memastikan logo mengecilkan sidebar menjadi rail 72 px; browser mobile memastikan tombol menu membuka drawer dan klik brand menutupnya.
+
+## 2026-11-02 — Warnai nama brand dan stabilkan toggle rail
+- Change: Tampilkan `Koi` merah; ketika sidebar menjadi rail, posisikan tombol perluas sebagai kontrol bundar di sudut kanan-atas logo agar tidak bergeser turun.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, `git diff --check` lulus; verifikasi browser menunggu.
+
+## 2026-11-02 — Perbarui identitas brand sidebar
+- Change: Pindahkan toggle ciut/perluas ke dalam baris brand sidebar; gunakan logo Onelito yang diberikan dan ganti teks menjadi `Onelito Koi` / `FISH INVENTORY`.
+- Changed files: `src/App.tsx`, `src/App.css`, `public/onelito-koi-logo.png`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memastikan logo PNG termuat, nama brand tampil, toggle berada di dalam area brand pada mode penuh dan rail, rail 72 px; drawer mobile menampilkan tombol X tanpa toggle desktop.
+
+## 2026-11-02 — Pindahkan kontrol sidebar ke header
+- Change: Pindahkan toggle desktop dari area logo sidebar ke kiri header, sejajar dengan breadcrumb; gunakan ikon chevron untuk ciut/perluas dan ikon menu yang sama untuk membuka drawer mobile.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser memastikan kontrol header tetap di kiri breadcrumb, chevron berubah dan sidebar mengecil ke rail 72 px di PC; mobile menampilkan ikon menu dan membuka drawer overlay.
+
+## 2026-11-02 — Sidebar responsif untuk desktop dan mobile
+- Change: Tambahkan mode rail ikon yang dapat diperluas di desktop; pada mobile gunakan drawer overlay dengan tombol buka, tombol tutup, backdrop, dan navigasi yang menutup drawer.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Browser desktop memastikan rail 72 px dengan label disembunyikan; browser mobile memastikan tombol menu muncul, drawer terbuka dengan backdrop dan tombol tutup, lalu dapat ditutup melalui backdrop.
+
+## 2026-11-02 — PDF menampilkan periode aktif
+- Change: Ganti label tanggal cetak PDF dengan nama periode aktif; ekspor mengirim nama periode yang sedang dipilih.
+- Changed files: `src/App.tsx`, `src/exportPdf.ts`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Ekspor aktual di browser berhasil untuk owner Budi Santoso; `pdftotext` memastikan PDF memuat `Periode 2026` dan tidak lagi memuat tanggal cetak.
+
+## 2026-10-27 — Sinkronkan dokumen acuan proyek
+- Change: Selaraskan ringkasan produk, perilaku terverifikasi, aturan kerja, status roadmap, design tokens/UI, dan pola animasi antar dokumen. Tetapkan `UI_DESIGN_GUIDELINES.md` sebagai acuan motion/style dan bedakan prototipe lokal dari integrasi masa depan.
+- Changed files: `.hermes.md`, `SESSION_MEMORY.md`, `DESIGN.md`, `NEXT_STEPS.md`, `PROGRESS.md`.
+- Verification: Tinjau dokumen yang diperbarui dan jalankan `git diff --check`; tidak ada kode aplikasi diubah.
+
+## 2026-10-27 — Lengkapi pedoman animasi per komponen
+- Change: Pedoman kini mencatat pola spesifik Rekap Ikan/tabel, Setting, tombol/Export PDF/tombol X, breadcrumb, tab/menu, modal/detail/preview, toast, reduced-motion, dan checklist implementasi komponen sejenis.
+- Changed files: `UI_DESIGN_GUIDELINES.md`, `PROGRESS.md`.
+- Verification: Dokumentasi diperiksa untuk cakupan pola per komponen; `git diff --check` lulus. Tidak ada perubahan kode UI.
+
+
+## 2026-10-27 — Animasi label breadcrumb mengikuti volume bar
+- Change: Label `Rekap Ikan`/`Setting` kini fade dan mengembang dari kiri dengan sedikit overshoot, seperti volume bar. Garis bawah tetap mengukur lebar breadcrumb aktual dan bertransisi halus; reduced-motion dihormati.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Animasi label breadcrumb Workspace
+- Change: `Workspace/{activeSection}` kini fade, geser vertikal ringan, dan blur tipis saat bagian berubah; reduced-motion dihormati.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi label berubah dari `Workspace/Rekap Ikan` ke `Workspace/Setting`, animasi `workspace-label-enter` 0.36s aktif. Build, lint, `git diff --check` lulus.
+
+## 2026-10-27 — Pisahkan animasi konten Rekap Ikan
+- Change: Konten tiap periode kini animasi per bagian: teks heading, tombol Tambah ikan, kontrol toolbar bertahap, tabel, dan ringkasan/total memiliki transisi terpisah. Reduced-motion dihormati.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi `rekap-text-enter`, `rekap-button-enter`, `rekap-control-enter`, dan `rekap-table-enter` pada bagian masing-masing. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tambah transisi untuk teks halaman Setting
+- Change: Heading Setting, deskripsi, dan badge PROTOTIPE ikut fade/geser saat masuk; jeda tipis untuk badge. Reduced-motion dihormati.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi animasi heading dan teks `settings-heading-item-enter`; build, lint, dan `git diff --check` lulus.
+
+## 2026-10-27 — Animasi bertahap untuk kartu Setting
+- Change: Kartu Setting masuk satu per satu dengan fade, geser vertikal, scale ringan, dan blur tipis; jeda 90 ms antar kartu. Reduced-motion dihormati.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi tiga kartu memakai `settings-card-enter`, durasi 460 ms, jeda 0/90/180 ms. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Haluskan transisi vertikal pindah periode
+- Change: Animasi seluruh konten periode diubah dari geser horizontal menjadi vertikal 18 px, scale ringan, fade dan blur tipis; durasi 420 ms dengan easing lebih lembut.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi `period-page-enter` 420 ms pada seluruh halaman periode. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Perluas transisi pindah periode ke seluruh konten
+- Change: Seluruh area konten periode (judul, filter, tabel, ringkasan, total) kini masuk dengan fade, geser horizontal, scale ringan, dan blur tipis selama 320 ms; reduced-motion dihormati.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi animasi `period-page-enter` 0.32s dan keberadaan judul, tabel, footer saat pindah periode. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tambah transisi konten saat pindah periode
+- Change: Area tabel periode baru mendapat fade ringan dan pergeseran 4 px selama 200 ms setiap tab dipilih; `prefers-reduced-motion` dihormati.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi animasi `period-content-in` 0.2s saat beralih Periode 2027 dan Periode 2026. `npm run build`, `npm run lint`, dan `git diff --check` lulus.
+
+## 2026-10-27 — Tambah animasi keluar toast popup
+- Change: Toast notifikasi kini menjalankan animasi fade/geser keluar sebelum dihapus; notifikasi baru membatalkan timer keluar sebelumnya. Hormati `prefers-reduced-motion`.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus; chunk awal tetap di bawah 500 kB.
+
+## 2026-10-27 — Lazy-load PDF export
+- Change: Modul `exportPdf` dimuat dinamis hanya saat pengguna mengekspor PDF; ukuran chunk awal turun dari 612.93 kB ke 159.77 kB. Chunk PDF menjadi 426.10 kB dan tidak lagi memicu batas 500 kB.
+- Changed files: `src/App.tsx`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memisahkan chunk PDF; belum diverifikasi unduhan PDF aktual di browser.
+
+## 2026-10-27 — Tambah animasi modal pratinjau gambar
+- Change: Modal gambar mendapat animasi masuk/keluar dan tombol X mendapat hover biru, gerak/putar, efek tekan, serta fokus keyboard. Keluar lewat X, backdrop, atau Escape.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi `dialog-in`, `form-dialog-out`, serta transisi tombol X 0.16s. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.93 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi tombol pada dialog ganti nama tab
+- Change: `Batal` dan `Simpan nama` pada dialog tab mendapat hover/press transitions dan fokus keyboard; Batal hover biru, Simpan mendapat bayangan.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi transisi 0.16s dan aturan active/focus untuk kedua tombol. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 612.81 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi tombol modal hapus
+- Change: Tombol `Batal` mendapat hover biru/angkat; tombol `Hapus` mendapat hover merah/angkat; keduanya mendapat transisi, efek tekan, dan fokus keyboard yang terlihat.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi transition 0.16s, efek active scale, dan focus-visible pada kedua tombol. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.81 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi tombol Batal dan Simpan modal input/edit
+- Change: Tombol Batal punya hover border biru/angkat; tombol Simpan punya hover bayangan dan keduanya punya efek tekan serta indikator fokus keyboard.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi transition 0.16s, hover, active, dan focus-visible untuk tombol modal. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.81 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi modal Detail T&C
+- Change: Modal Detail T&C memakai animasi masuk, animasi keluar melalui X/klik backdrop/Escape, serta animasi tombol X (hover biru, angkat, putar ikon, tekan, fokus keyboard).
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi `dialog-in`, `form-dialog-out`, `form-backdrop-out`, dan transisi tombol X 0.16s. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.81 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi penutupan modal konfirmasi
+- Change: Modal konfirmasi hapus ikan dan periode memudar/bergeser saat ditutup lewat Batal, klik backdrop, Escape (untuk ikan), maupun setelah konfirmasi hapus.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan modal konfirmasi ikan dan periode menjalankan `form-dialog-out`. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 612.68 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi penutupan modal tambah tab
+- Change: Modal tambah/ganti nama tab memudar dan bergeser sedikit saat ditutup melalui X, Batal, klik backdrop, atau setelah penyimpanan berhasil.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi kelas penutupan menjalankan `form-dialog-out` dan `form-backdrop-out`. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.48 kB (>500 kB).
+
+
+## 2026-10-27 — Samakan animasi tombol X di modal tambah periode
+- Change: Tombol X modal tambah/ganti nama periode memakai animasi tombol X modal input/edit: border biru dan naik saat hover, ikon berputar, efek tekan scale, serta fokus keyboard terlihat.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan aturan hover/tekan dan transisi 0.16s berlaku. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 612.36 kB (>500 kB).
+
+## 2026-10-27 — Tambah animasi tombol X modal input/edit
+- Change: Tombol X modal input/edit mendapat hover border biru, efek angkat, putar ikon, dan efek tekan.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi transisi 0.16s, hover border biru/angkat, efek tekan scale 0.95, dan focus-visible. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.36 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah animasi penutupan modal input/edit
+- Change: Modal input/edit memudar dan bergerak halus saat ditutup lewat tombol, klik backdrop, atau setelah simpan; animasi menghormati `prefers-reduced-motion` yang sudah ada.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan kelas closing memicu `form-dialog-out` dan `form-backdrop-out`, lalu modal dilepas. `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memberi peringatan chunk 612.36 kB (>500 kB).
+
+
+## 2026-10-27 — Terapkan animasi hover pada tombol Export PDF
+- Change: Tombol `Export PDF` kini menampilkan border biru saat hover, bersama animasi angkat dan gerak ikon; border biru hover yang keliru pada opsi menu tab dihapus.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: `npm run build`, `npm run lint`, dan `git diff --check` lulus. Build memberi peringatan chunk 612.23 kB (>500 kB).
+
+
+## 2026-10-27 — Tambah border biru saat hover opsi menu tab
+- Change: Opsi menu tab menampilkan border biru saat pointer hover, senada dengan hover tombol Detail; dimensi dan animasi tekan dipertahankan.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser mengonfirmasi hover rule memakai border `var(--blue)`, efek naik 1 px, dan tinggi opsi tetap 37.23 px. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.23 kB (>500 kB).
+
+## 2026-10-27 — Samakan animasi opsi menu dengan tombol Detail
+- Change: Opsi menu tab memakai animasi hover dan tekan yang sama seperti tombol Detail: naik 1 px saat hover, scale saat ditekan, transisi warna/bayangan singkat. Ukuran opsi tetap mengikuti tab.
+- Changed files: `src/App.css`, `PROGRESS.md`.
+- Verification: Browser memastikan transisi `transform`/`box-shadow` berdurasi 0.16s dan tinggi opsi tetap 37.23 px. `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memperingatkan chunk 612.23 kB (>500 kB).
+
 ## 2026-10-27 — Samakan ukuran menu aksi dengan tab
 - Change: Menu aksi memakai lebar tab pemicu; tiap opsi memakai tinggi tab, termasuk di layar kecil.
 - Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`.
-- Verification: Browser mengukur tab 120.86×37.24 px dan tiap opsi 118.86×37.23 px (lebar opsi dikurangi border menu 2 px). `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.22 kB (>500 kB).
+- Verification: Browser memastikan lebar menu dan opsi sama dengan tab (120.86 px) serta tinggi tiap opsi sama dengan tab (37.23 px). `npm run build`, `npm run lint`, dan `git diff --check` lulus; build memberi peringatan chunk 612.22 kB (>500 kB).
 
 ## 2026-10-27 — Tutup menu periode dengan klik luar atau Escape
 - Change: Menu tiga titik tutup otomatis saat pointer di luar menu, saat menekan `Escape`, atau setelah memilih aksi.
@@ -1008,3 +1427,7 @@
 - Change: Added fixed table column widths using `<colgroup>` and `table-layout: fixed` to maintain consistent column sizing across renders.
 - Changed files: `src/App.tsx`; `PROGRESS.md`.
 - Verification: `npm run build` passed; `npm run lint` passed with exit code 0.
+## [2026-11-05] - Dark Mode Toggle Figma Implementation
+- **Description**: Replaced standard theme toggle with a seamless sliding panoramic toggle using Figma SVG designs. Implemented side-by-side SVG sliding logic for a smooth transition between sun (light) and moon (dark).
+- **Files**: src/App.tsx, src/App.css
+- **Verification**: npm run build, npm run lint, browser manual test (dev server port 5173).

@@ -1,74 +1,59 @@
 # Project-Onelito 2 — Session Memory
 
-Purpose: read this file at the start of each new session so work continues in the correct folder with current status, decisions, and constraints.
+Purpose: start each session by reading this handoff and the current project documents. Verify actual source before relying on this summary.
 
 Last reviewed: 2026-10-27
 
-## Current implementation snapshot — verified against source
-
-- App is a local React 18 + Vite + TypeScript prototype; no backend/auth/database/cloud storage/deployment. Fish CRUD and records are in memory; reload resets records. Theme preference alone persists in localStorage.
-- Owner input is a dropdown for existing owners plus a separate `+ Owner Baru` link; duplicate new names are rejected case-insensitively. Edit preselects record owner. Under `All Owners`, owner appears beneath fish name.
-- Input/edit form modal has theme-aware scrollbar and body scroll lock. Delete action opens in-app confirmation. Toast uses centered own animation and replaces previous timeout when another message arrives.
-- Export is direct PDF download through jsPDF + jspdf-autotable, not `window.print()`. A4 landscape, requires one owner, includes full T&C, owner/date/count/grand total and proportional images up to 20 × 20 mm. PDF only; no Excel/CSV.
-- Table columns remain Fish, Harga (JPY), Kurs, Harga (IDR), Dealer Fee, Shipping Cost, Total, Sertifikat, Term & Condition, Edit. Dealer Fee percentage sits near fee nominal in a stable compact group.
-- `npm run build` and `npm run lint` are the required checks; lint script currently runs TypeScript check. Build warns about a >500 kB JS chunk but succeeds.
-
 ## Start here
 
-1. Confirm working directory is `C:\Users\user\Documents\Project-Onelito 2`. Do not use the similarly named `Project-Onelito` folder.
-2. Read `.hermes.md`, this file, `PROGRESS.md`, `PRD.md`, `DESIGN.md`, and `NEXT_STEPS.md` before making changes.
-3. Check actual source/status before claiming a feature exists; documents can lag code.
-4. Record every project change in `PROGRESS.md` with date, summary, changed files, and verification.
-5. Before code, database/schema, external-service, or deployment changes: explain findings, proposed changes, files, and risks; wait for explicit user approval. Preserve user files. Do not alter Supabase, Cloudinary, or deployment without separate approval.
+1. Confirm project root is `C:\Users\user\Documents\Project-Onelito 2`; do not use similarly named `Project-Onelito` folder.
+2. Read `.hermes.md`, `SESSION_MEMORY.md`, `PROGRESS.md`, `PRD.md`, `DESIGN.md`, `UI_DESIGN_GUIDELINES.md`, and `NEXT_STEPS.md` before project work.
+3. Check Git status and inspect source before making claims or edits.
+4. User expects Bahasa Indonesia, incremental UI changes, exact adherence to feedback, and no unrelated changes.
+5. Before code, database/schema, external-service, or deployment changes, explain scope, files, risks, and unresolved decisions; wait for explicit approval. Do not commit/push unless explicitly asked.
+6. Record every project change in `PROGRESS.md` with date, description, changed files, and real verification.
 
-## Project identity and current state
+## Verified application state
 
-- Product: Koi House — Rekap Pembelian Ikan Jepang (Fish Finance Dashboard).
-- Stack: React 18, Vite, TypeScript, CSS, Lucide React. `npm run build` runs TypeScript + Vite; `npm run lint` currently runs TypeScript check (`tsc -b --pretty`).
-- Current phase: local UI prototype. No connected backend, database, authentication, Supabase, Cloudinary, or deployment.
-- Fish records and CRUD use in-memory React state; do not imply records persist after page reload. Light/Dark choice is saved in `localStorage` (`fish-theme`).
-- The `Settings` sidebar item is a placeholder; it shows a toast. Do not describe it as functional settings.
-- No external database or cloud service has been modified as part of this project work.
+- Local React 18 + Vite + TypeScript UI prototype. No backend, auth, database, Supabase, Cloudinary, server persistence, or deployment unless later verified in code/config.
+- Fish records and CRUD are in-memory; reload resets them. Light/Dark preference alone persists in `localStorage`.
+- Main sections: `Rekap Ikan` and `Setting`. Setting page has prototype cards/actions; do not imply placeholder actions perform real backup/account functions.
+- Responsive desktop sidebar/header and mobile drawer. Preserve Light/Dark themes and contained horizontal table scrolling; no page-level horizontal overflow.
+- Current table columns: Fish, Harga (JPY), Kurs, Harga (IDR), Dealer Fee, Shipping Cost, Total, Sertifikat, Term & Condition, Edit.
+- Owner input: dropdown of existing owners plus separate `+ Owner Baru`; reject duplicate names case-insensitively. In `All Owners`, owner name appears below fish name.
+- T&C cell has short preview and Detail button; full terms open in dialog.
+- Delete uses in-app confirmation modal. Input/edit modal has theme-aware scrollbar and body scroll lock. Toast remains centered; new message replaces prior timeout/exit.
+- PDF is generated and downloaded directly via jsPDF + jspdf-autotable; requires one selected owner and includes full terms and proportional images. PDF is only retained export; do not restore Excel/CSV without explicit request.
+- Check `src/App.tsx`, `src/App.css`, `src/index.css`, `package.json`, `PRD.md`, and `DESIGN.md` for current exact behavior before changing it.
 
-## Current interface and behavior
+## UI design and motion source of truth
 
-- Dashboard title: `Rekap Pembelian Ikan Jepang`.
-- Desktop: left Koi House sidebar; `Rekap Ikan` and `Settings`; right-side top bar says `Workspace/Rekap Ikan` and holds Light/Dark toggle. Mobile: responsive sidebar drawer.
-- Main actions: add fish, search/filter table, PDF/print.
-- Table columns in order: Fish (image/name), Harga (JPY), Kurs, Harga (IDR), Dealer Fee, Shipping Cost, Total, Sertifikat, Term & Condition, Edit (edit/delete actions).
-- Owner appears in filter and summary, not as table column. Sorting supports name, owner, total. Filters include owner and certificate status. Search checks fish name and owner.
-- Dealer Fee percentage and amount belong together on the right side of Dealer Fee cell with a fixed compact alignment; keep them visually associated and do not reserve a large empty track.
-- T&C table cell shows short one-line preview and adjacent `Detail` button. The dialog shows full T&C and fish name.
-- Sample terms, preserve exact text:
-  - `Free azukari 1 season until September 2027`
-  - `Breeder guarantee 100%`
-  - `Free entry fish & handling fish AJKS 2027`
-- Sample records populate these terms. Edits are local state only.
-- PDF button requires one owner; selecting `All Owners` shows a toast instead. It downloads a generated PDF via jsPDF + jspdf-autotable, with full T&C, proportional embedded images, owner, date, record count, and grand total. Do not describe it as browser print-to-PDF.
-- Excel and CSV export were removed by user request. Do not restore unless explicitly asked.
-- Table is wide and horizontally scrollable inside its container; preserve no page-level horizontal overflow.
-- User prefers iterative UI changes based on their feedback, concise Bahasa Indonesia, and exact reference matching. For current project, inspect first; explain proposed code/database changes and wait for explicit approval. Subtle purposeful motion only.
+- `UI_DESIGN_GUIDELINES.md` is the project-specific source of truth for visual style, component patterns, animation rules, accessibility, and verification. Read it before UI work.
+- Preserve existing finance-dashboard style: clean, calm, modern, data-focused; token-based colors; consistent typography, spacing, radii, borders, and shadows; Light/Dark pairing.
+- Motion must be subtle, meaningful, interruptible, responsive, and reduced-motion aware. Avoid blinking, endless pulses, excessive bounce, and decorative animation.
+- Current motion patterns documented: Rekap Ikan section/table stagger; full-period vertical fade/scale/light blur transition; Setting heading and staggered card entrance; button hover/press/focus; period tabs and floating menu; modal enter/exit and close controls; centered toast enter/exit; breadcrumb label and single underline behavior.
+- Breadcrumb: `Workspace/` stays fixed; section label fades and gently expands from the left; one underline spans actual breadcrumb width and transitions smoothly. Never add second underline. Verify CSS overrides, since a duplicate global pseudo-element rule previously overrode the intended animation.
+- CSS-only micro-interactions do not warrant a new dependency by default.
 
 ## Project documents
 
-- `.hermes.md`: project rules and verified feature snapshot; update when product behavior or approval gates change.
-- `PRD.md`: product requirements; distinguish current local behavior from future integration goals.
-- `DESIGN.md`: visual and interaction rules; read before UI work and preserve current layout/theme behavior.
-- `NEXT_STEPS.md`: roadmap; mark phases/ integrations as active, complete, or future, never describe target services as connected.
-- `SESSION_MEMORY.md`: concise current handoff; refresh its implementation snapshot and open work after significant changes.
-- `PROGRESS.md`: chronological change log. Preserve history; append dated entries with changed files and actual verification.
+- `.hermes.md`: working rules and concise verified app facts.
+- `PRD.md`: product scope; distinguishes local prototype from future online requirements.
+- `DESIGN.md`: design tokens and verified UI structure; check against active CSS if values disagree.
+- `UI_DESIGN_GUIDELINES.md`: detailed visual/motion/component rules; use for new components and future UI changes.
+- `NEXT_STEPS.md`: current status, remaining review, and future phases; online integrations require separate approval.
+- `PROGRESS.md`: chronological history; preserve earlier entries and append new verified changes.
 
-## Known project requirements and product decisions
+## Verification
 
-- Owner selection uses saved-owner dropdown and separate new-owner mode; one full-access account remains a future target if/when authentication is approved.
-- Calculations: `Harga Rupiah = Harga Yen × Kurs` when both are supplied; otherwise Harga Rupiah may be entered manually. `Dealer Fee = Harga Rupiah × persen / 100`. `Total = Harga Rupiah + Dealer Fee + Shipping Cost`; blank shipping cost means Rp0. Do not round fee unless requirement changes.
-- T&C is per fish. Certificate status is per fish.
-- Desired image behavior: JPG/JPEG/PNG, max 10 MB before compression; whole image without cropping; table thumbnail and detail preview. Cloudinary remains only a future target, not a live integration.
-- User removed Excel export; PDF remains the only export action.
-- Automatic cloud backup was removed from MVP. Stock sheet, OCR, notifications, complex roles/analytics and similar items are deferred per PRD.
+- Required checks: `npm run build`, `npm run lint`, `git diff --check`.
+- `npm run lint` currently runs TypeScript check (`tsc -b --pretty`).
+- Vite may warn about a JavaScript chunk above 500 kB; build can still succeed. PDF libraries are lazy-loaded; verify actual PDF output if export code changes.
+- Do not claim browser/UI behavior verified unless browser inspection actually confirms it.
 
-## Verification history and next work
+## Current handoff
 
-- Latest source changes are recorded in `PROGRESS.md`; latest feature update was centered toast animation/timer replacement.
-- Documentation sync completed across `.hermes.md`, `DESIGN.md`, `NEXT_STEPS.md`, `PRD.md`, `SESSION_MEMORY.md`, and `PROGRESS.md`; build/lint passed. Build warns about a >500 kB JavaScript chunk.
-- Do not change app code or connect services unless user asks and approves.
+- UI animation/style rules have been added to `UI_DESIGN_GUIDELINES.md`; documentation summaries are synchronized in `.hermes.md`, `DESIGN.md`, and `NEXT_STEPS.md`.
+- These documentation updates are recorded in `PROGRESS.md`; re-check status to confirm exact files and pending changes.
+- An untracked PDF reference may exist: `rekap-ikan-2026-10-24.pdf`. Do not modify, stage, or delete it.
+- No app-code change is requested by this memory update. Continue only from the user's next explicit task.

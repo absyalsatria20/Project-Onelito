@@ -136,12 +136,22 @@ components:
 
 ## Overview
 
-Fish Admin Finance Dashboard uses a modern finance-dashboard visual language. The interface must feel reliable, efficient, and easy to scan during repeated admin data entry. Use charcoal for structure, blue for normal interaction, and red only for danger, urgency, or deliberate business emphasis.
+The application is a local React + Vite + TypeScript prototype. This file describes visual tokens and verified UI structure, not backend or future service functionality. For required interaction and animation behavior, read `UI_DESIGN_GUIDELINES.md`; when this token file differs from active CSS, inspect code and correct this document rather than assuming either is current.
 
-Support Light and Dark modes with a user-controlled theme switch. Do not use pure black as the main dark background; use charcoal surfaces to preserve hierarchy and reduce eye strain.
+Use a clean, calm, modern finance-dashboard visual language. The interface should feel reliable and easy to scan during repeated admin data entry. Use charcoal structure, blue for normal interaction, and red for danger, errors, or deliberate business emphasis. Support user-controlled Light and Dark themes. Avoid pure-black surfaces, decoration-heavy gradients, glassmorphism, and neon.
 
-The interface is medium-density: enough rows and financial values remain visible without making controls cramped. Motion stays subtle and purposeful, normally 150–250ms, with reduced-motion support.
+Density is medium: preserve readable table values while supporting efficient desktop data entry. Desktop uses sidebar/header dashboard layout; mobile uses responsive header and drawer. Wide table scroll stays contained in its own region. Keep all actions and content responsive.
 
+Motion must be subtle and purposeful. Component-specific animation patterns are defined in `UI_DESIGN_GUIDELINES.md`; reduced-motion must be respected.
+
+## Current implementation notes
+
+- Top-level sections are `Rekap Ikan` and `Setting`.
+- Breadcrumb is `Workspace/{activeSection}`. `Workspace/` stays fixed; section label fades/expands gently; exactly one underline follows actual breadcrumb width.
+- Rekap Ikan has grouped heading/toolbar/table/footer entrance animations and a full-period vertical transition.
+- Setting has heading/badge entrance and staggered card entrances.
+- Buttons, period tabs/menus, dialogs, preview, Detail T&C, and centered toast use consistent subtle interaction/entry/exit motion. See `UI_DESIGN_GUIDELINES.md` for requirements.
+- Records are in memory; only theme choice persists in `localStorage`. PDF is direct download and only retained export. Do not state future integrations as implemented.
 ## Colors
 
 - **Primary (#111827):** Charcoal structure, headings, navigation emphasis, and high-contrast text.
