@@ -150,7 +150,7 @@ function App() {
     <div className="app-shell">
       {sidebarOpen&&<button className="sidebar-scrim" aria-label="Tutup navigasi" onClick={()=>setSidebarOpen(false)}/>}
       <aside className={`sidebar ${sidebarOpen?'sidebar-open':''}`}>
-        <div className="sidebar-brand"><span className="brand-mark"><Fish size={21}/></span><span className="brand-copy"><b>Koi<span>House</span></b><small>INVENTORY MANAGER</small></span><button className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button></div>
+        <div className="sidebar-brand"><img src="/logo-onelito.png" alt="Onelito Logo" className="brand-logo"/><span className="brand-copy"><b>ONELITO <span className="brand-koired">KOI</span></b><small>Fish Inventory</small></span><button className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button></div>
         <span className="nav-label">WORKSPACE</span>
         <nav className="sidebar-nav" aria-label="Navigasi utama">
           <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><Fish size={18}/><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
