@@ -239,6 +239,8 @@ tbody tr:nth-child(n+13){animation-delay:.68s}
 
 /* --- H. SECTION & TAB TRANSITION --- */
 
+@keyframes floatGentle{0%,100%{transform:translateY(0)}50%{transform:translateY(-3px)}}
+
 @keyframes tabContentSwitch{from{opacity:0;transform:translateY(8px) scale(.995);filter:blur(2px)}to{opacity:1;transform:translateY(0) scale(1);filter:blur(0)}}
 
 .inventory-page{animation:tabContentSwitch .32s cubic-bezier(.22,1,.36,1) both}
