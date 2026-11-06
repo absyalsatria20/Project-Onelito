@@ -57,7 +57,7 @@ Bagian ini mencatat pola yang sudah dipakai UI. Saat membuat komponen sejenis, g
 - Tombol mengikuti state yang konsisten: hover dapat mengangkat 1–2 px atau memberi perubahan border/latar/bayangan ringan; active menekan kembali atau scale kecil; focus-visible jelas; disabled tidak bergerak dan tetap tampak nonaktif.
 - Tombol aksi utama mempertahankan warna dan bobot visual utama. Tombol sekunder lebih tenang. Tombol hapus memakai warna danger dan tidak meniru gaya aksi utama.
 - Tombol Export PDF memakai hover border biru, gerak naik, bayangan halus, dan gerak ikon seperti perilaku yang sudah ada. Terapkan pola itu hanya pada kontrol sejenis bila relevan.
-- Tombol X modal: hover border/latar biru dan naik tipis, ikon berputar seperempat putaran; saat ditekan scale kecil. Jangan membuat gerak ikon mengganggu atau mengubah posisi tombol.
+- Tombol X modal & sidebar close: tanpa rotasi; saat di-hover melakukan scale halus, latar belakang berubah menjadi biru (`var(--blue)`), ikon X berubah menjadi putih bersih (`#fff`), dan disertai efek *glow shadow* yang dinamis; saat ditekan scale mengecil.
 - Jangan memakai blink, pulse tanpa henti, atau animasi yang bergantung pada hover saja untuk menyampaikan fungsi.
 
 ### Navigasi, breadcrumb, tab, dan menu
