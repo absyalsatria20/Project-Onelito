@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Penyempurnaan Tombol Tutup pada Modal Profil
+- Change:
+  - Menghapus tombol silang (X) di bagian header modal "Profile Information" dan mempertahankan satu tombol "Tutup" di bagian pojok kanan bawah (`dialog-actions`).
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Pembaruan Judul Tab Browser & Favicon Logo
 - Change:
   - Mengubah judul tab browser menjadi **"Dashboard Onelito"** dan menyetel favicon menggunakan file logo vertikal (`Logo Onelito Vertical-02.png`).
