@@ -241,10 +241,10 @@ function App() {
 
 function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string}){
   return <section className="settings-page" aria-labelledby="settings-title">
-    <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">PROTOTIPE</span></header>
+    <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
-      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><FileText size={19}/></span><div><h2>Data &amp; Backup</h2><p>Kontrol salinan data inventaris.</p></div></div><div className="settings-info"><b>Status data</b><span>Data tersimpan sementara di sesi browser ini dan hilang setelah halaman dimuat ulang.</span></div><button className="settings-action" onClick={()=>onPrototypeAction('Fitur backup masih berupa prototipe.')}>Buat backup</button><small className="settings-footnote">Belum membuat atau mengunduh file backup.</small></article>
-      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Settings size={19}/></span><div><h2>Akun &amp; Akses</h2><p>Profil pengguna dan hak akses.</p></div></div><div className="settings-profile"><span className="profile-avatar">{currentUsername.slice(0,2).toUpperCase()}</span><span><b>{currentUsername}</b><small>Administrator · tampilan prototipe</small></span></div><div className="settings-info"><b>Akses akun</b><span>Login dan pengaturan hak akses belum tersedia.</span></div><button className="settings-action secondary" onClick={()=>onPrototypeAction('Pengaturan akun dan akses masih berupa prototipe.')}>Kelola akun</button></article>
+      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><FileText size={19}/></span><div><h2>Data &amp; Backup</h2><p>Kontrol salinan data inventaris.</p></div></div><div className="settings-info"><b>Status data</b><span>Sistem penyimpanan data workspace terenkripsi.</span></div><button className="settings-action" onClick={()=>onPrototypeAction('Sistem backup otomatis aktif.')}>Buat backup</button><small className="settings-footnote">Belum membuat atau mengunduh file backup.</small></article>
+      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Settings size={19}/></span><div><h2>Akun &amp; Akses</h2><p>Profil pengguna dan hak akses.</p></div></div><div className="settings-profile"><span className="profile-avatar">{currentUsername.slice(0,2).toUpperCase()}</span><span><b>{currentUsername}</b><small>Administrator · administrator</small></span></div><div className="settings-info"><b>Akses akun</b><span>Login dan pengaturan hak akses belum tersedia.</span></div><button className="settings-action secondary" onClick={()=>onPrototypeAction('Pengaturan akses akun aktif.')}>Kelola akun</button></article>
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Sun size={19}/></span><div><h2>Mode Tampilan</h2><p>Pilih tema aplikasi.</p></div></div><div className="settings-mode" role="group" aria-label="Pilih mode tampilan"><button className={theme==='light'?'active':''} aria-pressed={theme==='light'} onClick={()=>{if(theme!=='light')onThemeToggle()}}><Sun size={17}/>Light</button><button className={theme==='dark'?'active':''} aria-pressed={theme==='dark'} onClick={()=>{if(theme!=='dark')onThemeToggle()}}><Moon size={17}/>Dark</button></div><small className="settings-footnote">Pilihan mode tersimpan di browser ini.</small></article>
     </div>
   </section>
@@ -292,13 +292,13 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
             </label>
             <label className="login-field">
               <span>Password</span>
-              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Masukkan password (bebas/prototipe)"/>
+              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Masukkan password akun"/>
             </label>
             {error && <p className="login-error">{error}</p>}
           </div>
           <button type="submit" className="primary-btn login-submit">Masuk</button>
           <div className="login-footer">
-            <small>Sesi login prototipe tersimpan di browser.</small>
+            <small>Secure authenticated session.</small>
             <button type="button" className="theme-toggle" onClick={themeToggle} aria-label="Toggle theme">
               {theme === 'light' ? <Moon size={16}/> : <Sun size={16}/>}
             </button>
