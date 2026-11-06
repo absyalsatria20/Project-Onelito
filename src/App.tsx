@@ -92,6 +92,14 @@ function App() {
   const [notice, setNotice] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
+  const [profileMenuClosing, setProfileMenuClosing] = useState(false)
+  const closeProfileMenu = () => {
+    setProfileMenuClosing(true)
+    setTimeout(() => {
+      setProfileMenuOpen(false)
+      setProfileMenuClosing(false)
+    }, 160)
+  }
   const [activeSection, setActiveSection] = useState('Rekap Ikan')
   const filtered = useMemo(() => records.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [records, owner, certificate, query, sort])
   const selected = owner === 'All Owners' ? records : records.filter(r => r.owner === owner)
@@ -158,7 +166,7 @@ function App() {
         </nav>
         <div className="sidebar-spacer"/><span className="nav-label settings-label">PREFERENCES</span>
         <nav className="sidebar-nav"><button className={`sidebar-link ${activeSection==='Setting'?'selected':''}`} onClick={()=>{setActiveSection('Setting');setSidebarOpen(false)}}><Settings size={18}/><span>Setting</span></button></nav>
-        <div className="sidebar-bottom" style={{position:'relative'}}><div className="profile-card" onClick={()=>setProfileMenuOpen(!profileMenuOpen)} role="button" aria-expanded={profileMenuOpen} tabIndex={0}><span className="profile-avatar">AS</span><span><b>Admin Sistem</b><small>Workspace admin</small></span></div>{profileMenuOpen&&<div className="profile-popover-menu"><button onClick={()=>{toast('Profil: Admin Sistem (Workspace Admin)');setProfileMenuOpen(false)}}><User size={13}/> Lihat Profil</button><button onClick={()=>{toast('Berhasil keluar sesi (Logout)');setProfileMenuOpen(false)}}><LogOut size={13}/> Keluar (Logout)</button></div>}</div>
+        <div className="sidebar-bottom" style={{position:'relative'}}><div className="profile-card" onClick={()=>{if(profileMenuOpen){closeProfileMenu()}else{setProfileMenuOpen(true)}}} role="button" aria-expanded={profileMenuOpen} tabIndex={0}><span className="profile-avatar">AS</span><span><b>Admin Sistem</b><small>Workspace admin</small></span></div>{(profileMenuOpen || profileMenuClosing)&&<div className={`profile-popover-menu ${profileMenuClosing?'closing':''}`}><button onClick={()=>{toast('Profil: Admin Sistem (Workspace Admin)');closeProfileMenu()}}><User size={13}/> Lihat Profil</button><button onClick={()=>{toast('Berhasil keluar sesi (Logout)');closeProfileMenu()}}><LogOut size={13}/> Keluar (Logout)</button></div>}</div>
       </aside>
       <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab" key={activeSection}>Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" role="tablist" aria-label="Periode rekap ikan"><div className="period-tabs-indicator" style={{left:`${indicatorStyle.left}px`,width:`${indicatorStyle.width}px`}}/>{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id} ref={el=>{tabsRef.current[period.id]=el}}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
                     const tabEl=event.currentTarget.closest('.period-tab');

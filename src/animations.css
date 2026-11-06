@@ -29,6 +29,7 @@
 @keyframes counterUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 @keyframes sectionFadeIn{from{opacity:0;transform:translateY(14px);filter:blur(3px)}to{opacity:1;transform:translateY(0);filter:blur(0)}}
 @keyframes menuDropIn{from{opacity:0;transform:translateY(-6px) scale(.95)}to{opacity:1;transform:translateY(0) scale(1)}}
+@keyframes menuDropOut{from{opacity:1;transform:translateY(0) scale(1)}to{opacity:0;transform:translateY(-6px) scale(.95)}}
 @keyframes slideIndicator{from{opacity:0;transform:translateX(-100%)}to{opacity:1;transform:translateX(0)}}
 @keyframes brandFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
 @keyframes glowPulse{0%,100%{box-shadow:0 0 0 0 rgba(52,120,246,.0)}50%{box-shadow:0 0 12px 2px rgba(52,120,246,.18)}}
