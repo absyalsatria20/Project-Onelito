@@ -59,6 +59,17 @@ function App() {
   }, [modal, periodDialog, deletePeriodTarget])
   const [periodError,setPeriodError] = useState('')
   const [openPeriodMenu,setOpenPeriodMenu] = useState<{id:string;left:number;top:number;width:number;height:number}|null>(null)
+  const tabsRef = useRef<Record<string, HTMLDivElement | null>>({})
+  const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
+  useEffect(() => {
+    const activeEl = tabsRef.current[activePeriodId]
+    if (activeEl) {
+      setIndicatorStyle({
+        left: activeEl.offsetLeft + 10,
+        width: activeEl.offsetWidth - 20
+      })
+    }
+  }, [activePeriodId, periods])
   useEffect(() => {
     if (!openPeriodMenu) return
     const handlePointerDown = (event:PointerEvent) => {
@@ -148,7 +159,7 @@ function App() {
         <nav className="sidebar-nav"><button className={`sidebar-link ${activeSection==='Setting'?'selected':''}`} onClick={()=>{setActiveSection('Setting');setSidebarOpen(false)}}><Settings size={18}/><span>Setting</span></button></nav>
         <div className="sidebar-bottom"><div className="profile-card"><span className="profile-avatar">AS</span><span><b>Admin Sistem</b><small>Workspace admin</small></span><button onClick={()=>toast('Profil admin') } aria-label="Menu profil">···</button></div></div>
       </aside>
-      <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab">Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" role="tablist" aria-label="Periode rekap ikan">{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
+      <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab">Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" role="tablist" aria-label="Periode rekap ikan"><div className="period-tabs-indicator" style={{left:`${indicatorStyle.left}px`,width:`${indicatorStyle.width}px`}}/>{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id} ref={el=>{tabsRef.current[period.id]=el}}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
                     const tabEl=event.currentTarget.closest('.period-tab');
                     const rect=tabEl?tabEl.getBoundingClientRect():event.currentTarget.getBoundingClientRect();
                     setOpenPeriodMenu(openPeriodMenu?.id===period.id?null:{
