@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Pembaruan Teks Subtitle Halaman Login
+- Change:
+  - Mengubah teks subtitle pada kartu login dari "Silakan masuk ke sesi workspace admin." menjadi "Masuk ke Workspace".
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Penghapusan Istilah Prototipe dan Penyempurnaan UI Produksi
 - Change:
   - Menghapus seluruh referensi istilah "prototipe" pada halaman login, badge system, dan menu setting, menggantinya dengan terminologi standar aplikasi produksi/enterprise.

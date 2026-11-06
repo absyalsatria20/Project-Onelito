@@ -283,7 +283,7 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
           <div className="login-header">
             <img src="/logo-onelito.png" alt="Logo" className="login-logo"/>
             <h1>Onelito <span className="brand-koired">KOI</span></h1>
-            <p>Silakan masuk ke sesi workspace admin.</p>
+            <p>Masuk ke Workspace</p>
           </div>
           <div className="login-fields">
             <label className="login-field">
