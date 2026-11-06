@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Implementasi Custom Scrollbar Halus & Minimalis
+- Change:
+  - Mengganti `scrollbar-gutter: stable` dengan custom scrollbar tipis (`width: 6px`) pada elemen `html` untuk mencegah pergeseran layout (*layout shift*) saat refresh/load tanpa menyisakan *gutter* kosong yang kaku.
+- Changed files: `src/index.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Penyempurnaan Modal Profil & Animasi Transisi Halaman Setting
 - Change:
   - Menyederhanakan modal "Profile Information" dengan avatar besar di tengah atas serta username (`adelia`) dan title (`Workspace Administrator`) dalam format baris sejajar yang bersih dan proporsional.
