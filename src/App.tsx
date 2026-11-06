@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Settings, Sun, Trash2, User, X } from 'lucide-react'
+import { Check, ChevronDown, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import './App.css'
 import './animations.css'
@@ -265,6 +265,7 @@ function FishForm({initial:existing,owners,onClose,onSave,closing}:FormProps){
 function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>void; theme:'light'|'dark'; themeToggle:()=>void}) {
   const [username, setUsername] = useState('adelia')
   const [password, setPassword] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
   const [error, setError] = useState('')
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -291,7 +292,12 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
             </label>
             <label className="login-field">
               <span>Password</span>
-              <input type="password" value={password} onChange={e=>setPassword(e.target.value)} placeholder="Masukkan password akun"/>
+              <div className="login-password-wrap">
+                <input type={showPassword ? 'text' : 'password'} value={password} onChange={e=>setPassword(e.target.value)} placeholder="Masukkan password akun"/>
+                <button type="button" className="login-eye-btn" onClick={()=>setShowPassword(!showPassword)} aria-label={showPassword ? 'Sembunyikan password' : 'Tampilkan password'}>
+                  {showPassword ? <EyeOff size={18}/> : <Eye size={18}/>}
+                </button>
+              </div>
             </label>
             {error && <p className="login-error">{error}</p>}
           </div>
