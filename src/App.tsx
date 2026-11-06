@@ -101,6 +101,15 @@ function App() {
     }, 160)
   }
   const [activeSection, setActiveSection] = useState('Rekap Ikan')
+  useEffect(() => {
+    const handleOutsideClick = (e: MouseEvent) => {
+      if (profileMenuOpen && !(e.target as HTMLElement).closest('.sidebar-bottom')) {
+        closeProfileMenu()
+      }
+    }
+    document.addEventListener('mousedown', handleOutsideClick)
+    return () => document.removeEventListener('mousedown', handleOutsideClick)
+  }, [profileMenuOpen])
   const filtered = useMemo(() => records.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [records, owner, certificate, query, sort])
   const selected = owner === 'All Owners' ? records : records.filter(r => r.owner === owner)
   const grand = selected.reduce((sum, r) => sum + total(r), 0)
