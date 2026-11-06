@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Implementasi Sesi Login Prototipe
+- Change:
+  - Menambahkan halaman login prototipe (`LoginForm`) dengan input username (default `adelia`) dan password, penyimpanan status sesi via `localStorage`, serta fungsionalitas tombol "Keluar" untuk mengakhiri sesi.
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Proporsi Padding Modal Profil
 - Change:
   - Menyesuaikan padding bawah modal profil menjadi 24px agar jarak dari tombol "Tutup" ke bawah kotak modal sama persis dengan jarak samping kanan (24px).
