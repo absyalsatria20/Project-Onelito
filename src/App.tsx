@@ -282,8 +282,7 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
         <form className="login-card" onSubmit={handleSubmit}>
           <div className="login-header">
             <img src="/logo-onelito.png" alt="Logo" className="login-logo"/>
-            <h1>Onelito <span className="brand-koired">KOI</span></h1>
-            <p>Masuk ke Workspace</p>
+            <h1>Masuk ke Workspace</h1>
           </div>
           <div className="login-fields">
             <label className="login-field">

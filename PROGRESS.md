@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Redesain Header Halaman Login
+- Change:
+  - Menghapus teks "Onelito KOI" dan mengubah teks "Masuk ke Workspace" menjadi judul utama (`<h1>`) berukuran besar (menyamai ukuran teks sebelumnya).
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Pembaruan Teks Subtitle Halaman Login
 - Change:
   - Mengubah teks subtitle pada kartu login dari "Silakan masuk ke sesi workspace admin." menjadi "Masuk ke Workspace".
