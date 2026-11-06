@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Penyesuaian Posisi Tombol Tutup Modal Profil
+- Change:
+  - Menyelaraskan posisi tombol "Tutup" pada modal profil ke sisi kanan agar sejajar dengan batas kanan header text dan elemen kontainer.
+- Changed files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Penyempurnaan Tombol Tutup pada Modal Profil
 - Change:
   - Menghapus tombol silang (X) di bagian header modal "Profile Information" dan mempertahankan satu tombol "Tutup" di bagian pojok kanan bawah (`dialog-actions`).

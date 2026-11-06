@@ -41,6 +41,7 @@
 
 
 .profile-dialog{width:min(440px,100%);padding:24px;background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:0 25px 80px rgba(12,21,35,.28);color:var(--text);animation:modalSlideUp .22s cubic-bezier(.22,1,.36,1) both}
+.profile-dialog .dialog-actions{padding-right:0;background:transparent;border-top:0}
 .profile-dialog.closing{animation:modalSlideOut .18s cubic-bezier(.22,1,.36,1) both}
 .profile-dialog-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:20px}
 .profile-dialog-heading h2{margin:2px 0 3px;font-size:20px;letter-spacing:-.4px}
