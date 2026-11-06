@@ -63,7 +63,7 @@
 .login-page-wrap{min-height:100vh;display:grid;place-items:center;padding:24px;background:var(--page)}
 .login-card{width:min(420px,100%);padding:36px;background:var(--panel);border:1px solid var(--line);border-radius:16px;box-shadow:0 25px 70px rgba(12,21,35,.22);animation:modalSlideUp .3s cubic-bezier(.22,1,.36,1) both}
 .login-header{text-align:center;margin-bottom:28px}
-.login-logo{width:56px;height:56px;object-fit:contain;border-radius:12px;margin:0 auto 14px;display:block;animation:floatGentle 3.5s ease-in-out infinite}
+.login-logo{width:88px;height:88px;object-fit:contain;border-radius:14px;margin:0 auto 18px;display:block;animation:floatGentle 3.5s ease-in-out infinite}
 .login-header h1{margin:0 0 6px;font-size:24px;font-weight:750;letter-spacing:-.5px}
 .login-header p{margin:0;color:var(--muted);font-size:13px}
 .login-fields{display:grid;gap:16px;margin-bottom:24px}

@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-06 — Memperbesar Ukuran Logo pada Halaman Login
+- Change:
+  - Memperbesar ukuran logo pada header halaman login dari 56x56px menjadi 88x88px dengan radius dan jarak margin yang proporsional.
+- Changed files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Penambahan Tombol Toggle Show/Hide Password pada Form Login
 - Change:
   - Menambahkan tombol interaktif ikon mata (`Eye` / `EyeOff`) di dalam field password pada halaman login untuk memudahkan pengguna melihat atau menyembunyikan password saat diketik.
