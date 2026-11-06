@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-06 — Penyempurnaan Modal Profil & Animasi Transisi Halaman Setting
+- Change:
+  - Menyederhanakan modal "Profile Information" dengan avatar besar di tengah atas serta username (`adelia`) dan title (`Workspace Administrator`) dalam format baris sejajar yang bersih dan proporsional.
+  - Menyamakan animasi transisi halaman Setting dengan menu Rekap Ikan menggunakan `tabContentSwitch` untuk pengalaman visual yang konsisten dan mulus.
+- Changed files: `src/App.tsx`, `src/App.css`, `src/animations.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Implementasi Dialog Modal "Profil Admin Sistem" & Auto-Close Popover
 - Change:
   - Menambahkan dialog modal "Profil Admin Sistem" lengkap dengan informasi akun, peran akses (Full Access), status sesi aktif, serta animasi masuk (`modalSlideUp`) dan keluar (`modalSlideOut`).
