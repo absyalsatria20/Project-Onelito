@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-06 — Implementasi Dialog Modal "Profil Admin Sistem" & Auto-Close Popover
+- Change:
+  - Menambahkan dialog modal "Profil Admin Sistem" lengkap dengan informasi akun, peran akses (Full Access), status sesi aktif, serta animasi masuk (`modalSlideUp`) dan keluar (`modalSlideOut`).
+  - Mengimplementasikan penutupan popover secara otomatis saat pengguna mengklik di luar area profil (*outside click* di manapun pada halaman).
+- Changed files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Redesign Admin Profile Card ke Gradasi Biru, Interaktif Popover & Animasi Kotak
 - Change:
   - Mengubah card admin sistem di sidebar menjadi card modern berlatar belakang gradasi biru gelap ke terang (`linear-gradient(135deg, #1b3a6b 0%, #3478f6 100%)`).
