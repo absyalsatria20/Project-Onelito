@@ -1,5 +1,14 @@
 # Project Progress
 
+## 2026-11-06 — Redesign Admin Profile Card ke Gradasi Biru, Interaktif Popover & Animasi Kotak
+- Change:
+  - Mengubah card admin sistem di sidebar menjadi card modern berlatar belakang gradasi biru gelap ke terang (`linear-gradient(135deg, #1b3a6b 0%, #3478f6 100%)`).
+  - Menghapus titik tiga (`···`) dan menjadikan seluruh kotak card dapat diklik untuk membuka menu popover profil ("Lihat Profil" & "Keluar / Logout").
+  - Menambahkan animasi scale saat disentuh kursor (`hover`) dan animasi tekan (`active`) pada seluruh kotak card gradasi, bukan pada inisial avatar.
+  - Menambahkan animasi keluar (*exit animation*, `menuDropOut`) yang mulus saat popover menu ditutup.
+- Changed files: `src/App.tsx`, `src/App.css`, `src/animations.css`, `PROGRESS.md`
+- Verification: `npm run build` dan `npm run lint` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Perubahan Teks Dropdown & Lebar Presisi Tab Periode
 
 - Change: Mengubah teks tombol hapus pada dropdown tab periode dari "Hapus periode" menjadi "Hapus". Menyamakan lebar dan posisi dropdown menu persis dengan tab periode yang diklik (`rect.left` dan `rect.width`).
