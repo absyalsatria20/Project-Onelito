@@ -245,35 +245,22 @@
   animation: fadeSlideOutLeft .15s cubic-bezier(.22,1,.36,1) both;
 }
 
-@keyframes fishSwimNatural {
+@keyframes fishGlideCrisp {
   0%, 100% {
-    transform: translate(0px, 0px) rotate(0deg) scale(1);
-  }
-  15% {
-    transform: translate(1.8px, -1.2px) rotate(3.5deg) scale(1.02);
-  }
-  32% {
-    transform: translate(3px, 0.5px) rotate(6deg) scale(1.03);
+    transform: translateX(0px);
   }
   50% {
-    transform: translate(0.5px, 1.5px) rotate(-1.5deg) scale(0.99);
-  }
-  68% {
-    transform: translate(-1.5px, 0.8px) rotate(-4.5deg) scale(0.98);
-  }
-  84% {
-    transform: translate(-0.8px, -0.8px) rotate(-2deg) scale(1.01);
+    transform: translateX(4px);
   }
 }
 
 .app .sidebar-link .lucide-fish {
-  animation: fishSwimNatural 5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  animation: fishGlideCrisp 3.5s ease-in-out infinite;
   transform-origin: center;
   will-change: transform;
-  transform: translateZ(0);
 }
 .app .sidebar-link:hover .lucide-fish {
-  animation: fishSwimNatural 2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
+  animation: fishGlideCrisp 1.5s ease-in-out infinite;
 }
 
 @media (max-width: 900px) and (min-width: 701px) {
