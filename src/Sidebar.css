@@ -10,7 +10,9 @@
   width: 246px;
   height: 100vh;
   padding: 22px 15px 12px;
-  overflow: hidden;
+  overflow-y: auto;
+  overflow-x: visible;
+  scrollbar-width: thin;
   background: var(--panel);
   border-right: 1px solid var(--line);
   transition: width .24s cubic-bezier(.22,1,.36,1), flex-basis .24s cubic-bezier(.22,1,.36,1);
