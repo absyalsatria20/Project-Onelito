@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menggeser Posisi Tombol Toggle Sidebar Sedikit ke Atas
+- Change:
+  - Mengurangi padding atas pada `.app .sidebar` di `src/Sidebar.css` dari `22px` menjadi `15px` sehingga tombol buka/tutup sidebar (logo & brand header) bergeser sedikit ke atas secara proporsional.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Memperbaiki Animasi Close Popover Saat Sidebar Terbuka (`fadeSlideOutUp`)
 - Change:
   - Menambahkan keyframes `@keyframes fadeSlideOutUp` di `src/Sidebar.css` dan menerapkannya pada `.app .profile-popover-menu.closing` saat sidebar terbuka agar animasi penutupan popover mengalir halus ke atas dan tidak lagi ngebug/berkedip.
