@@ -149,6 +149,11 @@
 .app .profile-user-info b { color: #fff; font-size: 11.5px; font-weight: 650; }
 .app .profile-user-info small { color: #d0e1ff; font-size: 9.5px; }
 
+@keyframes fadeSlideOutUp {
+  from { opacity: 1; transform: translateY(0); }
+  to { opacity: 0; transform: translateY(-10px); }
+}
+
 .app .profile-popover-menu {
   position: absolute;
   bottom: 100%;
@@ -166,7 +171,7 @@
   animation: fadeSlideDown .18s cubic-bezier(.22,1,.36,1) both;
 }
 .app .profile-popover-menu.closing {
-  animation: fadeSlideUp .15s cubic-bezier(.22,1,.36,1) both;
+  animation: fadeSlideOutUp .15s cubic-bezier(.22,1,.36,1) both;
 }
 .app .profile-popover-menu button {
   width: 100%;

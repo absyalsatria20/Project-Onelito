@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Memperbaiki Animasi Close Popover Saat Sidebar Terbuka (`fadeSlideOutUp`)
+- Change:
+  - Menambahkan keyframes `@keyframes fadeSlideOutUp` di `src/Sidebar.css` dan menerapkannya pada `.app .profile-popover-menu.closing` saat sidebar terbuka agar animasi penutupan popover mengalir halus ke atas dan tidak lagi ngebug/berkedip.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menambahkan Animasi Tutup (`fadeSlideOutLeft`) untuk Popover Profil Collapsed
 - Change:
   - Menambahkan keyframes `@keyframes fadeSlideOutLeft` di `src/Sidebar.css` dan menerapkannya pada `.app .sidebar.sidebar-collapsed .profile-popover-menu.closing` agar animasi saat menutup popover saat sidebar ditutup bergerak halus ke kiri (`translateX(-12px)` dengan `opacity: 0`).
