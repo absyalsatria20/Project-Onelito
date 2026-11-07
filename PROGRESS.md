@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Membuat Tombol Toggle Sidebar Lebih Standout ("Heboh" & Menarik)
+- Change:
+  - Memperbarui style `.app .sidebar-brand` di `src/Sidebar.css` dengan latar panel lembut, border, shadow/glow halus, efek angkat (`translateY(-2px)`), serta transisi perbesaran ikon/logo saat di-hover agar tombol buka/tutup sidebar terlihat standout dan interaktif.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menambahkan Garis Pemisah (Divider) di Atas Tulisan WORKSPACE
 - Change:
   - Menambahkan kelas `workspace-label` pada elemen label WORKSPACE di `src/App.tsx` serta mendefinisikan style dengan `border-top: 1px solid var(--line); padding-top: 15px;` di `src/Sidebar.css` agar terdapat garis pemisah rapi di atas tulisan WORKSPACE.

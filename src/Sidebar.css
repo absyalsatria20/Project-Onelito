@@ -44,27 +44,41 @@
   width: 100%;
   height: 52px;
   min-width: 0;
-  padding: 0 7px;
+  padding: 0 10px;
   gap: 11px;
   overflow: hidden;
   color: var(--text);
   text-align: left;
-  background: transparent;
-  border: 0;
-  border-radius: 8px;
+  background: var(--panel-soft);
+  border: 1px solid var(--line);
+  border-radius: 10px;
   cursor: pointer;
+  box-shadow: 0 2px 8px rgba(27,43,67,.04);
+  transition: all .2s cubic-bezier(.22,1,.36,1);
 }
 
 .app .sidebar-brand,.app .sidebar .nav-label,.app .sidebar .sidebar-link { animation: none !important; }
-.app .sidebar-brand:hover { background: var(--panel-soft); }
-.app .brand-logo { display: block; flex: 0 0 38px; width: 38px; height: 38px; object-fit: contain; border-radius: 8px; animation: none; }
+.app .sidebar-brand:hover {
+  background: var(--panel);
+  border-color: var(--blue);
+  box-shadow: 0 6px 20px rgba(52,120,246,.18);
+  transform: translateY(-2px);
+}
+.app .sidebar-brand:active {
+  transform: translateY(0) scale(.98);
+}
+.app .brand-logo { display: block; flex: 0 0 38px; width: 38px; height: 38px; object-fit: contain; border-radius: 8px; animation: none; transition: transform .2s cubic-bezier(.34,1.56,.64,1); }
 .app .brand-copy { display: grid; flex: 1 1 auto; min-width: 0; gap: 0; overflow: hidden; opacity: 1; transition: opacity .15s ease; }
 .app .brand-copy b { overflow: hidden; color: var(--text); font: 750 17.5px Inter,'DM Sans',sans-serif; letter-spacing: -.45px; white-space: nowrap; }
 .app .brand-copy small { margin-top: -2px; color: #8a98ac; font-size: 11px; font-weight: 750; letter-spacing: .85px; white-space: nowrap; }
 .app .brand-koired { color: #df5c5c; }
 .app.dark .brand-koired { color: #fb7777; }
-.app .brand-toggle-icon { display: block; flex: 0 0 38px; width: 38px; height: 38px; color: var(--muted); }
-.app .sidebar-brand:hover .brand-toggle-icon { color: var(--blue); }
+.app .brand-toggle-icon { display: block; flex: 0 0 38px; width: 38px; height: 38px; color: var(--muted); transition: transform .2s cubic-bezier(.34,1.56,.64,1), color .15s ease; }
+.app .sidebar-brand:hover .brand-logo,
+.app .sidebar-brand:hover .brand-toggle-icon {
+  transform: scale(1.12);
+  color: var(--blue);
+}
 
 .app .sidebar-close {
   display: none;
