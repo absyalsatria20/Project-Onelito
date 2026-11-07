@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Mengubah Warna Corak Ikan Koi Menjadi Merah
+- Change:
+  - Memperbarui warna oranye (`#EF713A`, `#F4A261`, dll) pada SVG ikan koi di `src/App.tsx` menjadi warna merah cerah (`#DC2626`, `#F87171`, `#991B1B`).
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menerapkan Animasi SVG Ikan Koi Hidup (Ekor Wagging & Gelembung)
 - Change:
   - Mengganti ikon statis Lucide `Fish` pada tombol menu Rekap Ikan dengan struktur SVG kustom animasi ikan koi (menggunakan animasi ekor bergetar/wagging, gerakan renang naik-turun halus, serta gelembung air yang naik ke atas) sesuai referensi kode.
