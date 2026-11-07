@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menambahkan Garis Pemisah (Divider) di Atas Tulisan WORKSPACE
+- Change:
+  - Menambahkan kelas `workspace-label` pada elemen label WORKSPACE di `src/App.tsx` serta mendefinisikan style dengan `border-top: 1px solid var(--line); padding-top: 15px;` di `src/Sidebar.css` agar terdapat garis pemisah rapi di atas tulisan WORKSPACE.
+- Changed files: `src/App.tsx`, `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menurunkan Sedikit Posisi Tulisan WORKSPACE dan Menu Rekap Ikan
 - Change:
   - Meningkatkan margin atas pada `.app .nav-label` di `src/Sidebar.css` dari `28px` menjadi `35px` sehingga label WORKSPACE dan menu Rekap Ikan di bawahnya bergeser sedikit ke bawah.

@@ -193,7 +193,7 @@ function App() {
           </button>
           <button type="button" className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button>
         </div>
-        <span className="nav-label" title="WORKSPACE">WORKSPACE</span>
+        <span className="nav-label workspace-label" title="WORKSPACE">WORKSPACE</span>
         <nav className="sidebar-nav" aria-label="Navigasi utama">
           <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><Fish size={18}/><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
         </nav>

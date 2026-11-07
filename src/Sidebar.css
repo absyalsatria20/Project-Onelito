@@ -140,6 +140,7 @@
 .app .nav-badge { display: grid; flex: 0 0 auto; min-width: 22px; height: 21px; padding: 0 5px; place-items: center; color: #386fc7; font-size: 10px; background: #e1ebff; border-radius: 6px; }
 .app.dark .nav-badge { color: #d1e1ff; background: #354c6e; }
 .app .sidebar-spacer { flex: 1 1 auto; min-height: 42px; }
+.app .workspace-label { flex: 0 0 auto; height: auto; min-height: 27px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--line); }
 .app .settings-label { flex: 0 0 auto; height: auto; min-height: 27px; margin-top: 0; padding-top: 15px; border-top: 1px solid var(--line); }
 .app .sidebar-bottom { flex: 0 0 auto; width: 100%; margin-top: 10px; }
 .app .profile-card { display: flex; align-items: center; box-sizing: border-box; width: 100%; min-height: 58px; margin-top: 4px; padding: 10px 12px; gap: 11px; color: #fff; background: linear-gradient(135deg,#1b3a6b 0%,#3478f6 100%); border: 1px solid rgba(255,255,255,.15); border-radius: 10px; cursor: pointer; }
