@@ -147,6 +147,53 @@
 .app .profile-user-info b { color: #fff; font-size: 11.5px; font-weight: 650; }
 .app .profile-user-info small { color: #d0e1ff; font-size: 9.5px; }
 
+.app .profile-popover-menu {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 8px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(12,21,35,.18);
+  padding: 6px;
+  display: grid;
+  gap: 4px;
+  z-index: 40;
+  animation: fadeSlideDown .18s cubic-bezier(.22,1,.36,1) both;
+}
+.app .profile-popover-menu.closing {
+  animation: fadeSlideUp .15s cubic-bezier(.22,1,.36,1) both;
+}
+.app .profile-popover-menu button {
+  width: 100%;
+  height: 38px;
+  padding: 0 11px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: transparent;
+  border: 0;
+  border-radius: 7px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 550;
+  cursor: pointer;
+  text-align: left;
+  transition: background .15s, color .15s;
+}
+.app .profile-popover-menu button:hover {
+  background: var(--panel-soft);
+  color: var(--blue);
+}
+.app .profile-popover-menu button:last-child {
+  color: var(--red);
+}
+.app .profile-popover-menu button:last-child:hover {
+  background: color-mix(in srgb, var(--red) 12%, transparent);
+}
+
 /* Collapsed state rules: maintain exact vertical metrics (height, margins, padding, font-size) */
 .app .sidebar.sidebar-collapsed .sidebar-brand { justify-content: center; padding: 0 7px; }
 .app .sidebar.sidebar-collapsed .brand-copy { display: none !important; }
@@ -157,6 +204,18 @@
 .app .sidebar.sidebar-collapsed .settings-label { padding-top: 15px; }
 .app .sidebar.sidebar-collapsed .profile-card { justify-content: center; padding: 10px 0; }
 .app .sidebar.sidebar-collapsed .profile-user-info { display: none !important; }
+.app .sidebar.sidebar-collapsed .profile-popover-menu {
+  position: absolute;
+  left: calc(100% + 12px);
+  bottom: 0;
+  right: auto;
+  width: 190px;
+  margin-bottom: 0;
+  animation: fadeSlideLeft .18s cubic-bezier(.22,1,.36,1) both;
+}
+.app .sidebar.sidebar-collapsed .profile-popover-menu.closing {
+  animation: fadeSlideOut .15s cubic-bezier(.22,1,.36,1) both;
+}
 
 @media (max-width: 900px) and (min-width: 701px) {
   .app .sidebar { flex-basis: 230px; width: 230px; }

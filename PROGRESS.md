@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Memindahkan Posisi Popover Profil ke Samping Saat Sidebar Collapsed
+- Change:
+  - Menambahkan aturan CSS pada `.profile-popover-menu` di `src/Sidebar.css`. Saat sidebar terbuka, popover tampil di atas kartu profil; saat sidebar ditutup (collapsed), popover dipindahkan ke sebelah kanan luar sidebar (`left: calc(100% + 12px)`) dengan animasi geser yang rapi.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menyamakan Jarak Garis dan Teks PREFERENCES Saat Sidebar Collapsed
 - Change:
   - Memperbaiki aturan padding pada `.sidebar.sidebar-collapsed .settings-label` di `src/Sidebar.css` agar jarak padding-top (15px) dan garis pemisah konsisten saat sidebar ditutup maupun dibuka.
