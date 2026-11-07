@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menyamakan Animasi Toggle Sidebar dengan Tombol X (`.sidebar-close`)
+- Change:
+  - Memperbarui style ikon toggle sidebar (`.app .brand-toggle-icon`) di `src/Sidebar.css` mengikuti perilaku animasi tombol X (`.sidebar-close`): saat di-hover latar belakang berubah menjadi biru (`var(--blue)`), ikon berubah menjadi putih bersih (`#fff`), efek scale halus, dan *glow shadow* yang dinamis.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Mengubah Warna Corak Ikan Koi Menjadi Merah
 - Change:
   - Memperbarui warna oranye (`#EF713A`, `#F4A261`, dll) pada SVG ikan koi di `src/App.tsx` menjadi warna merah cerah (`#DC2626`, `#F87171`, `#991B1B`).

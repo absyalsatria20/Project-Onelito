@@ -73,11 +73,25 @@
 .app .brand-copy small { margin-top: -2px; color: #8a98ac; font-size: 11px; font-weight: 750; letter-spacing: .85px; white-space: nowrap; }
 .app .brand-koired { color: #df5c5c; }
 .app.dark .brand-koired { color: #fb7777; }
-.app .brand-toggle-icon { display: block; flex: 0 0 38px; width: 38px; height: 38px; color: var(--muted); transition: transform .2s cubic-bezier(.34,1.56,.64,1), color .15s ease; }
-.app .sidebar-brand:hover .brand-logo,
+.app .brand-toggle-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 34px;
+  width: 34px;
+  height: 34px;
+  color: var(--muted);
+  background: transparent;
+  border-radius: 7px;
+  transition: transform .2s cubic-bezier(.22,1,.36,1), color .18s ease, background .18s ease, box-shadow .2s ease;
+}
 .app .sidebar-brand:hover .brand-toggle-icon {
-  transform: scale(1.12);
-  color: var(--blue);
+  transform: scale(1.1);
+  color: #fff;
+  background: var(--blue);
+  box-shadow: 0 4px 12px rgba(52,120,246,.35);
+}
+.app .sidebar-brand:active .brand-toggle-icon {
+  transform: scale(.92);
 }
 
 .app .sidebar-close {
