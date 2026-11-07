@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Mengubah Posisi Popover Profil Collapsed Menjadi Fixed di Luar Sidebar Utama
+- Change:
+  - Mengubah posisi `.app .sidebar.sidebar-collapsed .profile-popover-menu` di `src/Sidebar.css` menjadi `position: fixed; left: 88px; bottom: 24px; z-index: 9999;` agar popover melayang keluar dari batasan sidebar dan masuk ke area dashboard utama tanpa terpotong.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Memperbaiki Overflow Sidebar Agar Popover Menu Profil Tampil Saat Collapsed
 - Change:
   - Mengubah properti `overflow: hidden` pada `.app .sidebar` di `src/Sidebar.css` menjadi `overflow-y: auto; overflow-x: visible;` sehingga popover profil yang diposisikan di sebelah kanan sidebar saat collapsed (`left: calc(100% + 12px)`) tidak terpotong (terklip) dan dapat diklik dengan sempurna.

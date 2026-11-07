@@ -207,12 +207,13 @@
 .app .sidebar.sidebar-collapsed .profile-card { justify-content: center; padding: 10px 0; }
 .app .sidebar.sidebar-collapsed .profile-user-info { display: none !important; }
 .app .sidebar.sidebar-collapsed .profile-popover-menu {
-  position: absolute;
-  left: calc(100% + 12px);
-  bottom: 0;
+  position: fixed;
+  left: 88px;
+  bottom: 24px;
+  width: 200px;
   right: auto;
-  width: 190px;
   margin-bottom: 0;
+  z-index: 9999;
   animation: fadeSlideLeft .18s cubic-bezier(.22,1,.36,1) both;
 }
 .app .sidebar.sidebar-collapsed .profile-popover-menu.closing {
