@@ -246,18 +246,18 @@
 }
 
 @keyframes fishSwim {
-  0%, 100% { transform: translateX(0) rotate(0deg); }
-  25% { transform: translateX(2px) rotate(4deg); }
-  50% { transform: translateX(0) rotate(0deg); }
-  75% { transform: translateX(-1.5px) rotate(-3deg); }
+  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
+  30% { transform: translateX(2.5px) translateY(-1px) rotate(5deg) scale(1.02); }
+  60% { transform: translateX(-1px) translateY(1px) rotate(-3deg) scale(0.98); }
+  85% { transform: translateX(-2px) translateY(0) rotate(-4deg) scale(1); }
 }
 
 .app .sidebar-link .lucide-fish {
-  animation: fishSwim 3s ease-in-out infinite;
+  animation: fishSwim 4s ease-in-out infinite;
   transform-origin: center;
 }
 .app .sidebar-link:hover .lucide-fish {
-  animation: fishSwim 1.2s ease-in-out infinite;
+  animation: fishSwim 1.8s ease-in-out infinite;
 }
 
 @media (max-width: 900px) and (min-width: 701px) {

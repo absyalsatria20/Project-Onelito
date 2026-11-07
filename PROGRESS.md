@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menyempurnakan Animasi Renang Ikan (`fishSwim`) Menjadi Lebih Natural dan Halus
+- Change:
+  - Memperbarui `@keyframes fishSwim` di `src/Sidebar.css` dengan variasi sumbu `X`, `Y`, rotasi mikro, dan skala kecil (`scale`), serta memperlambat durasi animasi menjadi `4s` (dan `1.8s` saat di-hover) agar gerakan renang ikan tampak jauh lebih natural, organik, dan hidup.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menambahkan Efek Renang Lembut (`fishSwim`) pada Ikon Ikan Rekap Ikan
 - Change:
   - Menambahkan keyframes `@keyframes fishSwim` dan aturan `.app .sidebar-link .lucide-fish` di `src/Sidebar.css` untuk memberikan efek animasi renang lembut (bergeser dan berotasi mikro) secara kontinyu, serta bergerak lebih aktif saat di-hover sehingga ikon ikan tampak hidup.
