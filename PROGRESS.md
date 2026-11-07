@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Mengoptimalkan Animasi Renang Ikan Menjadi Multi-Waypoint (Organic & 60 FPS)
+- Change:
+  - Memperbarui `@keyframes fishSwimNatural` di `src/Sidebar.css` dengan 6 titik koordinat transisi multi-arah (variasi X, Y, rotasi, dan skala) dan `cubic-bezier` yang mulus, serta menambahkan `will-change: transform` dan `translateZ(0)` untuk akselerasi GPU murni (60 FPS tanpa patah-patah).
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menyempurnakan Animasi Renang Ikan (`fishSwim`) Menjadi Lebih Natural dan Halus
 - Change:
   - Memperbarui `@keyframes fishSwim` di `src/Sidebar.css` dengan variasi sumbu `X`, `Y`, rotasi mikro, dan skala kecil (`scale`), serta memperlambat durasi animasi menjadi `4s` (dan `1.8s` saat di-hover) agar gerakan renang ikan tampak jauh lebih natural, organik, dan hidup.

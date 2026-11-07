@@ -245,19 +245,35 @@
   animation: fadeSlideOutLeft .15s cubic-bezier(.22,1,.36,1) both;
 }
 
-@keyframes fishSwim {
-  0%, 100% { transform: translateX(0) translateY(0) rotate(0deg) scale(1); }
-  30% { transform: translateX(2.5px) translateY(-1px) rotate(5deg) scale(1.02); }
-  60% { transform: translateX(-1px) translateY(1px) rotate(-3deg) scale(0.98); }
-  85% { transform: translateX(-2px) translateY(0) rotate(-4deg) scale(1); }
+@keyframes fishSwimNatural {
+  0%, 100% {
+    transform: translate(0px, 0px) rotate(0deg) scale(1);
+  }
+  15% {
+    transform: translate(1.8px, -1.2px) rotate(3.5deg) scale(1.02);
+  }
+  32% {
+    transform: translate(3px, 0.5px) rotate(6deg) scale(1.03);
+  }
+  50% {
+    transform: translate(0.5px, 1.5px) rotate(-1.5deg) scale(0.99);
+  }
+  68% {
+    transform: translate(-1.5px, 0.8px) rotate(-4.5deg) scale(0.98);
+  }
+  84% {
+    transform: translate(-0.8px, -0.8px) rotate(-2deg) scale(1.01);
+  }
 }
 
 .app .sidebar-link .lucide-fish {
-  animation: fishSwim 4s ease-in-out infinite;
+  animation: fishSwimNatural 5s cubic-bezier(0.37, 0, 0.63, 1) infinite;
   transform-origin: center;
+  will-change: transform;
+  transform: translateZ(0);
 }
 .app .sidebar-link:hover .lucide-fish {
-  animation: fishSwim 1.8s ease-in-out infinite;
+  animation: fishSwimNatural 2s cubic-bezier(0.37, 0, 0.63, 1) infinite;
 }
 
 @media (max-width: 900px) and (min-width: 701px) {
