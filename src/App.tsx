@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X } from 'lucide-react'
+import { Check, ChevronDown, ChevronsRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import './App.css'
 import './animations.css'
+import './Sidebar.css'
 
 type FishRecord = { id: number; name: string; owner: string; yen: number | null; rate: number | null; rupiah: number; feePercent: number; shipping: number; certificate: boolean; image: string; tc: string }
 type Period = { id: string; name: string; records: FishRecord[]; owner: string; certificate: string; query: string; sort: 'name' | 'owner' | 'total' }
@@ -30,19 +31,8 @@ const total = (r: FishRecord) => r.rupiah + fee(r) + r.shipping
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('fish-logged-in') === 'true')
   const [currentUsername, setCurrentUsername] = useState(() => localStorage.getItem('fish-username') || 'adelia')
+  const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
 
-  if (!isLoggedIn) {
-    return <LoginForm theme={localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light'} themeToggle={() => {
-      const next = localStorage.getItem('fish-theme') === 'dark' ? 'light' : 'dark'
-      localStorage.setItem('fish-theme', next)
-      window.location.reload()
-    }} onLogin={name => {
-      localStorage.setItem('fish-logged-in', 'true')
-      localStorage.setItem('fish-username', name)
-      setCurrentUsername(name)
-      setIsLoggedIn(true)
-    }} />
-  }
   const [periods, setPeriods] = useState<Period[]>([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
   const [activePeriodId, setActivePeriodId] = useState('period-2026')
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
@@ -56,7 +46,6 @@ function App() {
   const [periodDialog,setPeriodDialog] = useState<PeriodDialog>(null)
   const [periodName,setPeriodName] = useState('')
   const [deletePeriodTarget,setDeletePeriodTarget] = useState<Period|null>(null)
-  const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
   const [modal, setModal] = useState(false)
   const [closingModal, setClosingModal] = useState<string | null>(null)
   const closeWithAnimation = (modalKey: string, closeFn: () => void) => {
@@ -67,16 +56,18 @@ function App() {
     }, 180)
   }
   useEffect(() => {
+    if (!isLoggedIn) return
     if (!modal && !periodDialog && !deletePeriodTarget) return
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
     return () => { document.body.style.overflow = previousOverflow }
-  }, [modal, periodDialog, deletePeriodTarget])
+  }, [isLoggedIn, modal, periodDialog, deletePeriodTarget])
   const [periodError,setPeriodError] = useState('')
   const [openPeriodMenu,setOpenPeriodMenu] = useState<{id:string;left:number;top:number;width:number;height:number}|null>(null)
   const tabsRef = useRef<Record<string, HTMLDivElement | null>>({})
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   useEffect(() => {
+    if (!isLoggedIn) return
     const activeEl = tabsRef.current[activePeriodId]
     if (activeEl) {
       setIndicatorStyle({
@@ -84,9 +75,9 @@ function App() {
         width: activeEl.offsetWidth - 24
       })
     }
-  }, [activePeriodId, periods])
+  }, [isLoggedIn, activePeriodId, periods])
   useEffect(() => {
-    if (!openPeriodMenu) return
+    if (!isLoggedIn || !openPeriodMenu) return
     const handlePointerDown = (event:PointerEvent) => {
       if (event.target instanceof Element && !event.target.closest('.period-tab-menu, .period-tab-menu-trigger')) setOpenPeriodMenu(null)
     }
@@ -97,7 +88,7 @@ function App() {
       document.removeEventListener('pointerdown', handlePointerDown)
       document.removeEventListener('keydown', handleKeyDown)
     }
-  }, [openPeriodMenu])
+  }, [isLoggedIn, openPeriodMenu])
   const [ownerNames,setOwnerNames] = useState<string[]>(() => [...new Set(initial.map(record=>record.owner))])
   const owners = ownerNames
   const [editing, setEditing] = useState<FishRecord | null>(null)
@@ -106,6 +97,7 @@ function App() {
   const [deleteTarget, setDeleteTarget] = useState<FishRecord | null>(null)
   const [notice, setNotice] = useState('')
   const [sidebarOpen, setSidebarOpen] = useState(false)
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false)
   const [profileMenuOpen, setProfileMenuOpen] = useState(false)
   const [profileMenuClosing, setProfileMenuClosing] = useState(false)
   const [profileModal, setProfileModal] = useState(false)
@@ -118,6 +110,7 @@ function App() {
   }
   const [activeSection, setActiveSection] = useState('Rekap Ikan')
   useEffect(() => {
+    if (!isLoggedIn) return
     const handleOutsideClick = (e: MouseEvent) => {
       if (profileMenuOpen && !(e.target as HTMLElement).closest('.sidebar-bottom')) {
         closeProfileMenu()
@@ -125,7 +118,7 @@ function App() {
     }
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
-  }, [profileMenuOpen])
+  }, [isLoggedIn, profileMenuOpen])
   const filtered = useMemo(() => records.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [records, owner, certificate, query, sort])
   const selected = owner === 'All Owners' ? records : records.filter(r => r.owner === owner)
   const grand = selected.reduce((sum, r) => sum + total(r), 0)
@@ -180,18 +173,33 @@ function App() {
     }
   }
 
+  if (!isLoggedIn) {
+    return <LoginForm theme={theme} themeToggle={themeToggle} onLogin={name => {
+      localStorage.setItem('fish-logged-in', 'true')
+      localStorage.setItem('fish-username', name)
+      setCurrentUsername(name)
+      setIsLoggedIn(true)
+    }} />
+  }
+
   return <div className={`app ${theme}`}>
     <div className="app-shell">
       {sidebarOpen&&<button className="sidebar-scrim" aria-label="Tutup navigasi" onClick={()=>setSidebarOpen(false)}/>}
-      <aside className={`sidebar ${sidebarOpen?'sidebar-open':''}`}>
-        <div className="sidebar-brand"><img src="/logo-onelito.png" alt="Onelito Logo" className="brand-logo"/><span className="brand-copy"><b>ONELITO <span className="brand-koired">KOI</span></b><small>Fish Inventory</small></span><button className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button></div>
-        <span className="nav-label">WORKSPACE</span>
+      <aside className={`sidebar ${sidebarOpen?'sidebar-open':''} ${sidebarCollapsed?'sidebar-collapsed':''}`}>
+        <div className="sidebar-header">
+          <button type="button" className="sidebar-brand" onClick={()=>setSidebarCollapsed(val=>!val)} aria-expanded={!sidebarCollapsed} aria-label={sidebarCollapsed?'Buka sidebar':'Tutup sidebar'} title={sidebarCollapsed?'Buka sidebar':'Tutup sidebar'}>
+            {sidebarCollapsed ? <ChevronsRight size={22} className="brand-toggle-icon"/> : <img src="/logo-onelito.png" alt="" className="brand-logo"/>}
+            <span className="brand-copy"><b>ONELITO <span className="brand-koired">KOI</span></b><small>Fish Inventory</small></span>
+          </button>
+          <button type="button" className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button>
+        </div>
+        <span className="nav-label" title="WORKSPACE">WORKSPACE</span>
         <nav className="sidebar-nav" aria-label="Navigasi utama">
           <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><Fish size={18}/><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
         </nav>
-        <div className="sidebar-spacer"/><span className="nav-label settings-label">PREFERENCES</span>
+        <div className="sidebar-spacer"/><span className="nav-label settings-label" title="PREFERENCES">PREFERENCES</span>
         <nav className="sidebar-nav"><button className={`sidebar-link ${activeSection==='Setting'?'selected':''}`} onClick={()=>{setActiveSection('Setting');setSidebarOpen(false)}}><Settings size={18}/><span>Setting</span></button></nav>
-        <div className="sidebar-bottom" style={{position:'relative'}}><div className="profile-card" onClick={()=>{if(profileMenuOpen){closeProfileMenu()}else{setProfileMenuOpen(true)}}} role="button" aria-expanded={profileMenuOpen} tabIndex={0}><span className="profile-avatar">{currentUsername.slice(0,2).toUpperCase()}</span><span><b>{currentUsername}</b><small>Workspace admin</small></span></div>{(profileMenuOpen || profileMenuClosing)&&<div className={`profile-popover-menu ${profileMenuClosing?'closing':''}`}><button onClick={()=>{setProfileModal(true);closeProfileMenu()}}><User size={13}/> Lihat Profil</button><button onClick={()=>{localStorage.removeItem('fish-logged-in');setIsLoggedIn(false);toast('Berhasil keluar sesi');closeProfileMenu()}}><LogOut size={13}/> Keluar</button></div>}</div>
+        <div className="sidebar-bottom" style={{position:'relative'}}><div className="profile-card" onClick={(e)=>{e.stopPropagation();if(profileMenuOpen){closeProfileMenu()}else{setProfileMenuOpen(true)}}} role="button" aria-expanded={profileMenuOpen} tabIndex={0}><span className="profile-avatar">{currentUsername.slice(0,2).toUpperCase()}</span><span className="profile-user-info"><b>{currentUsername}</b><small>Workspace admin</small></span></div>{(profileMenuOpen || profileMenuClosing)&&<div className={`profile-popover-menu ${profileMenuClosing?'closing':''}`}><button onClick={()=>{setProfileModal(true);closeProfileMenu()}}><User size={13}/> Lihat Profil</button><button onClick={()=>{localStorage.removeItem('fish-logged-in');setIsLoggedIn(false);toast('Berhasil keluar sesi');closeProfileMenu()}}><LogOut size={13}/> Keluar</button></div>}</div>
       </aside>
       <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab" key={activeSection}>Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" role="tablist" aria-label="Periode rekap ikan"><div className="period-tabs-indicator" style={{left:`${indicatorStyle.left}px`,width:`${indicatorStyle.width}px`}}/>{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id} ref={el=>{tabsRef.current[period.id]=el}}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
                     const tabEl=event.currentTarget.closest('.period-tab');
@@ -229,7 +237,7 @@ function App() {
 
 
     {modal&&<FishForm key={`${activePeriod.id}-${editing?.id??'new'}`} initial={editing} owners={owners} closing={closingModal==='modal'} onClose={()=>closeWithAnimation('modal',()=>setModal(false))} onSave={record=>{setOwnerNames(items=>items.some(name=>name.toLocaleLowerCase()===record.owner.trim().toLocaleLowerCase())?items:[...items,record.owner.trim()]);setRecords(items=>editing?items.map(item=>item.id===editing.id?record:item):[{...record,id:Math.max(0,...items.map(item=>item.id))+1},...items]);closeWithAnimation('modal',()=>setModal(false));toast(editing?'Perubahan berhasil disimpan':'Ikan berhasil ditambahkan')}}/>}
-    {periodDialog&&<div className={`modal-backdrop ${closingModal==='periodDialog'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}}><form className={`period-name-dialog ${closingModal==='periodDialog'?'closing':''}`} role="dialog" aria-modal="true" aria-labelledby="period-dialog-title" onSubmit={savePeriodName}><div className="period-dialog-heading"><div><span className="eyebrow">WORKSPACE</span><h2 id="period-dialog-title">{periodDialog.mode==='add'?'Tambah periode':'Ganti nama periode'}</h2></div><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))} aria-label="Tutup"><X size={20}/></button></div><label className="period-name-field" htmlFor="period-name">Nama periode<input id="period-name" autoFocus value={periodName} onChange={event=>{setPeriodName(event.target.value);setPeriodError('')}} placeholder="Contoh: Periode 2027" aria-describedby={periodError?'period-name-error':undefined}/></label>{periodError&&<p className="period-form-error" id="period-name-error" role="alert">{periodError}</p>}<div className="period-dialog-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}>Batal</button><button type="submit" className="primary-btn">{periodDialog.mode==='add'?'Buat periode':'Simpan nama'}</button></div></form></div>}
+    {periodDialog&&<div className={`modal-backdrop ${closingModal==='periodDialog'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}}><form className={`period-name-dialog ${closingModal==='periodDialog'?'closing':''}`} role="dialog" aria-modal="true" aria-labelledby="period-dialog-title" onSubmit={savePeriodName}><div className="period-dialog-heading"><div><span className="eyebrow">WORKSPACE</span><h2 id="period-dialog-title">{periodDialog.mode==='add'?'Tambah Tab Baru':'Ganti nama periode'}</h2></div><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))} aria-label="Tutup"><X size={20}/></button></div><label className="period-name-field" htmlFor="period-name">Nama Tab<input id="period-name" autoFocus value={periodName} onChange={event=>{setPeriodName(event.target.value);setPeriodError('')}} placeholder="Contoh: Periode 2027" aria-describedby={periodError?'period-name-error':undefined}/></label>{periodError&&<p className="period-form-error" id="period-name-error" role="alert">{periodError}</p>}<div className="period-dialog-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}>Batal</button><button type="submit" className="primary-btn">{periodDialog.mode==='add'?'Buat periode':'Simpan nama'}</button></div></form></div>}
     {deletePeriodTarget&&<div className={`modal-backdrop ${closingModal==='deletePeriodTarget'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}}><section className={`confirm-dialog ${closingModal==='deletePeriodTarget'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="period-delete-title" aria-describedby="period-delete-description"><div className="confirm-icon"><Trash2 size={21}/></div><h2 id="period-delete-title">Hapus periode?</h2><p id="period-delete-description">Periode <b>{deletePeriodTarget.name}</b> dan seluruh data di dalamnya akan dihapus. Tindakan ini tidak dapat dibatalkan.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={deletePeriod}>Hapus</button></div></section></div>}
     {preview&&<div className={`modal-backdrop ${closingModal==='preview'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('preview',()=>setPreview(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('preview',()=>setPreview(null))}}><section className={`image-dialog ${closingModal==='preview'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Foto ${preview.name}`}><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('preview',()=>setPreview(null))} aria-label="Tutup"><X size={20}/></button><img src={preview.image} alt={preview.name}/><div className="image-caption"><b>{preview.name}</b><span>{preview.owner}</span></div></section></div>}
     {termsDetail&&<div className={`modal-backdrop ${closingModal==='termsDetail'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('termsDetail',()=>setTermsDetail(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('termsDetail',()=>setTermsDetail(null))}}><section className={`terms-dialog ${closingModal==='termsDetail'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Term & Condition ${termsDetail.name}`}><div className="terms-heading"><div><h2>Term &amp; Condition</h2><p>{termsDetail.name}</p></div><button className="dialog-close" onClick={()=>closeWithAnimation('termsDetail',()=>setTermsDetail(null))} aria-label="Tutup"><X size={20}/></button></div><ul>{termsDetail.tc.split('\n').filter(Boolean).map(term=><li key={term}>{term}</li>)}</ul></section></div>}

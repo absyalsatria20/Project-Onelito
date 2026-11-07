@@ -1,5 +1,57 @@
 # Project Progress
 
+## 2026-11-07 — Menyamakan Jarak Garis dan Teks PREFERENCES Saat Sidebar Collapsed
+- Change:
+  - Memperbaiki aturan padding pada `.sidebar.sidebar-collapsed .settings-label` di `src/Sidebar.css` agar jarak padding-top (15px) dan garis pemisah konsisten saat sidebar ditutup maupun dibuka.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-07 — Memperbaiki Visibilitas Label PREFERENCES di Sidebar
+- Change:
+  - Memperbaiki properti tinggi dan padding pada kelas `.settings-label` di `src/Sidebar.css` yang sebelumnya terpotong/hilang karena batasan `height: 12px` saat sidebar dibuka.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-07 — Memperbaiki Teks PREFERENCES di Sidebar
+- Change:
+  - Mengembalikan teks label `PREFERENCES` di `src/App.tsx` yang sebelumnya terpotong menjadi `PREFER...`.
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-07 — Penyempurnaan Tampilan Sidebar Saat Collapsed
+- Change:
+  - Mempertahankan ukuran font dan padding asli teks workspace (`nav-label`) saat sidebar ditutup (tidak mengecil).
+  - Mengatur ulang `justify-content: center` dan `gap: 0` pada link navigasi (`sidebar-link`) saat sidebar ditutup agar ikon (seperti ikon ikan) berada tepat di tengah kotak button menu.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-07 — Mengatasi Pergeseran Vertikal 3 Komponen Sidebar Saat Toggle
+- Change:
+  - Mengunci metrik vertikal (tinggi, padding, margin, font-size) pada tombol brand (`sidebar-brand`), label workspace (`nav-label`), dan link navigasi (`sidebar-link`) agar 100% identik antara kondisi expanded dan collapsed.
+  - Menggunakan transisi opacity/width alih-alih `display: none` atau perubahan ukuran padding vertikal yang memicu pergeseran posisi naik-turun pada elemen saat sidebar dibuka atau ditutup.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, `git diff --check` sukses (exit code 0).
+
+## 2026-11-07 — Membangun Ulang Sidebar Expand/Collapse
+- Change:
+  - Mengganti header toggle menjadi tombol aksesibel terpisah dari tombol tutup drawer mobile.
+  - Membuat ulang geometri sidebar dengan tinggi tetap untuk header, label, dan item navigasi; state collapsed hanya mengubah lebar dan visibilitas label, bukan posisi vertikal.
+  - Memindahkan style sidebar ke `src/Sidebar.css` dan memuat stylesheet setelah style lama agar aturan baru menang dengan jelas.
+- Changed files: `src/App.tsx`, `src/App.css`, `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses. Pemeriksaan visual browser belum dilakukan.
+
+## 2026-11-07 — Perbaikan Bug Layar Blank Saat Login dan Logout
+- Change:
+  - Memperbaiki alur render state autentikasi (`isLoggedIn`) dan state tema (`theme`) pada komponen `App` agar konsisten dan terhindar dari ketidakcocokan hook efek DOM atau *unmount/remount* yang tidak sinkron, sehingga transisi antara halaman login dan dashboard tidak menghasilkan layar blank.
+- Changed files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` dan `npm run build` sukses tanpa error (exit code 0).
+
+## 2026-11-07 — Menjaga Posisi Top Logo Sidebar Tetap Absolut 100% Stabil
+- Change:
+  - Memastikan tidak ada pergeseran vertikal pada logo/brand sidebar saat di-collapse.
+- Changed files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` dan `npm run build` sukses tanpa error (exit code 0).
+
 ## 2026-11-06 — Memperbesar Ukuran Logo pada Halaman Login
 - Change:
   - Memperbesar ukuran logo pada header halaman login dari 56x56px menjadi 88x88px dengan radius dan jarak margin yang proporsional.
