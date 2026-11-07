@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menambahkan Efek Renang Lembut (`fishSwim`) pada Ikon Ikan Rekap Ikan
+- Change:
+  - Menambahkan keyframes `@keyframes fishSwim` dan aturan `.app .sidebar-link .lucide-fish` di `src/Sidebar.css` untuk memberikan efek animasi renang lembut (bergeser dan berotasi mikro) secara kontinyu, serta bergerak lebih aktif saat di-hover sehingga ikon ikan tampak hidup.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Membuat Tombol Toggle Sidebar Lebih Standout ("Heboh" & Menarik)
 - Change:
   - Memperbarui style `.app .sidebar-brand` di `src/Sidebar.css` dengan latar panel lembut, border, shadow/glow halus, efek angkat (`translateY(-2px)`), serta transisi perbesaran ikon/logo saat di-hover agar tombol buka/tutup sidebar terlihat standout dan interaktif.
