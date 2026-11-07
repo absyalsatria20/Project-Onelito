@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menerapkan Animasi SVG Ikan Koi Hidup (Ekor Wagging & Gelembung)
+- Change:
+  - Mengganti ikon statis Lucide `Fish` pada tombol menu Rekap Ikan dengan struktur SVG kustom animasi ikan koi (menggunakan animasi ekor bergetar/wagging, gerakan renang naik-turun halus, serta gelembung air yang naik ke atas) sesuai referensi kode.
+- Changed files: `src/App.tsx`, `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Mengganti Animasi Ikan dengan `fishGlideCrisp` (Clean Horizontal Glide)
 - Change:
   - Mengganti animasi multi-transform yang memicu blur sub-pixel menjadi animasi geser horizontal murni (`translateX(0px)` ke `translateX(4px)`) dengan `ease-in-out` di `src/Sidebar.css` agar ikon ikan tetap tajam, crisp, dan tidak patah-patah (60 FPS bersih).
