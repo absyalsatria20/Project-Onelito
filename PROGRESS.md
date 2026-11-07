@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menambahkan Animasi Tutup (`fadeSlideOutLeft`) untuk Popover Profil Collapsed
+- Change:
+  - Menambahkan keyframes `@keyframes fadeSlideOutLeft` di `src/Sidebar.css` dan menerapkannya pada `.app .sidebar.sidebar-collapsed .profile-popover-menu.closing` agar animasi saat menutup popover saat sidebar ditutup bergerak halus ke kiri (`translateX(-12px)` dengan `opacity: 0`).
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Mengubah Posisi Popover Profil Collapsed Menjadi Fixed di Luar Sidebar Utama
 - Change:
   - Mengubah posisi `.app .sidebar.sidebar-collapsed .profile-popover-menu` di `src/Sidebar.css` menjadi `position: fixed; left: 88px; bottom: 24px; z-index: 9999;` agar popover melayang keluar dari batasan sidebar dan masuk ke area dashboard utama tanpa terpotong.

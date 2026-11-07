@@ -206,6 +206,11 @@
 .app .sidebar.sidebar-collapsed .settings-label { padding-top: 15px; }
 .app .sidebar.sidebar-collapsed .profile-card { justify-content: center; padding: 10px 0; }
 .app .sidebar.sidebar-collapsed .profile-user-info { display: none !important; }
+@keyframes fadeSlideOutLeft {
+  from { opacity: 1; transform: translateX(0); }
+  to { opacity: 0; transform: translateX(-12px); }
+}
+
 .app .sidebar.sidebar-collapsed .profile-popover-menu {
   position: fixed;
   left: 88px;
@@ -217,7 +222,7 @@
   animation: fadeSlideLeft .18s cubic-bezier(.22,1,.36,1) both;
 }
 .app .sidebar.sidebar-collapsed .profile-popover-menu.closing {
-  animation: fadeSlideOut .15s cubic-bezier(.22,1,.36,1) both;
+  animation: fadeSlideOutLeft .15s cubic-bezier(.22,1,.36,1) both;
 }
 
 @media (max-width: 900px) and (min-width: 701px) {
