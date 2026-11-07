@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-07 — Menurunkan Sedikit Posisi Tulisan WORKSPACE dan Menu Rekap Ikan
+- Change:
+  - Meningkatkan margin atas pada `.app .nav-label` di `src/Sidebar.css` dari `28px` menjadi `35px` sehingga label WORKSPACE dan menu Rekap Ikan di bawahnya bergeser sedikit ke bawah.
+- Changed files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Menggeser Posisi Tombol Toggle Sidebar Sedikit ke Atas
 - Change:
   - Mengurangi padding atas pada `.app .sidebar` di `src/Sidebar.css` dari `22px` menjadi `15px` sehingga tombol buka/tutup sidebar (logo & brand header) bergeser sedikit ke atas secara proporsional.
