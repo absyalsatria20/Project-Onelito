@@ -1,5 +1,23 @@
 # Project Progress
 
+## 2026-11-09 — Restore Divider Lines on Workspace & Preferences Labels with Entrance Animation
+- Change:
+  - Mengembalikan pseudo-element `::before` pada `.workspace-label` dan `.settings-label` dengan animasi `lineSlideIn` (`scaleX(0)` ke `scaleX(1)`) sehingga garis pembatas kembali muncul dengan animasi masuk yang mulus dan dramatis.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
+## 2026-11-09 — Enhance Sidebar Entrance Animations to be More Prominent & Visible
+- Change:
+  - Membuat animasi masuk (*entrance animations*) di sidebar jauh lebih menonjol, jelas, dan dramatis dengan keyframe kustom `sidebarItemFadeIn` (pergeseran horizontal `-35px`, efek blur awal, durasi `0.5s`) serta keyframe garis `lineSlideIn` (`scaleX(0)` ke `scaleX(1)`) dengan jeda waktu (*staggered delays*) terstruktur untuk setiap komponen sidebar.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
+## 2026-11-09 — Fix Text & Line Animation for Workspace & Preferences Labels in Sidebar
+- Change:
+  - Menambahkan `display: block` dan `overflow: visible` pada `.workspace-label` dan `.settings-label` di `src/Sidebar.css` agar properti `transform` pada animasi `fadeSlideLeft` dapat diterapkan dengan sempurna pada elemen teks (*span*), sehingga teks "WORKSPACE" dan "PREFERENCES" beserta garis pemisah animasinya kini tampil dengan animasi masuk bertahap yang mulus.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Enable Block Display for Workspace & Preferences Labels to Ensure Text Animation Works
 - Change:
   - Menambahkan `display: block` pada `.workspace-label` dan `.settings-label` di `src/Sidebar.css` agar properti `transform` pada animasi `fadeSlideLeft` dapat berfungsi secara optimal pada elemen teks (*span*), sehingga teks "WORKSPACE" dan "PREFERENCES" kini bergerak masuk dengan mulus.
