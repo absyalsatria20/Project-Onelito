@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Ensure Consistent Font Size for Workspace & Preferences Labels in Collapsed Sidebar
+- Change:
+  - Menambahkan `font-size: 9px !important` pada state sidebar collapsed untuk `.workspace-label` dan `.settings-label` di `src/Sidebar.css` guna memastikan ukuran font tetap konsisten dan tidak berubah-ubah saat sidebar ditutup maupun dibuka.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Fix Text Overflow on Workspace & Preferences Labels When Sidebar is Collapsed
 - Change:
   - Menambahkan aturan `.app .sidebar.sidebar-collapsed .workspace-label` dan `.settings-label` dengan `overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important;` agar saat sidebar ditutup (*collapsed*), teks label terpotong rapi di dalam batas lebar sidebar dan tidak meluber keluar.

@@ -281,6 +281,7 @@
 .app .sidebar.sidebar-collapsed .sidebar-link .nav-badge { display: none !important; }
 .app .sidebar.sidebar-collapsed .workspace-label,
 .app .sidebar.sidebar-collapsed .settings-label {
+  font-size: 9px !important;
   overflow: hidden !important;
   text-overflow: ellipsis !important;
   white-space: nowrap !important;
