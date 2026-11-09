@@ -12,6 +12,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Remove Forced Minimum Height for Mobile View to Prevent Unnecessary Scrolling
+- Change:
+  - Mengubah `.workspace-layout` pada mobile view (`max-width: 700px`) dari `min-height: calc(100vh - 78px)` menjadi `min-height: auto`. Halaman kini hanya akan memanjang dan memunculkan scroll vertikal jika isi konten/tabel memang melebihi tinggi layar.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Set Period Tabs Indicator Bottom to 34px in Mobile View
 - Change:
   - Menyesuaikan posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) di mobile view menjadi `bottom: 34px !important`.
