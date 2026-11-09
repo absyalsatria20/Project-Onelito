@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Hide Topbar Theme Toggle Correctly on Mobile View (.scene-toggle class)
+- Change:
+  - Memperbaiki selector CSS pada mobile view (`max-width: 700px`) menjadi `.workspace-topbar .scene-toggle { display: none !important; }` agar toggle di topbar mobile benar-benar tersembunyi (sebelumnya salah menargetkan `.theme-toggle`).
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Increase Mobile Theme Toggle Margin to 13px for Ideal Spacing
 - Change:
   - Meningkatkan margin atas `.mobile-theme-toggle-wrap` pada mobile view menjadi `13px` agar jarak dengan menu Setting lebih pas dan proporsional.
