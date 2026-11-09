@@ -1,6 +1,9 @@
 # Project Progress
 
-## 2026-11-09 — Menghapus Bulan Sabit Statis dari Background Darkmode (`toggle-night-bg.svg`)
+## 2026-11-09 — Menghapus Scrollbar Vertikal dari Sidebar
+- Change:
+  - Memperbarui `src/Sidebar.css` dengan mengubah properti `overflow-y: auto` dan `scrollbar-width: thin` menjadi `overflow: visible` pada `.app .sidebar` sehingga scrollbar vertikal di sidebar hilang sepenuhnya.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0); perubahan telah di-commit & di-push ke GitHub.
 - Change:
   - Menghapus path bulan sabit / crescent dari background `toggle-night-bg.svg` agar latar belakang darkmode benar-benar bersih dan hanya tombol geser (`.knob-moon`) yang menjadi representasi bulan.
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0).
