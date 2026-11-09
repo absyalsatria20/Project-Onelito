@@ -224,7 +224,10 @@ function App() {
     const onWheel = (e: WheelEvent) => {
       if (e.deltaY !== 0) {
         e.preventDefault()
-        container.scrollLeft += e.deltaY
+        container.scrollBy({
+          left: e.deltaY * 0.75,
+          behavior: 'smooth'
+        })
       }
     }
     container.addEventListener('wheel', onWheel, { passive: false })

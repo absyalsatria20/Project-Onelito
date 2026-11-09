@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Make Period Tab Wheel-to-Scroll Smooth and Fluid
+- Change:
+  - Memperhalus animasi pergeseran *wheel-to-scroll* pada tab periode dengan menggunakan `container.scrollBy({ left: e.deltaY * 0.75, behavior: 'smooth' })`, memberikan efek transisi gulir yang lembut dan responsif.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Replace Drag-to-Scroll with Wheel-to-Scroll on Period Tabs (PC)
 - Change:
   - Mengganti interaksi *drag-to-scroll* pada container `.period-tabs` dengan *wheel-to-scroll*: pengguna PC cukup memutar roda mouse (`scroll wheel`) di atas barisan tab periode untuk menggeser tab secara horizontal dengan mulus.
