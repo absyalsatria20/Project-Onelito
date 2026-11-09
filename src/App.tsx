@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, ChevronsRight, ChevronRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key, Download, Upload, Database } from 'lucide-react'
+import { Check, ChevronDown, ChevronsRight, ChevronRight, Fish, FileText, ImagePlus, LogOut, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key, Download, Upload, Database } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import ThemeToggle from './ThemeToggle'
 import './App.css'
@@ -223,6 +223,33 @@ function App() {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   }, [isLoggedIn, profileMenuOpen])
+
+  useEffect(() => {
+    let touchStartX = 0
+    let touchStartY = 0
+    const handleTouchStart = (e: TouchEvent) => {
+      if (window.innerWidth > 700) return
+      touchStartX = e.touches[0].clientX
+      touchStartY = e.touches[0].clientY
+    }
+    const handleTouchEnd = (e: TouchEvent) => {
+      if (window.innerWidth > 700) return
+      const deltaX = e.changedTouches[0].clientX - touchStartX
+      const deltaY = Math.abs(e.changedTouches[0].clientY - touchStartY)
+      if (!sidebarOpen && touchStartX < 35 && deltaX > 60 && deltaY < 50) {
+        setSidebarOpen(true)
+      }
+      if (sidebarOpen && deltaX < -60 && deltaY < 50) {
+        setSidebarOpen(false)
+      }
+    }
+    window.addEventListener('touchstart', handleTouchStart, { passive: true })
+    window.addEventListener('touchend', handleTouchEnd, { passive: true })
+    return () => {
+      window.removeEventListener('touchstart', handleTouchStart)
+      window.removeEventListener('touchend', handleTouchEnd)
+    }
+  }, [sidebarOpen])
   const filtered = useMemo(() => records.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [records, owner, certificate, query, sort])
   const selected = owner === 'All Owners' ? records : records.filter(r => r.owner === owner)
   const grand = selected.reduce((sum, r) => sum + total(r), 0)
@@ -318,7 +345,7 @@ function App() {
                   }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
       <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} currentUsername={currentUsername} currentTitle={currentTitle} currentAvatar={currentAvatar} openModal={openAccountModal} lastBackupTime={lastBackupTime} onExportBackup={handleExportBackup} onImportBackup={handleImportBackup}/> : <>
-      <header className="page-heading"><div className="heading-copy"><button className="mobile-nav-toggle" onClick={()=>setSidebarOpen(true)} aria-label="Buka navigasi"><Menu size={20}/></button><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
+      <header className="page-heading"><div className="heading-copy"><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
           <label className="search-field"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari ikan atau pemilik..." aria-label="Cari ikan atau pemilik"/></label>

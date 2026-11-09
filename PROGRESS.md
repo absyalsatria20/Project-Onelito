@@ -1,5 +1,15 @@
 # Project Progress
 
+## 2026-11-09 — Edge Swipe Gesture untuk Sidebar Mobile & Clean Topbar
+- Change:
+  - Menghapus tombol hamburger (`mobile-nav-toggle`) dari topbar mobile agar tampilan topbar menjadi bersih dan tidak penuh.
+  - Menambahkan dukungan **edge swipe gesture** (`touchstart` / `touchend` di layar `<= 700px`):
+    - Geser dari tepi kiri layar (`< 35px`) ke kanan (`> 60px`) untuk membuka sidebar.
+    - Geser ke kiri saat sidebar terbuka untuk menutup sidebar.
+  - Tampilan PC tetap utuh dan tidak terpengaruh.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Optimalisasi Responsive Mobile pada Halaman Setting
 - Change:
   - Menambahkan aturan CSS responsif (`.settings-actions-grid` dan `.account-actions-grid`) dengan breakpoint `max-width: 500px`.
