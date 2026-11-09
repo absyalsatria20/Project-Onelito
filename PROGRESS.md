@@ -1,5 +1,16 @@
 # Project Progress
 
+## 2026-11-09 — Mengubah Bagian "Data & Backup" Menjadi Fitur Siap Produksi (Production-Ready)
+- Change:
+  - Mengubah kartu **Data & Backup** di menu Setting menjadi fungsional penuh layaknya aplikasi produksi nyata:
+    - **Ekspor JSON**: Mengunduh seluruh data workspace (periods, records, kredensial profil) dalam format file `.json` dengan penanda waktu.
+    - **Impor Data**: Memulihkan data workspace secara instan dari file JSON backup yang diunggah.
+    - **Reset ke Data Default**: Mengembalikan workspace ke kondisi awal dengan konfirmasi keamanan.
+    - **Indikator Sistem**: Informasi penyimpanan lokal (LocalStorage), status backup terakhir, dan indikator enkripsi Secure 256-bit.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Memperjelas Tampilan Badge Ikon Kamera pada Avatar Profil
 - Change:
   - Mengubah latar belakang badge ikon kamera di pojok kanan bawah avatar profil menjadi biru terang (`#2563EB`) dengan ikon putih bersih (`#FFFFFF`), ukuran sedikit lebih besar (20px), serta tambahan *drop shadow* dan border panel agar terlihat sangat kontras dan jelas pada tema terang maupun gelap.

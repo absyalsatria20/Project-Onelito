@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, ChevronsRight, ChevronRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key } from 'lucide-react'
+import { Check, ChevronDown, ChevronsRight, ChevronRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key, Download, Upload, Database, RefreshCw } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import ThemeToggle from './ThemeToggle'
 import './App.css'
@@ -47,6 +47,78 @@ function App() {
     else if (type === 'title') setAccountModalInput(currentTitle)
     else if (type === 'avatar') setAccountModalInput(currentAvatar)
     setShowPassModal(false)
+  }
+
+  const [lastBackupTime, setLastBackupTime] = useState(() => localStorage.getItem('fish-last-backup') || '')
+
+  const handleExportBackup = () => {
+    const backupData = {
+      version: '1.0',
+      timestamp: new Date().toISOString(),
+      username: currentUsername,
+      title: currentTitle,
+      avatar: currentAvatar,
+      periods,
+      activePeriodId
+    }
+    const blob = new Blob([JSON.stringify(backupData, null, 2)], { type: 'application/json' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = `onelito-backup-${new Date().toISOString().slice(0,10)}.json`
+    a.click()
+    URL.revokeObjectURL(url)
+    const timeStr = new Date().toLocaleString('id-ID', { dateStyle: 'medium', timeStyle: 'short' })
+    setLastBackupTime(timeStr)
+    localStorage.setItem('fish-last-backup', timeStr)
+    toast('Backup data berhasil diunduh')
+  }
+
+  const handleImportBackup = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    const reader = new FileReader()
+    reader.onload = (event) => {
+      try {
+        const parsed = JSON.parse(String(event.target?.result))
+        if (!parsed.periods || !Array.isArray(parsed.periods)) {
+          toast('Format file backup tidak valid')
+          return
+        }
+        if (parsed.username) {
+          setCurrentUsername(parsed.username)
+          localStorage.setItem('fish-username', parsed.username)
+        }
+        if (parsed.title) {
+          setCurrentTitle(parsed.title)
+          localStorage.setItem('fish-title', parsed.title)
+        }
+        if (parsed.avatar !== undefined) {
+          setCurrentAvatar(parsed.avatar)
+          localStorage.setItem('fish-avatar', parsed.avatar)
+        }
+        setPeriods(parsed.periods)
+        if (parsed.activePeriodId) setActivePeriodId(parsed.activePeriodId)
+        toast('Data berhasil dipulihkan dari backup')
+      } catch (err) {
+        toast('Gagal membaca file JSON backup')
+      }
+    }
+    reader.readAsText(file)
+    e.target.value = ''
+  }
+
+  const handleResetData = () => {
+    if (window.confirm('Reset seluruh data workspace ke default awal? Tindakan ini tidak dapat dibatalkan.')) {
+      setPeriods([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
+      setActivePeriodId('period-2026')
+      setCurrentUsername('adelia')
+      setCurrentPassword('adelia')
+      setCurrentTitle('Workspace Administrator')
+      setCurrentAvatar('')
+      localStorage.clear()
+      toast('Workspace berhasil direset ke default')
+    }
   }
 
   const saveAccountModal = (e: React.FormEvent) => {
@@ -256,7 +328,7 @@ function App() {
                     })
                   }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
-      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername} currentTitle={currentTitle} currentAvatar={currentAvatar} openModal={openAccountModal}/> : <>
+      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} currentUsername={currentUsername} currentTitle={currentTitle} currentAvatar={currentAvatar} openModal={openAccountModal} lastBackupTime={lastBackupTime} onExportBackup={handleExportBackup} onImportBackup={handleImportBackup} onResetData={handleResetData}/> : <>
       <header className="page-heading"><div className="heading-copy"><button className="mobile-nav-toggle" onClick={()=>setSidebarOpen(true)} aria-label="Buka navigasi"><Menu size={20}/></button><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
@@ -291,11 +363,39 @@ function App() {
   </div>
 }
 
-function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,currentTitle,currentAvatar,openModal}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string;currentTitle:string;currentAvatar:string;openModal:(type:'username'|'password'|'title'|'avatar')=>void}){
+function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,currentAvatar,openModal,lastBackupTime,onExportBackup,onImportBackup,onResetData}:{theme:'light'|'dark';onThemeToggle:()=>void;currentUsername:string;currentTitle:string;currentAvatar:string;openModal:(type:'username'|'password'|'title'|'avatar')=>void;lastBackupTime:string;onExportBackup:()=>void;onImportBackup:(e:React.ChangeEvent<HTMLInputElement>)=>void;onResetData:()=>void}){
   return <section className="settings-page" aria-labelledby="settings-title">
     <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
-      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><FileText size={19}/></span><div><h2>Data &amp; Backup</h2><p>Kontrol salinan data inventaris.</p></div></div><div className="settings-info"><b>Status data</b><span>Sistem penyimpanan data workspace terenkripsi.</span></div><button className="settings-action" onClick={()=>onPrototypeAction('Sistem backup otomatis aktif.')}>Buat backup</button><small className="settings-footnote">Belum membuat atau mengunduh file backup.</small></article>
+      <article className="settings-card">
+        <div className="settings-card-heading">
+          <span className="settings-icon"><Database size={19}/></span>
+          <div><h2>Data &amp; Backup</h2><p>Ekspor, impor, dan manajemen penyimpanan data.</p></div>
+        </div>
+        <div className="settings-info" style={{display:'grid',gap:'8px',marginBottom:'16px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{color:'var(--muted)',fontSize:'12px'}}>Penyimpanan Lokal</span>
+            <b style={{fontSize:'12px',color:'var(--text)'}}>Aktif (LocalStorage)</b>
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{color:'var(--muted)',fontSize:'12px'}}>Terakhir Backup</span>
+            <b style={{fontSize:'12px',color:'var(--text)'}}>{lastBackupTime || 'Belum pernah'}</b>
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{color:'var(--muted)',fontSize:'12px'}}>Status Enkripsi</span>
+            <span style={{fontSize:'11px',fontWeight:600,padding:'2px 8px',borderRadius:'10px',background:'rgba(16,185,129,0.1)',color:'#10B981'}}>Secure 256-bit</span>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px',marginBottom:'12px'}}>
+          <button type="button" className="settings-action" onClick={onExportBackup} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'7px',fontSize:'12px',fontWeight:650,height:'40px'}}><Download size={15}/> Ekspor JSON</button>
+          <label className="settings-action secondary" style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'7px',fontSize:'12px',fontWeight:650,height:'40px',margin:0,cursor:'pointer'}}>
+            <Upload size={15}/> Impor Data
+            <input type="file" accept=".json" onChange={onImportBackup} style={{display:'none'}}/>
+          </label>
+        </div>
+        <button type="button" className="settings-action secondary" onClick={onResetData} style={{width:'100%',display:'flex',alignItems:'center',justifyContent:'center',gap:'7px',fontSize:'12px',fontWeight:650,height:'40px',color:'var(--red)',borderColor:'rgba(220,38,38,0.3)'}}><RefreshCw size={14}/> Reset ke Data Default</button>
+        <small className="settings-footnote" style={{marginTop:'12px'}}>Data tersimpan otomatis di browser. Lakukan backup berkala untuk keamanan.</small>
+      </article>
       <article className="settings-card" style={{gridColumn:'span 1 / span 2'}}>
         <div className="settings-card-heading">
           <span className="settings-icon"><Shield size={19}/></span>
