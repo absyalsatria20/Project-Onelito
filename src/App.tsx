@@ -307,7 +307,7 @@ function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,cu
           <button type="button" className="settings-action secondary" onClick={()=>openModal('password')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Password</button>
           <button type="button" className="settings-action secondary" onClick={()=>openModal('title')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Title</button>
         </div>
-        <small className="settings-footnote">Kelola kredensial dan informasi profil akun.</small>
+        <small className="settings-footnote">Kelola informasi profil akun.</small>
       </article>
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Sun size={19}/></span><div><h2>Mode Tampilan</h2><p>Pilih tema aplikasi.</p></div></div><div className="settings-mode" role="group" aria-label="Pilih mode tampilan"><button className={theme==='light'?'active':''} aria-pressed={theme==='light'} onClick={()=>{if(theme!=='light')onThemeToggle()}}><Sun size={17}/>Light</button><button className={theme==='dark'?'active':''} aria-pressed={theme==='dark'} onClick={()=>{if(theme!=='dark')onThemeToggle()}}><Moon size={17}/>Dark</button></div><small className="settings-footnote">Pilihan mode tersimpan di browser ini.</small></article>
     </div>
