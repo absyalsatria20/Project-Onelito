@@ -33,6 +33,14 @@ const total = (r: FishRecord) => r.rupiah + fee(r) + r.shipping
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('fish-logged-in') === 'true')
   const [currentUsername, setCurrentUsername] = useState(() => localStorage.getItem('fish-username') || 'adelia')
+  const [currentPassword, setCurrentPassword] = useState(() => localStorage.getItem('fish-password') || 'adelia')
+  const handleUpdateAccount = (newUsername: string, newPassword: string) => {
+    setCurrentUsername(newUsername)
+    setCurrentPassword(newPassword)
+    localStorage.setItem('fish-username', newUsername)
+    localStorage.setItem('fish-password', newPassword)
+    toast('Akun & akses berhasil diperbarui')
+  }
   const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
 
   const [periods, setPeriods] = useState<Period[]>([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
@@ -215,7 +223,7 @@ function App() {
                     })
                   }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
-      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername}/> : <>
+      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername} currentPassword={currentPassword} onUpdateAccount={handleUpdateAccount}/> : <>
       <header className="page-heading"><div className="heading-copy"><button className="mobile-nav-toggle" onClick={()=>setSidebarOpen(true)} aria-label="Buka navigasi"><Menu size={20}/></button><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
@@ -249,12 +257,47 @@ function App() {
   </div>
 }
 
-function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string}){
+function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,currentPassword,onUpdateAccount}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string;currentPassword:string;onUpdateAccount:(u:string,p:string)=>void}){
+  const [usernameInput,setUsernameInput]=useState(currentUsername)
+  const [passwordInput,setPasswordInput]=useState(currentPassword)
+  const [showPass,setShowPass]=useState(false)
+
+  const handleSave=(e:React.FormEvent)=>{
+    e.preventDefault()
+    if(!usernameInput.trim()){
+      onPrototypeAction('Username wajib diisi')
+      return
+    }
+    onUpdateAccount(usernameInput.trim(), passwordInput)
+  }
+
   return <section className="settings-page" aria-labelledby="settings-title">
     <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><FileText size={19}/></span><div><h2>Data &amp; Backup</h2><p>Kontrol salinan data inventaris.</p></div></div><div className="settings-info"><b>Status data</b><span>Sistem penyimpanan data workspace terenkripsi.</span></div><button className="settings-action" onClick={()=>onPrototypeAction('Sistem backup otomatis aktif.')}>Buat backup</button><small className="settings-footnote">Belum membuat atau mengunduh file backup.</small></article>
-      <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Settings size={19}/></span><div><h2>Akun &amp; Akses</h2><p>Profil pengguna dan hak akses.</p></div></div><div className="settings-profile"><span className="profile-avatar">{currentUsername.slice(0,2).toUpperCase()}</span><span><b>{currentUsername}</b><small>Administrator · administrator</small></span></div><div className="settings-info"><b>Akses akun</b><span>Login dan pengaturan hak akses belum tersedia.</span></div><button className="settings-action secondary" onClick={()=>onPrototypeAction('Pengaturan akses akun aktif.')}>Kelola akun</button></article>
+      <article className="settings-card">
+        <div className="settings-card-heading">
+          <span className="settings-icon"><Settings size={19}/></span>
+          <div><h2>Akun &amp; Akses</h2><p>Ubah username dan password akun.</p></div>
+        </div>
+        <form onSubmit={handleSave} style={{display:'grid',gap:'12px',marginBottom:'16px'}}>
+          <label className="field" style={{fontSize:'12px',fontWeight:650}}>
+            <span>Username</span>
+            <input value={usernameInput} onChange={e=>setUsernameInput(e.target.value)} placeholder="Masukkan username baru" style={{height:'38px',padding:'0 11px',border:'1px solid var(--line)',borderRadius:'7px',background:'var(--panel)',color:'var(--text)',fontSize:'13px'}}/>
+          </label>
+          <label className="field" style={{fontSize:'12px',fontWeight:650}}>
+            <span>Password</span>
+            <div className="login-password-wrap">
+              <input type={showPass?'text':'password'} value={passwordInput} onChange={e=>setPasswordInput(e.target.value)} placeholder="Masukkan password baru" style={{height:'38px',padding:'0 38px 0 11px',border:'1px solid var(--line)',borderRadius:'7px',background:'var(--panel)',color:'var(--text)',width:'100%',fontSize:'13px'}}/>
+              <button type="button" className="login-eye-btn" onClick={()=>setShowPass(!showPass)} aria-label={showPass?'Sembunyikan password':'Tampilkan password'} style={{right:'6px'}}>
+                {showPass?<EyeOff size={16}/>:<Eye size={16}/>}
+              </button>
+            </div>
+          </label>
+          <button type="submit" className="settings-action" style={{marginTop:'4px',cursor:'pointer'}}>Simpan Perubahan</button>
+        </form>
+        <small className="settings-footnote">Perubahan langsung disimpan ke sesi.</small>
+      </article>
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Sun size={19}/></span><div><h2>Mode Tampilan</h2><p>Pilih tema aplikasi.</p></div></div><div className="settings-mode" role="group" aria-label="Pilih mode tampilan"><button className={theme==='light'?'active':''} aria-pressed={theme==='light'} onClick={()=>{if(theme!=='light')onThemeToggle()}}><Sun size={17}/>Light</button><button className={theme==='dark'?'active':''} aria-pressed={theme==='dark'} onClick={()=>{if(theme!=='dark')onThemeToggle()}}><Moon size={17}/>Dark</button></div><small className="settings-footnote">Pilihan mode tersimpan di browser ini.</small></article>
     </div>
   </section>

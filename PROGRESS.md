@@ -1,5 +1,10 @@
 # Project Progress
 
+## 2026-11-09 — Menambahkan Fitur Ubah Username & Password di Menu Setting (Akun & Akses)
+- Change:
+  - Memperbarui `SettingsPanel` di `src/App.tsx` dengan menambahkan form input untuk mengubah username dan password akun (default `adelia` / `adelia`), serta menyimpan perubahan ke `localStorage` dan menampilkan notifikasi toast.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0); perubahan telah di-commit & di-push ke GitHub.
+
 ## 2026-11-09 — Mengubah `overflow-y: hidden` pada `.table-wrap`
 - Change:
   - Memperbarui `src/App.css` pada `.table-wrap` dengan menetapkan `overflow-x: auto; overflow-y: hidden;` agar tidak ada scrollbar vertical di dalam tabel, sementara tabel tetap fleksibel memanjang ke bawah dan scroll horizontal tetap aktif untuk layar sempit.
