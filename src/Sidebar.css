@@ -55,11 +55,13 @@
   transition: all .2s cubic-bezier(.22,1,.36,1);
 }
 
-.app .sidebar .sidebar-brand { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.05s both; }
-.app .sidebar .workspace-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.1s both; }
-.app .sidebar .sidebar-nav { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.15s both; }
-.app .sidebar .settings-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.2s both; }
-.app .sidebar .sidebar-bottom { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.25s both; }
+.app .sidebar .sidebar-header { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.03s both; }
+.app .sidebar .workspace-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.08s both; }
+.app .sidebar .sidebar-nav:nth-of-type(1) { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.13s both; }
+.app .sidebar .settings-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.18s both; }
+.app .sidebar .sidebar-nav:nth-of-type(2) { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.23s both; }
+.app .sidebar .mobile-theme-toggle-wrap { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.28s both; }
+.app .sidebar .sidebar-bottom { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.33s both; }
 .app .sidebar-brand:hover {
   background: var(--panel);
   border-color: var(--blue);

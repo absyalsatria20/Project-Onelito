@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Comprehensive Staggered Animations for All Sidebar Components
+- Change:
+  - Menerapkan animasi masuk bertahap (*staggered entrance animations*) `fadeSlideLeft` secara menyeluruh pada **semua** komponen yang ada di dalam sidebar secara berurutan: `.sidebar-header`, `.workspace-label`, `.sidebar-nav` (menu utama), `.settings-label`, `.sidebar-nav` (menu setting), `.mobile-theme-toggle-wrap` (toggle mode di mobile), dan `.sidebar-bottom` (kartu profil).
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Restore Sidebar Entrance Staggered Animations on Page Load / Refresh
 - Change:
   - Menghapus aturan `animation: none !important` pada elemen sidebar di `src/Sidebar.css` dan mengaktifkan kembali animasi masuk bertahap (`fadeSlideLeft` dengan *staggered delays*) untuk logo/brand sidebar, label workspace, navigasi menu, label setting, dan kartu profil di bawah.
