@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Push Add Button Down in Mobile View
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), margin atas tombol "+ Tambah Ikan" (`.heading-actions`) ditingkatkan (`margin-top: 12px`) agar posisinya turun lebih ke bawah mendekati area tabel.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Left-Align Mobile Header Title and Subtitle
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), kontainer judul dan subtitle header (`.heading-copy`, `h1`, `p`) diatur secara eksplisit menjadi rata kiri (`text-align: left`).
