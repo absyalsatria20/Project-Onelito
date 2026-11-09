@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Fix Text Overflow on Workspace & Preferences Labels When Sidebar is Collapsed
+- Change:
+  - Menambahkan aturan `.app .sidebar.sidebar-collapsed .workspace-label` dan `.settings-label` dengan `overflow: hidden !important; text-overflow: ellipsis !important; white-space: nowrap !important;` agar saat sidebar ditutup (*collapsed*), teks label terpotong rapi di dalam batas lebar sidebar dan tidak meluber keluar.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Restore Divider Lines on Workspace & Preferences Labels with Entrance Animation
 - Change:
   - Mengembalikan pseudo-element `::before` pada `.workspace-label` dan `.settings-label` dengan animasi `lineSlideIn` (`scaleX(0)` ke `scaleX(1)`) sehingga garis pembatas kembali muncul dengan animasi masuk yang mulus dan dramatis.
