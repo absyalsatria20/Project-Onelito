@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Move Theme Toggle to Sidebar Exclusively for Mobile View
+- Change:
+  - Memindahkan `ThemeToggle` dari topbar ke dalam sidebar khusus pada mobile view (`max-width: 700px`), sedangkan tampilan PC tetap tidak berubah.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Restore "Tambah Ikan" Text with Stacked Icon/Text Layout on Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 600px`), tombol tambah ikan (`.heading-actions .primary-btn`) diubah dari kotak ikon saja menjadi tombol dengan ikon plus di atas dan teks "Tambah ikan" di bawahnya (stacked layout), memberikan ruang teks yang leluasa tanpa mengubah tampilan PC.
