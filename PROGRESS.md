@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Add Entrance Animation to Divider Lines of Workspace & Preferences Labels
+- Change:
+  - Memisahkan garis pembatas border atas pada `.workspace-label` dan `.settings-label` menjadi pseudo-element `::before` dengan animasi `slideIndicator`, sehingga garis pemisah maupun teks label muncul dengan animasi masuk bertahap yang selaras di sidebar.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Comprehensive Staggered Animations for All Sidebar Components
 - Change:
   - Menerapkan animasi masuk bertahap (*staggered entrance animations*) `fadeSlideLeft` secara menyeluruh pada **semua** komponen yang ada di dalam sidebar secara berurutan: `.sidebar-header`, `.workspace-label`, `.sidebar-nav` (menu utama), `.settings-label`, `.sidebar-nav` (menu setting), `.mobile-theme-toggle-wrap` (toggle mode di mobile), dan `.sidebar-bottom` (kartu profil).
