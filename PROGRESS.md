@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Fix Period Tabs Indicator Position in Mobile View (CSS Specificity Order)
+- Change:
+  - Memindahkan override aturan `@media(max-width: 700px)` untuk `.period-tabs-indicator` (`bottom: 2px !important`) ke bagian paling akhir file `src/App.css` agar aturan prioritas CSS tidak tertimpa oleh definisi global. Kini garis indikator biru berada di dalam kotak tab periode secara presisi.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Place Period Tabs Indicator Inside the Tab Box in Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) disetel ke `bottom: 1px` sehingga posisinya berada di dalam kotak tab periode.
