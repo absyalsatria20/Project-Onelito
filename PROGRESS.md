@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Fix Mobile Header Layout (Title on Top, Full-Width Add Button with Side-by-Side Icon & Text Below)
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), header halaman (`.page-heading`) diatur secara vertikal di mana judul & deskripsi ("Rekap Pembelian Ikan Jepang") berada di atas, dan tombol "+ Tambah Ikan" berada di bawahnya dengan lebar penuh (`width: 100%`) serta ikon plus di samping teks (horizontal inline, bukan ditumpuk). Tampilan PC tetap utuh dan fix seperti semula.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Reorder Grand Total Box Above Owner Summary on Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), posisi footer dibalik menggunakan `flex-direction: column-reverse` sehingga kotak grand total berada di atas dan teks rangkuman owner berada di bawahnya (tampilan PC tetap tidak berubah).
