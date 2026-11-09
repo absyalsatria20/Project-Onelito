@@ -102,3 +102,28 @@
 .login-password-wrap input{padding-right:44px}
 .login-eye-btn{position:absolute;right:10px;background:none;border:0;color:var(--muted);cursor:pointer;padding:6px;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:color .15s,background .15s}
 .login-eye-btn:hover{color:var(--text);background:var(--panel-hover)}
+
+.table-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 14px;
+  padding: 0 4px;
+}
+.owner-summary {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--muted);
+  flex: 1;
+  text-align: center;
+}
+.grand-total {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: var(--text);
+}

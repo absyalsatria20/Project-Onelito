@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Center-align Owner Summary & Record Count Footer Text
+- Change:
+  - Mengatur teks rangkuman owner dan jumlah data (`.owner-summary` / "Owner: ... · Menampilkan ... data") menjadi rata tengah (`text-align: center`, `justify-content: center`) di bagian footer tabel rekap ikan.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Konsistensi Styling Tombol Close (X) pada Sidebar Mobile
 - Change:
   - Memperbarui gaya tombol tutup (`.sidebar-close`) di sidebar mobile agar memiliki ukuran 38x38px, latar belakang panel, border linier, radius sudut 8px, serta efek hover biru yang konsisten dengan tombol aksi panel lainnya.
