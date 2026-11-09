@@ -12,10 +12,11 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
-## 2026-11-09 — Revert Content Scroll Container Change
+## 2026-11-09 — Fix Sidebar Z-Index and Scrim Backdrop Blur/Darkening for Mobile View
 - Change:
-  - Mengembalikan perubahan wrapper `.workspace-content-scroll` dan mengembalikan layout seperti semula sesuai permintaan user.
-- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+  - Mengatur `.sidebar-scrim` dengan `inset: 0`, `z-index: 90`, dan efek `backdrop-filter: blur(4px)` serta latar belakang gelap agar saat sidebar aktif di mobile, topbar dan komponen di belakangnya ikut ter-blur dan gelap.
+  - Menaikkan `z-index` sidebar menjadi `100` agar berada di atas scrim dan topbar, mencegah sidebar tertutup oleh topbar.
+- Files: `src/App.css`, `src/Sidebar.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0).
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), properti `html` diatur ke `overflow-y: auto` dan `body`, `#root` menggunakan `min-height: auto`. Dengan demikian, scrollbar vertikal hanya akan muncul jika konten/tabel memang melebihi tinggi layar; jika konten sedikit dan muat di layar, tidak ada scrollbar atau scrolling yang muncul.
