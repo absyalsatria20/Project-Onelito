@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Adjust Period Tabs Indicator Position in Mobile View
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) diturunkan sedikit (`bottom: 33px`) agar pas dan selaras.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Increase Add Button Margin Top on Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), margin atas tombol "+ Tambah Ikan" (`.heading-actions`) ditingkatkan lagi (`margin-top: 18px`) agar posisinya turun lebih dekat ke area tabel.
