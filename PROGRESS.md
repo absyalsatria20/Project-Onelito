@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Menambahkan Transisi Keluar (`closeWithAnimation`) pada Modal Akun & Akses
+- Change:
+  - Mengintegrasikan fungsi transisi keluar (`closeWithAnimation`) pada semua modal Akun & Akses (Username, Password, Title, Avatar) saat ditutup, dibatalkan, maupun disimpan. Ini menyamakan animasi transisi *fade-out / slide-out* agar konsisten dengan modal-modal lain di aplikasi.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Mengoptimalkan Kompresi & Resizing Gambar Avatar untuk Menghilangkan Lag Saat Save Modal
 - Change:
   - Menambahkan proses kompresi & resizing gambar avatar (maks. 160px JPEG kualitas 0.85 via Canvas) saat diunggah. Ini mencegah pembengkakan ukuran string base64 yang sebelumnya menyebabkan jeda (freeze) pada main-thread saat menyimpan, sehingga modal ganti avatar kini langsung tertutup secara instan dan responsif.
