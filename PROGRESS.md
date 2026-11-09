@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Menambahkan Ikon Panah Kanan (`ChevronRight`) pada Tombol Aksi "Akun & Akses"
+- Change:
+  - Menambahkan ikon panah kanan (`ChevronRight`) di sisi kanan setiap tombol aksi (Ubah Username, Ubah Password, Ubah Title, Ubah Avatar) untuk memberikan kesan navigasi yang interaktif.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Redesign Tampilan Menu Setting "Akun & Akses" Menjadi Lebih Elegan & Modern
 - Change:
   - Mendesain ulang kartu **Akun & Akses** dengan banner profil gradien, badge Admin, dan avatar 50px dengan indikator kamera interaktif.
