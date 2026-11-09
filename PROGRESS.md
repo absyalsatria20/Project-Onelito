@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-09 — Center-align Owner Summary & Record Count Footer Text
+## 2026-11-09 — Center-align Owner Summary on Mobile View Only
+- Change:
+  - Mengembalikan tampilan PC ke kondisi semula tanpa perubahan (tetap fix seperti sebelumnya).
+  - Mengatur teks rangkuman owner dan jumlah data agar rata tengah secara khusus pada tampilan mobile (`max-width: 700px`).
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 - Change:
   - Mengatur teks rangkuman owner dan jumlah data (`.owner-summary` / "Owner: ... · Menampilkan ... data") menjadi rata tengah (`text-align: center`, `justify-content: center`) di bagian footer tabel rekap ikan.
 - Files: `src/App.css`, `PROGRESS.md`
