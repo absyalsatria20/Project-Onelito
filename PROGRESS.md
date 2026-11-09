@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Refine Mobile Scroll Lock to Prevent Sticky Topbar Reset
+- Change:
+  - Menyederhanakan penanganan scroll lock modal/sidebar di mobile kembali menggunakan `overflow: hidden` disertai `window.scrollTo(0, scrollY)` saat aktif dan cleanup untuk memastikan posisi scroll dan topbar tetap stabil di tempatnya.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Fix Mobile Scroll Jump / Reset When Opening Modals or Sidebar
 - Change:
   - Mengubah implementasi penguncian scroll background di mobile (`useEffect`) dari sekadar `overflow: hidden` menjadi teknik `position: fixed` dengan `top: -scrollY` yang mengunci posisi gulir persis di tempat saat modal atau sidebar dibuka, serta memulihkan posisi scroll secara presisi saat ditutup. Ini mencegah topbar melompat/kembali ke posisi semula di perangkat mobile.
