@@ -1,5 +1,13 @@
 # Project Progress
 
+## 2026-11-09 — Redesign Tampilan Menu Setting "Akun & Akses" Menjadi Lebih Elegan & Modern
+- Change:
+  - Mendesain ulang kartu **Akun & Akses** dengan banner profil gradien, badge Admin, dan avatar 50px dengan indikator kamera interaktif.
+  - Mengganti tombol aksi biasa dengan tombol berikon tematik (`User`, `Key`, `Shield`, `Camera`) dalam grid 2 kolom yang rapi dan responsif.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Menambahkan Fitur Ganti Avatar di Menu Setting (Akun & Akses)
 - Change:
   - Menambahkan menu dan tombol **Ubah Avatar** di kartu **Akun & Akses** pada menu **Setting**.

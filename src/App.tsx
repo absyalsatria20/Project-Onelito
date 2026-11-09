@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Check, ChevronDown, ChevronsRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X } from 'lucide-react'
+import { Check, ChevronDown, ChevronsRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import ThemeToggle from './ThemeToggle'
 import './App.css'
@@ -296,23 +296,29 @@ function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,cu
     <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><FileText size={19}/></span><div><h2>Data &amp; Backup</h2><p>Kontrol salinan data inventaris.</p></div></div><div className="settings-info"><b>Status data</b><span>Sistem penyimpanan data workspace terenkripsi.</span></div><button className="settings-action" onClick={()=>onPrototypeAction('Sistem backup otomatis aktif.')}>Buat backup</button><small className="settings-footnote">Belum membuat atau mengunduh file backup.</small></article>
-      <article className="settings-card">
+      <article className="settings-card" style={{gridColumn:'span 1 / span 2'}}>
         <div className="settings-card-heading">
-          <span className="settings-icon"><Settings size={19}/></span>
-          <div><h2>Akun &amp; Akses</h2><p>Profil pengguna dan hak akses.</p></div>
+          <span className="settings-icon"><Shield size={19}/></span>
+          <div><h2>Akun &amp; Akses</h2><p>Profil pengguna, kredensial, dan hak akses.</p></div>
         </div>
-        <div className="settings-profile" style={{display:'flex',alignItems:'center',gap:'12px',padding:'12px',background:'var(--panel-muted)',borderRadius:'8px',marginBottom:'16px'}}>
-          <span className="profile-avatar" style={{width:'40px',height:'40px',borderRadius:'50%',background:'var(--primary)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'15px',overflow:'hidden'}}>{currentAvatar ? <img src={currentAvatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : currentUsername.slice(0,2).toUpperCase()}</span>
-          <div style={{display:'flex',flexDirection:'column'}}>
-            <b style={{fontSize:'14px',color:'var(--text)'}}>{currentUsername}</b>
-            <small style={{fontSize:'12px',color:'var(--muted)'}}>{currentTitle} · administrator</small>
+        <div style={{display:'flex',alignItems:'center',gap:'16px',padding:'16px 20px',background:'linear-gradient(135deg, var(--panel-muted) 0%, var(--panel) 100%)',borderRadius:'10px',border:'1px solid var(--line)',marginBottom:'16px',position:'relative',overflow:'hidden'}}>
+          <div style={{position:'relative',cursor:'pointer',flexShrink:0}} onClick={()=>openModal('avatar')} title="Klik untuk ubah avatar">
+            <span className="profile-avatar" style={{width:'50px',height:'50px',borderRadius:'50%',background:'var(--primary)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'17px',overflow:'hidden',boxShadow:'0 4px 12px rgba(0,0,0,0.1)'}}>{currentAvatar ? <img src={currentAvatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : currentUsername.slice(0,2).toUpperCase()}</span>
+            <span style={{position:'absolute',bottom:0,right:0,width:'18px',height:'18px',background:'var(--primary)',color:'#fff',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px',border:'2px solid var(--panel)'}}><Camera size={10}/></span>
+          </div>
+          <div style={{display:'flex',flexDirection:'column',gap:'2px',flex:1}}>
+            <div style={{display:'flex',alignItems:'center',gap:'8px'}}>
+              <b style={{fontSize:'15px',color:'var(--text)',fontWeight:700}}>{currentUsername}</b>
+              <span style={{fontSize:'10px',fontWeight:600,padding:'2px 8px',borderRadius:'10px',background:'rgba(220, 38, 38, 0.1)',color:'#DC2626'}}>Admin</span>
+            </div>
+            <span style={{fontSize:'12px',color:'var(--muted)',fontWeight:500}}>{currentTitle}</span>
           </div>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(0, 1fr))',gap:'8px',marginBottom:'12px'}}>
-          <button type="button" className="settings-action secondary" onClick={()=>openModal('username')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Username</button>
-          <button type="button" className="settings-action secondary" onClick={()=>openModal('password')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Password</button>
-          <button type="button" className="settings-action secondary" onClick={()=>openModal('title')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Title</button>
-          <button type="button" className="settings-action secondary" onClick={()=>openModal('avatar')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Avatar</button>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(0, 1fr))',gap:'10px',marginBottom:'12px'}}>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('username')} style={{display:'flex',alignItems:'center',gap:'8px',fontSize:'12px',fontWeight:600,padding:'0 14px',justifyContent:'flex-start',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><User size={15} style={{color:'var(--primary)'}}/> Ubah Username</button>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('password')} style={{display:'flex',alignItems:'center',gap:'8px',fontSize:'12px',fontWeight:600,padding:'0 14px',justifyContent:'flex-start',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><Key size={15} style={{color:'var(--primary)'}}/> Ubah Password</button>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('title')} style={{display:'flex',alignItems:'center',gap:'8px',fontSize:'12px',fontWeight:600,padding:'0 14px',justifyContent:'flex-start',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><Shield size={15} style={{color:'var(--primary)'}}/> Ubah Title</button>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('avatar')} style={{display:'flex',alignItems:'center',gap:'8px',fontSize:'12px',fontWeight:600,padding:'0 14px',justifyContent:'flex-start',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><Camera size={15} style={{color:'var(--primary)'}}/> Ubah Avatar</button>
         </div>
         <small className="settings-footnote">Kelola informasi profil akun.</small>
       </article>
