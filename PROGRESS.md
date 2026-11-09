@@ -12,13 +12,11 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
-## 2026-11-09 — Make Workspace Topbar Sticky (Fixed on Scroll)
+## 2026-11-09 — Revert Content Scroll Container Change
 - Change:
-  - Menambahkan properti `position: sticky; top: 0; z-index: 50;` pada `.workspace-topbar` agar bar atas (top bar) tetap berada di posisinya (freeze) saat halaman digulir (scroll).
-- Files: `src/App.css`, `PROGRESS.md`
-- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
-
-## 2026-11-09 — Optimize Mobile Scroll Behavior (`overflow-y: auto`)
+  - Mengembalikan perubahan wrapper `.workspace-content-scroll` dan mengembalikan layout seperti semula sesuai permintaan user.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), properti `html` diatur ke `overflow-y: auto` dan `body`, `#root` menggunakan `min-height: auto`. Dengan demikian, scrollbar vertikal hanya akan muncul jika konten/tabel memang melebihi tinggi layar; jika konten sedikit dan muat di layar, tidak ada scrollbar atau scrolling yang muncul.
 - Files: `src/index.css`, `PROGRESS.md`
