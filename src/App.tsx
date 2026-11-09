@@ -223,7 +223,21 @@ function App() {
     if (!hasActiveModal) return
     const previousOverflow = document.body.style.overflow
     document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = previousOverflow }
+
+    const handleTouchMove = (e: TouchEvent) => {
+      const target = e.target as HTMLElement
+      const inSidebar = target.closest('.sidebar')
+      const inModal = target.closest('.form-dialog, .confirm-dialog, .profile-dialog, .period-name-dialog, .image-dialog, .terms-dialog, .profile-popover-menu')
+      if (!inSidebar && !inModal) {
+        e.preventDefault()
+      }
+    }
+
+    document.addEventListener('touchmove', handleTouchMove, { passive: false })
+    return () => {
+      document.body.style.overflow = previousOverflow
+      document.removeEventListener('touchmove', handleTouchMove)
+    }
   }, [isLoggedIn, modal, periodDialog, deletePeriodTarget, preview, termsDetail, deleteTarget, profileModal, accountModal, sidebarOpen])
 
   useEffect(() => {

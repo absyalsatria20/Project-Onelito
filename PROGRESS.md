@@ -12,9 +12,9 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
-## 2026-11-09 — Isolate Background Scrolling When Sidebar or Modals Are Open
+## 2026-11-09 — Prevent Mobile Touch Background Scrolling When Sidebar or Modals Are Open
 - Change:
-  - Memperluas efek penguncian scroll background (`document.body.style.overflow = 'hidden'`) agar aktif setiap kali **sidebar terbuka** (`sidebarOpen`) atau **popup modal apapun aktif** (`modal`, `periodDialog`, `deletePeriodTarget`, `preview`, `termsDetail`, `deleteTarget`, `profileModal`, `accountModal`). Menu utama dan halaman belakang kini terisolasi total dan tidak dapat digulir.
+  - Menambahkan listener `touchmove` dengan `{ passive: false }` pada efek penguncian dokumen saat sidebar atau popup modal aktif. Sentuhan/geseran di luar elemen sidebar atau dialog modal kini diblokir via `e.preventDefault()`, sehingga halaman utama benar-benar terisolasi dan tidak bisa digulir di perangkat mobile (iOS/Android).
 - Files: `src/App.tsx`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 - Change:
