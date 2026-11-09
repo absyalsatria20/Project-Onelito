@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Restore Sidebar Entrance Staggered Animations on Page Load / Refresh
+- Change:
+  - Menghapus aturan `animation: none !important` pada elemen sidebar di `src/Sidebar.css` dan mengaktifkan kembali animasi masuk bertahap (`fadeSlideLeft` dengan *staggered delays*) untuk logo/brand sidebar, label workspace, navigasi menu, label setting, dan kartu profil di bawah.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Restore Theme Toggle in Mobile Sidebar While Keeping It Hidden on PC
 - Change:
   - Mengembalikan visibilitas toggle mode di sidebar khusus untuk mobile view (`@media(max-width:700px)`), sementara di tampilan web PC tetap tersembunyi (`display: none` secara default).

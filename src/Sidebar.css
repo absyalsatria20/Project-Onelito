@@ -55,7 +55,11 @@
   transition: all .2s cubic-bezier(.22,1,.36,1);
 }
 
-.app .sidebar-brand,.app .sidebar .nav-label,.app .sidebar .sidebar-link { animation: none !important; }
+.app .sidebar .sidebar-brand { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.05s both; }
+.app .sidebar .workspace-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.1s both; }
+.app .sidebar .sidebar-nav { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.15s both; }
+.app .sidebar .settings-label { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.2s both; }
+.app .sidebar .sidebar-bottom { animation: fadeSlideLeft 0.35s cubic-bezier(.22,1,.36,1) 0.25s both; }
 .app .sidebar-brand:hover {
   background: var(--panel);
   border-color: var(--blue);
