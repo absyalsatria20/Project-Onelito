@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Adjust Mobile Theme Toggle Position in Sidebar Closer to Setting Menu
+- Change:
+  - Mengurangi margin atas `.mobile-theme-toggle-wrap` pada mobile view menjadi `4px` agar posisi toggle dan teks "Ubah Tampilan" naik hampir mepet tepat di bawah menu Setting.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Refine Mobile Theme Toggle Layout in Sidebar (Borderless, Left Toggle / Right Label)
 - Change:
   - Mengubah tampilan toggle mode di sidebar khusus mobile view menjadi tanpa kotak (border/background dihapus), dengan posisi toggle di kiri dan teks "Ubah Tampilan" di sebelah kanannya, tepat di bawah menu Setting.
