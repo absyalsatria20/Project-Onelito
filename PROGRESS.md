@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Raise Mobile Theme Toggle Position Even Higher Under Setting Menu
+- Change:
+  - Mengubah margin atas `.mobile-theme-toggle-wrap` pada mobile view menjadi `-3px` agar posisinya semakin naik dan benar-benar mepet tepat di bawah menu Setting.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Adjust Mobile Theme Toggle Position in Sidebar Closer to Setting Menu
 - Change:
   - Mengurangi margin atas `.mobile-theme-toggle-wrap` pada mobile view menjadi `4px` agar posisi toggle dan teks "Ubah Tampilan" naik hampir mepet tepat di bawah menu Setting.
