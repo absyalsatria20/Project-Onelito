@@ -159,13 +159,6 @@ function App() {
       setClosingModal(null)
     }, 180)
   }
-  useEffect(() => {
-    if (!isLoggedIn) return
-    if (!modal && !periodDialog && !deletePeriodTarget) return
-    const previousOverflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    return () => { document.body.style.overflow = previousOverflow }
-  }, [isLoggedIn, modal, periodDialog, deletePeriodTarget])
   const [periodError,setPeriodError] = useState('')
   const [openPeriodMenu,setOpenPeriodMenu] = useState<{id:string;left:number;top:number;width:number;height:number}|null>(null)
   const tabsRef = useRef<Record<string, HTMLDivElement | null>>({})
@@ -223,6 +216,15 @@ function App() {
     document.addEventListener('mousedown', handleOutsideClick)
     return () => document.removeEventListener('mousedown', handleOutsideClick)
   }, [isLoggedIn, profileMenuOpen])
+
+  useEffect(() => {
+    if (!isLoggedIn) return
+    const hasActiveModal = modal || periodDialog || deletePeriodTarget || preview || termsDetail || deleteTarget || profileModal || accountModal || sidebarOpen
+    if (!hasActiveModal) return
+    const previousOverflow = document.body.style.overflow
+    document.body.style.overflow = 'hidden'
+    return () => { document.body.style.overflow = previousOverflow }
+  }, [isLoggedIn, modal, periodDialog, deletePeriodTarget, preview, termsDetail, deleteTarget, profileModal, accountModal, sidebarOpen])
 
   useEffect(() => {
     let touchStartX = 0

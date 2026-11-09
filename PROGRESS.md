@@ -12,12 +12,11 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
-## 2026-11-09 — Fix Sidebar Z-Index and Scrim Backdrop Blur/Darkening for Mobile View
+## 2026-11-09 — Isolate Background Scrolling When Sidebar or Modals Are Open
 - Change:
-  - Mengatur `.sidebar-scrim` dengan `inset: 0`, `z-index: 90`, dan efek `backdrop-filter: blur(4px)` serta latar belakang gelap agar saat sidebar aktif di mobile, topbar dan komponen di belakangnya ikut ter-blur dan gelap.
-  - Menaikkan `z-index` sidebar menjadi `100` agar berada di atas scrim dan topbar, mencegah sidebar tertutup oleh topbar.
-- Files: `src/App.css`, `src/Sidebar.css`, `PROGRESS.md`
-- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+  - Memperluas efek penguncian scroll background (`document.body.style.overflow = 'hidden'`) agar aktif setiap kali **sidebar terbuka** (`sidebarOpen`) atau **popup modal apapun aktif** (`modal`, `periodDialog`, `deletePeriodTarget`, `preview`, `termsDetail`, `deleteTarget`, `profileModal`, `accountModal`). Menu utama dan halaman belakang kini terisolasi total dan tidak dapat digulir.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), properti `html` diatur ke `overflow-y: auto` dan `body`, `#root` menggunakan `min-height: auto`. Dengan demikian, scrollbar vertikal hanya akan muncul jika konten/tabel memang melebihi tinggi layar; jika konten sedikit dan muat di layar, tidak ada scrollbar atau scrolling yang muncul.
 - Files: `src/index.css`, `PROGRESS.md`
