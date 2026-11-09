@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Refine Mobile Header & Add Button Layout
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), deskripsi "Kelola data ikan, harga, dan dokumen pemilik" diatur menjadi 1 baris (`white-space: nowrap`), tombol "+ Tambah Ikan" disesuaikan ukurannya agar proporsional seperti versi PC (tidak memenuhi layar) dan diletakkan lebih ke bawah dekat dengan tabel dengan jarak rapat. Tampilan PC tetap utuh dan stabil.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Fix Mobile Header Layout (Title on Top, Full-Width Add Button with Side-by-Side Icon & Text Below)
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), header halaman (`.page-heading`) diatur secara vertikal di mana judul & deskripsi ("Rekap Pembelian Ikan Jepang") berada di atas, dan tombol "+ Tambah Ikan" berada di bawahnya dengan lebar penuh (`width: 100%`) serta ikon plus di samping teks (horizontal inline, bukan ditumpuk). Tampilan PC tetap utuh dan fix seperti semula.
