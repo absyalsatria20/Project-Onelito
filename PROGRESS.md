@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Left-Align Mobile Header Title and Subtitle
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), kontainer judul dan subtitle header (`.heading-copy`, `h1`, `p`) diatur secara eksplisit menjadi rata kiri (`text-align: left`).
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Refine Mobile Header: Prevent Subtitle Truncation and Shift Add Button to Right Near Table
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), properti `white-space: nowrap` dan ellipsis pada subtitle (`.heading-copy p`) dihapus agar teks lengkap terbaca tanpa terpotong `...`. Posisi tombol "+ Tambah Ikan" (`.heading-actions`) dipindah ke sisi kanan (`justify-content: flex-end`) dan diturunkan sedikit (`margin-top: 6px`) agar posisinya merapat ke tabel. Tampilan PC tetap utuh dan stabil.
