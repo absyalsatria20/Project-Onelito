@@ -1,5 +1,48 @@
 # Project Progress
 
+## 2026-11-09 — Menghapus Bulan Sabit Statis dari Background Darkmode (`toggle-night-bg.svg`)
+- Change:
+  - Menghapus path bulan sabit / crescent dari background `toggle-night-bg.svg` agar latar belakang darkmode benar-benar bersih dan hanya tombol geser (`.knob-moon`) yang menjadi representasi bulan.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+- Change:
+  - Membersihkan lingkaran bulan dari background `toggle-night-bg.svg` agar tidak terjadi duplikasi/dobelan dengan tombol geser (`.knob-moon`).
+  - Menambahkan efek *glow* (`box-shadow`) yang elegan pada bola bulan (`.knob-moon`).
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+- Change:
+  - Menyalin ulang `Group 1.svg` dan `Group 2.svg` dari folder referensi asli ke `public/toggle-day-bg.svg` dan `public/toggle-night-bg.svg` dengan hanya mengecualikan elemen bola matahari/bulan (sehingga seluruh awan kecil dan awan bawah tampil sempurna di light mode).
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+- Change:
+  - Mengembalikan seluruh elemen awan pada `toggle-day-bg.svg`.
+  - Menambahkan efek glow dan gradien khas pada bola matahari (`.knob-sun`).
+  - Menambahkan detail elemen kawah bulan persis seperti file SVG asli pada bola bulan (`.knob-moon`).
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+- Change:
+  - Memperbarui `src/ThemeToggle.css` menggunakan layout persetase responsif (`width: 27.73%`, `height: 80%`, `left: 3.46%`, dan `left: 68.81%` saat aktif) agar bola matahari/bulan proporsional, berada di dalam track toggle tanpa keluar batas, dan menyesuaikan ukuran wadah dengan sempurna di topbar maupun login form.
+- Changed files: `src/ThemeToggle.css`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-09 — Menyempurnakan Transisi Theme Toggle Menjadi Sliding Sun/Moon & Cross-Fade Background
+- Change:
+  - Memperbarui komponen `ThemeToggle` (`src/ThemeToggle.tsx` dan `src/ThemeToggle.css`) serta memisahkan aset background (`public/toggle-day-bg.svg` & `public/toggle-night-bg.svg`) untuk menghasilkan transisi yang sesuai keinginan: bola matahari/bulan bergeser secara halus (`translateX(245px)` dengan `cubic-bezier(0.22, 1, 0.36, 1)`), matahari/bulan ber-cross-fade dan berotasi halus, serta latar belakang ber-cross-fade secara lembut (fade effect).
+- Changed files: `src/ThemeToggle.tsx`, `src/ThemeToggle.css`, `public/toggle-day-bg.svg`, `public/toggle-night-bg.svg`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-09 — Mengganti Toggle Dark/Light Mode dengan Ilustrasi Day/Night (Clip-Path Reveal)
+- Change:
+  - Membuat komponen `ThemeToggle` baru (`src/ThemeToggle.tsx` + `src/ThemeToggle.css`) yang menampilkan ilustrasi SVG siang (matahari, awan, latar biru) dan malam (bulan, bintang, latar gelap) dengan animasi transisi clip-path circle reveal.
+  - Mengganti tombol icon Moon/Sun di topbar (workspace header) dan login form dengan komponen ThemeToggle baru. Topbar pakai size 80px, login form 100px.
+  - Menyalin file SVG referensi (`Group 1.svg` dan `Group 2.svg`) ke `public/toggle-day.svg` dan `public/toggle-night.svg`.
+  - Menambahkan CSS selector `.workspace-topbar .scene-toggle` untuk layout margin-left auto.
+  - Moon tetap diimport karena masih dipakai di Settings panel.
+- Changed files: `src/ThemeToggle.tsx`, `src/ThemeToggle.css`, `src/App.tsx`, `src/App.css`, `public/toggle-day.svg`, `public/toggle-night.svg`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
+## 2026-11-09 — Mengganti Tanggal Cetak PDF dengan Nama Tab Aktif
+- Change:
+  - Mengubah fungsi ekspor PDF (`src/exportPdf.ts` dan `src/App.tsx`) untuk menggantikan teks "Tanggal Cetak: [tanggal]" pada header subtitle dokumen PDF dengan nama tab periode aktif yang sedang dibuka (contoh: "Periode 2026").
+- Changed files: `src/exportPdf.ts`, `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint`, `npm run build`, dan `git diff --check` sukses (exit code 0).
+
 ## 2026-11-07 — Membuat Kotak Brand/Toggle Sidebar Penuh Warna Biru Saat Hover (Collapsed)
 - Change:
   - Menambahkan aturan hover khusus pada `.app .sidebar.sidebar-collapsed .sidebar-brand:hover` di `src/Sidebar.css` agar ketika sidebar ditutup dan tombol brand di-hover, seluruh kotak brand berubah menjadi solid biru (`var(--blue)`) dengan ikon putih bersih.

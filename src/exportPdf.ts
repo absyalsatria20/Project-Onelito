@@ -46,14 +46,11 @@ async function imageAsDataUrl(url: string): Promise<string | null> {
   }
 }
 
-export async function downloadRekapPdf(owner: string, records: ExportFishRecord[]): Promise<void> {
+export async function downloadRekapPdf(owner: string, records: ExportFishRecord[], periodName: string): Promise<void> {
   const pdf = new jsPDF({ orientation: 'landscape', unit: 'mm', format: 'a4' })
   const pageWidth = pdf.internal.pageSize.getWidth()
   const margin = 10
   const grandTotal = records.reduce((sum, record) => sum + itemTotal(record), 0)
-  const printDate = new Date().toLocaleDateString('id-ID', {
-    day: 'numeric', month: 'long', year: 'numeric',
-  })
 
   pdf.setFont('helvetica', 'bold')
   pdf.setFontSize(16)
@@ -61,7 +58,7 @@ export async function downloadRekapPdf(owner: string, records: ExportFishRecord[
   pdf.text('REKAP PEMBELIAN IKAN JEPANG', pageWidth / 2, 15, { align: 'center' })
   pdf.setFont('helvetica', 'normal')
   pdf.setFontSize(9)
-  pdf.text(`Owner: ${owner} · ${records.length} data ikan · Tanggal Cetak: ${printDate}`, pageWidth / 2, 21, { align: 'center' })
+  pdf.text(`Owner: ${owner} · ${records.length} data ikan · ${periodName}`, pageWidth / 2, 21, { align: 'center' })
 
   const printableImages = await Promise.all(records.map(record => imageAsDataUrl(record.image)))
   const rows = records.map(record => ({

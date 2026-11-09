@@ -1,0 +1,128 @@
+/* ── Sliding Sun/Moon Theme Toggle ── */
+.scene-toggle {
+  position: relative;
+  display: block;
+  aspect-ratio: 375 / 130;
+  padding: 0;
+  border: none;
+  border-radius: 999px;
+  overflow: hidden;
+  isolation: isolate;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.scene-toggle .toggle-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.scene-toggle .toggle-bg img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: fill;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity 1.2s ease;
+}
+
+.scene-toggle .track-day {
+  z-index: 1;
+  opacity: 1;
+}
+
+.scene-toggle .track-night {
+  z-index: 2;
+  opacity: 0;
+}
+
+.scene-toggle.is-dark .track-day {
+  opacity: 0;
+}
+
+.scene-toggle.is-dark .track-night {
+  opacity: 1;
+}
+
+.scene-toggle .toggle-knob {
+  position: absolute;
+  top: 10%;
+  left: 3.46%;
+  width: 27.73%;
+  height: 80%;
+  border-radius: 50%;
+  z-index: 3;
+  transition: left 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.scene-toggle.is-dark .toggle-knob {
+  left: 68.81%;
+}
+
+.scene-toggle .knob-sun,
+.scene-toggle .knob-moon {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  transition: opacity 1.2s ease, transform 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.scene-toggle .knob-sun {
+  background: linear-gradient(135deg, #FFF500 0%, #FFC700 100%);
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+  box-shadow: 0 0 18px rgba(255, 245, 0, 0.75), inset 0 2px 4px rgba(255, 255, 255, 0.6);
+}
+
+.scene-toggle .knob-moon {
+  background: #EFEAD7;
+  opacity: 0;
+  transform: scale(0.8) rotate(-90deg);
+  box-shadow: 0 0 20px rgba(239, 234, 215, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.9), 0 4px 12px rgba(0, 0, 0, 0.3);
+  overflow: hidden;
+}
+
+.scene-toggle .moon-craters {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.scene-toggle.is-dark .knob-sun {
+  opacity: 0;
+  transform: scale(0.8) rotate(90deg);
+}
+
+.scene-toggle.is-dark .knob-moon {
+  opacity: 1;
+  transform: scale(1) rotate(0deg);
+}
+
+.scene-toggle:hover {
+  filter: brightness(1.05);
+}
+
+.scene-toggle:active {
+  transform: scale(0.97);
+}
+
+.scene-toggle:focus-visible {
+  outline: 3px solid var(--blue, #60a5fa);
+  outline-offset: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .scene-toggle,
+  .scene-toggle * {
+    transition: none !important;
+  }
+}

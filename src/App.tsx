@@ -1,9 +1,11 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronsRight, Fish, FileText, ImagePlus, LogOut, Menu, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
+import ThemeToggle from './ThemeToggle'
 import './App.css'
 import './animations.css'
 import './Sidebar.css'
+import './ThemeToggle.css'
 
 type FishRecord = { id: number; name: string; owner: string; yen: number | null; rate: number | null; rupiah: number; feePercent: number; shipping: number; certificate: boolean; image: string; tc: string }
 type Period = { id: string; name: string; records: FishRecord[]; owner: string; certificate: string; query: string; sort: 'name' | 'owner' | 'total' }
@@ -165,7 +167,7 @@ function App() {
     }
     toast('Menyiapkan file PDF...')
     try {
-      await downloadRekapPdf(owner, selected)
+      await downloadRekapPdf(owner, selected, activePeriod.name)
       toast('PDF berhasil di-download')
     } catch (err) {
       console.error(err)
@@ -211,7 +213,7 @@ function App() {
                       width:rect.width,
                       height:36
                     })
-                  }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<button className="theme-toggle" onClick={themeToggle} aria-label={theme === 'light' ? 'Aktifkan mode gelap' : 'Aktifkan mode terang'} title={theme === 'light' ? 'Mode gelap' : 'Mode terang'}>{theme === 'light' ? <Moon size={17}/> : <Sun size={17}/>}</button></header>
+                  }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
       <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername}/> : <>
       <header className="page-heading"><div className="heading-copy"><button className="mobile-nav-toggle" onClick={()=>setSidebarOpen(true)} aria-label="Buka navigasi"><Menu size={20}/></button><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
@@ -312,9 +314,7 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
           <button type="submit" className="primary-btn login-submit">Masuk</button>
           <div className="login-footer">
             <small>Secure authenticated session.</small>
-            <button type="button" className="theme-toggle" onClick={themeToggle} aria-label="Toggle theme">
-              {theme === 'light' ? <Moon size={16}/> : <Sun size={16}/>}
-            </button>
+            <ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={100}/>
           </div>
         </form>
       </div>
