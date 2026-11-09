@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Make Mobile Workspace Topbar Positioned Fixed (`position: fixed`)
+- Change:
+  - Mengubah posisi `.workspace-topbar` pada mobile view (`max-width: 700px`) dari `position: sticky` menjadi `position: fixed` (`top: 0; left: 0; right: 0; z-index: 50`) dan menambahkan `padding-top: 54px` pada `.workspace-main`. Ini memastikan topbar benar-benar membeku (*frozen*) di atas layar dan tidak pernah melompat atau berubah posisi saat membuka modal popup maupun sidebar di perangkat mobile.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Refine Mobile Scroll Lock to Prevent Sticky Topbar Reset
 - Change:
   - Menyederhanakan penanganan scroll lock modal/sidebar di mobile kembali menggunakan `overflow: hidden` disertai `window.scrollTo(0, scrollY)` saat aktif dan cleanup untuk memastikan posisi scroll dan topbar tetap stabil di tempatnya.
