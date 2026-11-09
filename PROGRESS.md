@@ -1,5 +1,14 @@
 # Project Progress
 
+## 2026-11-09 — Menambahkan Fitur Ganti Avatar di Menu Setting (Akun & Akses)
+- Change:
+  - Menambahkan menu dan tombol **Ubah Avatar** di kartu **Akun & Akses** pada menu **Setting**.
+  - Menambahkan dialog modal upload foto avatar (mendukung JPG/PNG hingga 10MB) beserta opsi reset/hapus avatar.
+  - Menyimpan avatar di `localStorage` (`fish-avatar`) dan merender avatar kustom di sidebar, kartu profil setting, serta dialog profil admin.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Refactor Menu Setting Akun & Akses (Profil Card & Modal Ubah Username, Password, Title)
 - Change:
   - Menambahkan profil card di menu Setting (Akun & Akses) yang menampilkan avatar, username, dan title aktif.
