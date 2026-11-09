@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Disable Sidebar Brand Button & Styling on Mobile View
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), area logo/brand di bagian atas sidebar diubah menjadi header statis (non-interaktif): menghilangkan border, background, shadow, pointer-events, dan hover effect karena fungsi *collapse* tidak diperlukan di mobile.
+  - Tampilan PC tetap berfungsi normal sebagai tombol *collapse*.
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Edge Swipe Gesture untuk Sidebar Mobile & Clean Topbar
 - Change:
   - Menghapus tombol hamburger (`mobile-nav-toggle`) dari topbar mobile agar tampilan topbar menjadi bersih dan tidak penuh.

@@ -353,6 +353,19 @@
 }
 
 @media (max-width: 700px) {
+  .app .sidebar-brand {
+    background: transparent !important;
+    border: 0 !important;
+    box-shadow: none !important;
+    cursor: default !important;
+    pointer-events: none !important;
+    padding: 0 4px !important;
+  }
+  .app .sidebar-brand:hover {
+    transform: none !important;
+    border-color: transparent !important;
+    box-shadow: none !important;
+  }
   .app .sidebar,
   .app .sidebar.sidebar-collapsed {
     position: fixed;
