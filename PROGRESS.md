@@ -1,5 +1,16 @@
 # Project Progress
 
+## 2026-11-09 — Memberikan Warna Kustom & Badge Berlatar Belakang pada Ikon Aksi "Akun & Akses"
+- Change:
+  - Menambahkan warna tematik kustom untuk setiap ikon aksi di menu Setting ("Akun & Akses"):
+    - **Ubah Username**: Ikon Biru (`#3B82F6`) dengan badge latar belakang transparan.
+    - **Ubah Password**: Ikon Amber/Oranye (`#F59E0B`) dengan badge latar belakang transparan.
+    - **Ubah Title**: Ikon Ungu (`#8B5CF6`) dengan badge latar belakang transparan.
+    - **Ubah Avatar**: Ikon Hijau Emerald (`#10B981`) dengan badge latar belakang transparan.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Menambahkan Ikon Panah Kanan (`ChevronRight`) pada Tombol Aksi "Akun & Akses"
 - Change:
   - Menambahkan ikon panah kanan (`ChevronRight`) di sisi kanan setiap tombol aksi (Ubah Username, Ubah Password, Ubah Title, Ubah Avatar) untuk memberikan kesan navigasi yang interaktif.
