@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Mengoptimalkan Kompresi & Resizing Gambar Avatar untuk Menghilangkan Lag Saat Save Modal
+- Change:
+  - Menambahkan proses kompresi & resizing gambar avatar (maks. 160px JPEG kualitas 0.85 via Canvas) saat diunggah. Ini mencegah pembengkakan ukuran string base64 yang sebelumnya menyebabkan jeda (freeze) pada main-thread saat menyimpan, sehingga modal ganti avatar kini langsung tertutup secara instan dan responsif.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Memperbarui Teks Deskripsi Kartu "Akun & Akses" di Setting
 - Change:
   - Mengubah teks sub-heading pada kartu **Akun & Akses** dari *"Profil pengguna, kredensial, dan hak akses."* menjadi *"Ubah profil username, password, title, dan avatar."*
