@@ -375,7 +375,7 @@ function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,current
             <span style={{fontSize:'11px',fontWeight:600,padding:'2px 8px',borderRadius:'10px',background:'rgba(16,185,129,0.1)',color:'#10B981'}}>Secure 256-bit</span>
           </div>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'1fr 1fr',gap:'8px',marginBottom:'4px'}}>
+        <div className="settings-actions-grid">
           <button type="button" className="settings-action" onClick={onExportBackup} style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'7px',fontSize:'12px',fontWeight:650,height:'40px'}}><Download size={15}/> Ekspor JSON</button>
           <label className="settings-action secondary" style={{display:'flex',alignItems:'center',justifyContent:'center',gap:'7px',fontSize:'12px',fontWeight:650,height:'40px',margin:0,cursor:'pointer'}}>
             <Upload size={15}/> Impor Data
@@ -402,7 +402,7 @@ function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,current
             <span style={{fontSize:'12px',color:'var(--muted)',fontWeight:500}}>{currentTitle}</span>
           </div>
         </div>
-        <div style={{display:'grid',gridTemplateColumns:'repeat(2, minmax(0, 1fr))',gap:'10px',marginBottom:'12px'}}>
+        <div className="account-actions-grid">
           <button type="button" className="settings-action secondary" onClick={()=>openModal('username')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:'12px',fontWeight:600,padding:'0 14px',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><span style={{display:'flex',alignItems:'center',gap:'10px'}}><span style={{width:'26px',height:'26px',borderRadius:'6px',background:'rgba(59,130,246,0.12)',display:'flex',alignItems:'center',justifyContent:'center'}}><User size={14} style={{color:'#3B82F6'}}/></span> Ubah Username</span><ChevronRight size={15} style={{color:'var(--muted)'}}/></button>
           <button type="button" className="settings-action secondary" onClick={()=>openModal('password')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:'12px',fontWeight:600,padding:'0 14px',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><span style={{display:'flex',alignItems:'center',gap:'10px'}}><span style={{width:'26px',height:'26px',borderRadius:'6px',background:'rgba(245,158,11,0.12)',display:'flex',alignItems:'center',justifyContent:'center'}}><Key size={14} style={{color:'#F59E0B'}}/></span> Ubah Password</span><ChevronRight size={15} style={{color:'var(--muted)'}}/></button>
           <button type="button" className="settings-action secondary" onClick={()=>openModal('title')} style={{display:'flex',alignItems:'center',justifyContent:'space-between',fontSize:'12px',fontWeight:600,padding:'0 14px',height:'42px',background:'var(--panel)',border:'1px solid var(--line)',borderRadius:'8px',cursor:'pointer',color:'var(--text)',transition:'all 0.15s ease'}}><span style={{display:'flex',alignItems:'center',gap:'10px'}}><span style={{width:'26px',height:'26px',borderRadius:'6px',background:'rgba(139,92,246,0.12)',display:'flex',alignItems:'center',justifyContent:'center'}}><Shield size={14} style={{color:'#8B5CF6'}}/></span> Ubah Title</span><ChevronRight size={15} style={{color:'var(--muted)'}}/></button>

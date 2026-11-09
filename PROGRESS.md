@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Optimalisasi Responsive Mobile pada Halaman Setting
+- Change:
+  - Menambahkan aturan CSS responsif (`.settings-actions-grid` dan `.account-actions-grid`) dengan breakpoint `max-width: 500px`.
+  - Pada layar kecil (ponsel), tombol aksi ekspor/impor dan tombol-tombol manajemen akun otomatis menyusun diri menjadi 1 kolom penuh agar tidak berjejalan atau terpotong.
+- Files: `src/App.tsx`, `src/App.css`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+
 ## 2026-11-09 — Compress Gambar Ikan via Canvas agar Ikut Backup JSON
 - Change:
   - Modifikasi `fileChange` di `FishForm`: gambar yang di-upload user sekarang di-resize maks 320px dan di-compress ke JPEG quality 0.8 via Canvas sebelum disimpan ke state.
