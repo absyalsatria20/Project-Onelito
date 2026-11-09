@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Refine Mobile Theme Toggle Layout in Sidebar (Borderless, Left Toggle / Right Label)
+- Change:
+  - Mengubah tampilan toggle mode di sidebar khusus mobile view menjadi tanpa kotak (border/background dihapus), dengan posisi toggle di kiri dan teks "Ubah Tampilan" di sebelah kanannya, tepat di bawah menu Setting.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Move Theme Toggle to Sidebar Exclusively for Mobile View
 - Change:
   - Memindahkan `ThemeToggle` dari topbar ke dalam sidebar khusus pada mobile view (`max-width: 700px`), sedangkan tampilan PC tetap tidak berubah.
