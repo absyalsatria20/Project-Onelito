@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Memperbaiki Prioritas CSS Hover (`!important`) pada Tombol Aksi "Akun & Akses"
+- Change:
+  - Menambahkan modifier `!important` pada properti warna teks dan border saat `:hover` pada `.settings-action.secondary` untuk memastikan animasi hover teks & border biru langsung aktif tanpa terhalang gaya inline.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Menambahkan Animasi Hover (Teks & Border Berubah Biru) pada Tombol Aksi "Akun & Akses"
 - Change:
   - Menambahkan efek hover halus pada tombol aksi di menu Setting ("Akun & Akses"): saat kursor menyentuh tombol, teks dan border berubah menjadi warna biru (`var(--blue)`), dengan efek elevasi ringan (`transform: translateY(-1px)`) dan shadow lembut.
