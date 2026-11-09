@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Replace Drag-to-Scroll with Wheel-to-Scroll on Period Tabs (PC)
+- Change:
+  - Mengganti interaksi *drag-to-scroll* pada container `.period-tabs` dengan *wheel-to-scroll*: pengguna PC cukup memutar roda mouse (`scroll wheel`) di atas barisan tab periode untuk menggeser tab secara horizontal dengan mulus.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Fix PC Sidebar Theme Toggle Visibility & Robust Period Tab Scrolling
 - Change:
   - Memperbaiki visibilitas toggle mode di sidebar: menyembunyikan `.mobile-theme-toggle-wrap` secara default di PC (`display: none`) dan hanya menampilkannya saat mode mobile (`@media(max-width:700px)`).

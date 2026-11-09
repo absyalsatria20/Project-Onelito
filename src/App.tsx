@@ -221,32 +221,15 @@ function App() {
   useEffect(() => {
     const container = periodTabsContainerRef.current
     if (!container) return
-    let isDown = false, startX = 0, scrollLeft = 0
-    const onMouseDown = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('button')) return
-      isDown = true
-      container.style.cursor = 'grabbing'
-      container.style.userSelect = 'none'
-      startX = e.clientX
-      scrollLeft = container.scrollLeft
+    const onWheel = (e: WheelEvent) => {
+      if (e.deltaY !== 0) {
+        e.preventDefault()
+        container.scrollLeft += e.deltaY
+      }
     }
-    const onMouseLeave = () => { isDown = false; container.style.cursor = 'grab'; container.style.userSelect = '' }
-    const onMouseUp = () => { isDown = false; container.style.cursor = 'grab'; container.style.userSelect = '' }
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return
-      e.preventDefault()
-      const walk = e.clientX - startX
-      container.scrollLeft = scrollLeft - walk
-    }
-    container.addEventListener('mousedown', onMouseDown)
-    container.addEventListener('mouseleave', onMouseLeave)
-    container.addEventListener('mouseup', onMouseUp)
-    container.addEventListener('mousemove', onMouseMove)
+    container.addEventListener('wheel', onWheel, { passive: false })
     return () => {
-      container.removeEventListener('mousedown', onMouseDown)
-      container.removeEventListener('mouseleave', onMouseLeave)
-      container.removeEventListener('mouseup', onMouseUp)
-      container.removeEventListener('mousemove', onMouseMove)
+      container.removeEventListener('wheel', onWheel)
     }
   }, [activeSection])
   useEffect(() => {
