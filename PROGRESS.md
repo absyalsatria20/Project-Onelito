@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Compress Gambar Ikan via Canvas agar Ikut Backup JSON
+- Change:
+  - Modifikasi `fileChange` di `FishForm`: gambar yang di-upload user sekarang di-resize maks 320px dan di-compress ke JPEG quality 0.8 via Canvas sebelum disimpan ke state.
+  - Hasil berupa base64 string yang otomatis tersimpan di `FishRecord.image`, sehingga ikut ter-backup dan ter-restore lewat fitur Ekspor/Impor JSON.
+- Files: `src/App.tsx`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+
 ## 2026-11-09 — Hapus Fitur Reset Data & Tambah Entrance Animation Halaman Setting
 - Change:
   - Menghapus tombol **Reset ke Data Default** beserta handler-nya dari kartu Data & Backup untuk mencegah risiko kehilangan data.
