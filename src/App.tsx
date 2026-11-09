@@ -34,12 +34,39 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(() => localStorage.getItem('fish-logged-in') === 'true')
   const [currentUsername, setCurrentUsername] = useState(() => localStorage.getItem('fish-username') || 'adelia')
   const [currentPassword, setCurrentPassword] = useState(() => localStorage.getItem('fish-password') || 'adelia')
-  const handleUpdateAccount = (newUsername: string, newPassword: string) => {
-    setCurrentUsername(newUsername)
-    setCurrentPassword(newPassword)
-    localStorage.setItem('fish-username', newUsername)
-    localStorage.setItem('fish-password', newPassword)
-    toast('Akun & akses berhasil diperbarui')
+  const [currentTitle, setCurrentTitle] = useState(() => localStorage.getItem('fish-title') || 'Workspace Administrator')
+  const [accountModal, setAccountModal] = useState<'username' | 'password' | 'title' | null>(null)
+  const [accountModalInput, setAccountModalInput] = useState('')
+  const [showPassModal, setShowPassModal] = useState(false)
+
+  const openAccountModal = (type: 'username' | 'password' | 'title') => {
+    setAccountModal(type)
+    if (type === 'username') setAccountModalInput(currentUsername)
+    else if (type === 'password') setAccountModalInput(currentPassword)
+    else if (type === 'title') setAccountModalInput(currentTitle)
+    setShowPassModal(false)
+  }
+
+  const saveAccountModal = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!accountModalInput.trim() && accountModal !== 'password') {
+      toast('Nilai tidak boleh kosong')
+      return
+    }
+    if (accountModal === 'username') {
+      setCurrentUsername(accountModalInput.trim())
+      localStorage.setItem('fish-username', accountModalInput.trim())
+      toast('Username berhasil diubah')
+    } else if (accountModal === 'password') {
+      setCurrentPassword(accountModalInput)
+      localStorage.setItem('fish-password', accountModalInput)
+      toast('Password berhasil diubah')
+    } else if (accountModal === 'title') {
+      setCurrentTitle(accountModalInput.trim())
+      localStorage.setItem('fish-title', accountModalInput.trim())
+      toast('Title / jabatan berhasil diubah')
+    }
+    setAccountModal(null)
   }
   const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
 
@@ -223,7 +250,7 @@ function App() {
                     })
                   }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
-      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername} currentPassword={currentPassword} onUpdateAccount={handleUpdateAccount}/> : <>
+      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} onPrototypeAction={toast} currentUsername={currentUsername} currentTitle={currentTitle} openModal={openAccountModal}/> : <>
       <header className="page-heading"><div className="heading-copy"><button className="mobile-nav-toggle" onClick={()=>setSidebarOpen(true)} aria-label="Buka navigasi"><Menu size={20}/></button><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
@@ -252,25 +279,13 @@ function App() {
     {preview&&<div className={`modal-backdrop ${closingModal==='preview'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('preview',()=>setPreview(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('preview',()=>setPreview(null))}}><section className={`image-dialog ${closingModal==='preview'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Foto ${preview.name}`}><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('preview',()=>setPreview(null))} aria-label="Tutup"><X size={20}/></button><img src={preview.image} alt={preview.name}/><div className="image-caption"><b>{preview.name}</b><span>{preview.owner}</span></div></section></div>}
     {termsDetail&&<div className={`modal-backdrop ${closingModal==='termsDetail'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('termsDetail',()=>setTermsDetail(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('termsDetail',()=>setTermsDetail(null))}}><section className={`terms-dialog ${closingModal==='termsDetail'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Term & Condition ${termsDetail.name}`}><div className="terms-heading"><div><h2>Term &amp; Condition</h2><p>{termsDetail.name}</p></div><button className="dialog-close" onClick={()=>closeWithAnimation('termsDetail',()=>setTermsDetail(null))} aria-label="Tutup"><X size={20}/></button></div><ul>{termsDetail.tc.split('\n').filter(Boolean).map(term=><li key={term}>{term}</li>)}</ul></section></div>}
     {deleteTarget&&<div className={`modal-backdrop ${closingModal==='deleteTarget'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}}><section className={`confirm-dialog ${closingModal==='deleteTarget'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description"><div className="confirm-icon"><Trash2 size={21}/></div><h2 id="delete-title">Hapus data ikan?</h2><p id="delete-description">Data <b>{deleteTarget.name}</b> akan dihapus. Tindakan ini tidak dapat dibatalkan.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={confirmDelete}>Hapus</button></div></section></div>}
-    {profileModal&&<div className={`modal-backdrop ${closingModal==='profileModal'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('profileModal',()=>setProfileModal(false))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('profileModal',()=>setProfileModal(false))}}><section className={`profile-dialog ${closingModal==='profileModal'?'closing':''}`} role="dialog" aria-modal="true" aria-label="Profil Admin Sistem"><div className="profile-dialog-heading"><div><h2>Profile Information</h2></div></div><div className="profile-dialog-body" style={{display:'flex',flexDirection:'column',gap:'16px',padding:'8px 0 20px'}}><div style={{display:'flex',justifyContent:'center',marginBottom:4}}><div className="profile-dialog-avatar-large">{currentUsername.slice(0,2).toUpperCase()}</div></div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingBottom:14,borderBottom:'1px solid var(--line)'}}><span style={{fontSize:15,color:'var(--muted)',fontWeight:600}}>Username</span><b style={{fontSize:15,color:'var(--text)',fontWeight:650}}>{currentUsername}</b></div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:2}}><span style={{fontSize:15,color:'var(--muted)',fontWeight:600}}>Title &amp; Jabatan</span><b style={{fontSize:15,color:'var(--text)',fontWeight:650}}>Workspace Administrator</b></div></div><div className="dialog-actions"><button type="button" className="primary-btn" onClick={()=>closeWithAnimation('profileModal',()=>setProfileModal(false))}>Tutup</button></div></section></div>}
+    {profileModal&&<div className={`modal-backdrop ${closingModal==='profileModal'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('profileModal',()=>setProfileModal(false))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('profileModal',()=>setProfileModal(false))}}><section className={`profile-dialog ${closingModal==='profileModal'?'closing':''}`} role="dialog" aria-modal="true" aria-label="Profil Admin Sistem"><div className="profile-dialog-heading"><div><h2>Profile Information</h2></div></div><div className="profile-dialog-body" style={{display:'flex',flexDirection:'column',gap:'16px',padding:'8px 0 20px'}}><div style={{display:'flex',justifyContent:'center',marginBottom:4}}><div className="profile-dialog-avatar-large">{currentUsername.slice(0,2).toUpperCase()}</div></div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingBottom:14,borderBottom:'1px solid var(--line)'}}><span style={{fontSize:15,color:'var(--muted)',fontWeight:600}}>Username</span><b style={{fontSize:15,color:'var(--text)',fontWeight:650}}>{currentUsername}</b></div><div style={{display:'flex',justifyContent:'space-between',alignItems:'center',paddingTop:2}}><span style={{fontSize:15,color:'var(--muted)',fontWeight:600}}>Title &amp; Jabatan</span><b style={{fontSize:15,color:'var(--text)',fontWeight:650}}>{currentTitle}</b></div></div><div className="dialog-actions"><button type="button" className="primary-btn" onClick={()=>closeWithAnimation('profileModal',()=>setProfileModal(false))}>Tutup</button></div></section></div>}
+    {accountModal&&<div className="modal-backdrop" onMouseDown={e=>{if(e.target===e.currentTarget)setAccountModal(null)}}><form className="period-name-dialog" onSubmit={saveAccountModal}><div className="period-dialog-heading"><div><span className="eyebrow">AKUN &amp; AKSES</span><h2>{accountModal==='username'?'Ubah Username':accountModal==='password'?'Ubah Password':'Ubah Title / Jabatan'}</h2></div><button type="button" className="dialog-close" onClick={()=>setAccountModal(null)} aria-label="Tutup"><X size={20}/></button></div><label className="period-name-field" htmlFor="account-input">{accountModal==='username'?'Username baru':accountModal==='password'?'Password baru':'Title / jabatan baru'}<div className={accountModal==='password'?'login-password-wrap':''}><input id="account-input" type={accountModal==='password'&&!showPassModal?'password':'text'} autoFocus value={accountModalInput} onChange={e=>setAccountModalInput(e.target.value)} placeholder={accountModal==='username'?'Masukkan username baru':accountModal==='password'?'Masukkan password baru':'Masukkan title baru'} style={accountModal==='password'?{paddingRight:'40px'}:undefined}/>{accountModal==='password'&&<button type="button" className="login-eye-btn" onClick={()=>setShowPassModal(!showPassModal)} aria-label={showPassModal?'Sembunyikan password':'Tampilkan password'} style={{right:'8px'}}>{showPassModal?<EyeOff size={16}/>:<Eye size={16}/>}</button>}</div></label><div className="period-dialog-actions"><button type="button" className="secondary-btn" onClick={()=>setAccountModal(null)}>Batal</button><button type="submit" className="primary-btn">Simpan</button></div></form></div>}
     {notice&&<div className="toast"><Check size={17}/>{notice}</div>}
   </div>
 }
 
-function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,currentPassword,onUpdateAccount}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string;currentPassword:string;onUpdateAccount:(u:string,p:string)=>void}){
-  const [usernameInput,setUsernameInput]=useState(currentUsername)
-  const [passwordInput,setPasswordInput]=useState(currentPassword)
-  const [showPass,setShowPass]=useState(false)
-
-  const handleSave=(e:React.FormEvent)=>{
-    e.preventDefault()
-    if(!usernameInput.trim()){
-      onPrototypeAction('Username wajib diisi')
-      return
-    }
-    onUpdateAccount(usernameInput.trim(), passwordInput)
-  }
-
+function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,currentTitle,openModal}:{theme:'light'|'dark';onThemeToggle:()=>void;onPrototypeAction:(message:string)=>void;currentUsername:string;currentTitle:string;openModal:(type:'username'|'password'|'title')=>void}){
   return <section className="settings-page" aria-labelledby="settings-title">
     <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
@@ -278,25 +293,21 @@ function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,cu
       <article className="settings-card">
         <div className="settings-card-heading">
           <span className="settings-icon"><Settings size={19}/></span>
-          <div><h2>Akun &amp; Akses</h2><p>Ubah username dan password akun.</p></div>
+          <div><h2>Akun &amp; Akses</h2><p>Profil pengguna dan hak akses.</p></div>
         </div>
-        <form onSubmit={handleSave} style={{display:'grid',gap:'12px',marginBottom:'16px'}}>
-          <label className="field" style={{fontSize:'12px',fontWeight:650}}>
-            <span>Username</span>
-            <input value={usernameInput} onChange={e=>setUsernameInput(e.target.value)} placeholder="Masukkan username baru" style={{height:'38px',padding:'0 11px',border:'1px solid var(--line)',borderRadius:'7px',background:'var(--panel)',color:'var(--text)',fontSize:'13px'}}/>
-          </label>
-          <label className="field" style={{fontSize:'12px',fontWeight:650}}>
-            <span>Password</span>
-            <div className="login-password-wrap">
-              <input type={showPass?'text':'password'} value={passwordInput} onChange={e=>setPasswordInput(e.target.value)} placeholder="Masukkan password baru" style={{height:'38px',padding:'0 38px 0 11px',border:'1px solid var(--line)',borderRadius:'7px',background:'var(--panel)',color:'var(--text)',width:'100%',fontSize:'13px'}}/>
-              <button type="button" className="login-eye-btn" onClick={()=>setShowPass(!showPass)} aria-label={showPass?'Sembunyikan password':'Tampilkan password'} style={{right:'6px'}}>
-                {showPass?<EyeOff size={16}/>:<Eye size={16}/>}
-              </button>
-            </div>
-          </label>
-          <button type="submit" className="settings-action" style={{marginTop:'4px',cursor:'pointer'}}>Simpan Perubahan</button>
-        </form>
-        <small className="settings-footnote">Perubahan langsung disimpan ke sesi.</small>
+        <div className="settings-profile" style={{display:'flex',alignItems:'center',gap:'12px',padding:'12px',background:'var(--panel-muted)',borderRadius:'8px',marginBottom:'16px'}}>
+          <span className="profile-avatar" style={{width:'40px',height:'40px',borderRadius:'50%',background:'var(--primary)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'15px'}}>{currentUsername.slice(0,2).toUpperCase()}</span>
+          <div style={{display:'flex',flexDirection:'column'}}>
+            <b style={{fontSize:'14px',color:'var(--text)'}}>{currentUsername}</b>
+            <small style={{fontSize:'12px',color:'var(--muted)'}}>{currentTitle} · administrator</small>
+          </div>
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(3, minmax(0, 1fr))',gap:'8px',marginBottom:'12px'}}>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('username')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Username</button>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('password')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Password</button>
+          <button type="button" className="settings-action secondary" onClick={()=>openModal('title')} style={{fontSize:'11px',padding:'0 4px',justifyContent:'center',height:'36px'}}>Ubah Title</button>
+        </div>
+        <small className="settings-footnote">Kelola kredensial dan informasi profil akun.</small>
       </article>
       <article className="settings-card"><div className="settings-card-heading"><span className="settings-icon"><Sun size={19}/></span><div><h2>Mode Tampilan</h2><p>Pilih tema aplikasi.</p></div></div><div className="settings-mode" role="group" aria-label="Pilih mode tampilan"><button className={theme==='light'?'active':''} aria-pressed={theme==='light'} onClick={()=>{if(theme!=='light')onThemeToggle()}}><Sun size={17}/>Light</button><button className={theme==='dark'?'active':''} aria-pressed={theme==='dark'} onClick={()=>{if(theme!=='dark')onThemeToggle()}}><Moon size={17}/>Dark</button></div><small className="settings-footnote">Pilihan mode tersimpan di browser ini.</small></article>
     </div>

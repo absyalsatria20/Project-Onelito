@@ -1,5 +1,15 @@
 # Project Progress
 
+## 2026-11-09 — Refactor Menu Setting Akun & Akses (Profil Card & Modal Ubah Username, Password, Title)
+- Change:
+  - Menambahkan profil card di menu Setting (Akun & Akses) yang menampilkan avatar, username, dan title aktif.
+  - Menambahkan tombol aksi terpisah: **Ubah Username**, **Ubah Password**, dan **Ubah Title**.
+  - Menambahkan dialog modal interaktif untuk masing-masing aksi perubahan data akun & title.
+  - Menyimpan title akun di `localStorage` (`fish-title`).
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Menambahkan Fitur Ubah Username & Password di Menu Setting (Akun & Akses)
 - Change:
   - Memperbarui `SettingsPanel` di `src/App.tsx` dengan menambahkan form input untuk mengubah username dan password akun (default `adelia` / `adelia`), serta menyimpan perubahan ke `localStorage` dan menampilkan notifikasi toast.
