@@ -104,5 +104,5 @@
 .login-eye-btn:hover{color:var(--text);background:var(--panel-hover)}
 
 @media(max-width:700px){
-  .period-tabs-indicator{bottom:2px!important}
+  .period-tabs-indicator{bottom:34px!important}
 }

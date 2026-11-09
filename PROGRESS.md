@@ -12,6 +12,24 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Set Period Tabs Indicator Bottom to 34px in Mobile View
+- Change:
+  - Menyesuaikan posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) di mobile view menjadi `bottom: 34px !important`.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
+## 2026-11-09 — Adjust Period Tabs Indicator Position Slightly Down in Mobile View
+- Change:
+  - Menyesuaikan posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) di mobile view menjadi `bottom: 36px !important` agar turun sedikit secara proporsional.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
+## 2026-11-09 — Position Period Tabs Indicator Above the Tab Box in Mobile View
+- Change:
+  - Mengembalikan posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) ke atas kotak tab periode (`bottom: 38px !important`) sesuai permintaan.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Place Period Tabs Indicator Inside the Tab Box in Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), posisi garis indikator biru pada tab periode (`.period-tabs-indicator`) disetel ke `bottom: 1px` sehingga posisinya berada di dalam kotak tab periode.
