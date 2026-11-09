@@ -1,5 +1,10 @@
 # Project Progress
 
+## 2026-11-09 — Menghapus Scroll Vertikal Tabel & Membuat Tabel Memanjang ke Bawah
+- Change:
+  - Memperbarui `.table-wrap` di `src/App.css` dari `overflow: auto` menjadi `overflow-x: auto; overflow-y: visible;` agar scroll vertical di dalam tabel hilang dan tabel secara otomatis memanjang ke bawah mengikuti jumlah data.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0); perubahan telah di-commit & di-push ke GitHub.
+
 ## 2026-11-09 — Menghapus Scrollbar Vertikal dari Sidebar
 - Change:
   - Memperbarui `src/Sidebar.css` dengan mengubah properti `overflow-y: auto` dan `scrollbar-width: thin` menjadi `overflow: visible` pada `.app .sidebar` sehingga scrollbar vertikal di sidebar hilang sepenuhnya.
