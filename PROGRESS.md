@@ -6,6 +6,12 @@
 - Files: `src/App.css`, `PROGRESS.md`
 - Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
 
+## 2026-11-09 — Refine Mobile Header: Prevent Subtitle Truncation and Shift Add Button to Right Near Table
+- Change:
+  - Pada tampilan mobile (`max-width: 700px`), properti `white-space: nowrap` dan ellipsis pada subtitle (`.heading-copy p`) dihapus agar teks lengkap terbaca tanpa terpotong `...`. Posisi tombol "+ Tambah Ikan" (`.heading-actions`) dipindah ke sisi kanan (`justify-content: flex-end`) dan diturunkan sedikit (`margin-top: 6px`) agar posisinya merapat ke tabel. Tampilan PC tetap utuh dan stabil.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Refine Mobile Header & Add Button Layout
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), deskripsi "Kelola data ikan, harga, dan dokumen pemilik" diatur menjadi 1 baris (`white-space: nowrap`), tombol "+ Tambah Ikan" disesuaikan ukurannya agar proporsional seperti versi PC (tidak memenuhi layar) dan diletakkan lebih ke bawah dekat dengan tabel dengan jarak rapat. Tampilan PC tetap utuh dan stabil.
