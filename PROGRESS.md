@@ -1,5 +1,14 @@
 # Project Progress
 
+## 2026-11-09 — Implement Comprehensive Mobile View Animations (Stagger, Touch Feedback, Sidebar Entrance)
+- Change:
+  - Menambahkan animasi *staggered entrance* untuk halaman inventaris dan panel filter di mobile view.
+  - Menambahkan animasi *stagger* urutan kemunculan item di dalam sidebar drawer saat dibuka.
+  - Menambahkan efek tekan sentuh aktif (`:active` press scale `0.98`) pada tombol, tab, dan kartu di mobile view.
+  - Mendukung `prefers-reduced-motion` untuk aksesibilitas gerak.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Hide Topbar Theme Toggle Correctly on Mobile View (.scene-toggle class)
 - Change:
   - Memperbaiki selector CSS pada mobile view (`max-width: 700px`) menjadi `.workspace-topbar .scene-toggle { display: none !important; }` agar toggle di topbar mobile benar-benar tersembunyi (sebelumnya salah menargetkan `.theme-toggle`).

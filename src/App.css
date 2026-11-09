@@ -119,3 +119,43 @@
   .workspace-topbar .scene-toggle{display:none!important}
   .period-tabs-indicator{bottom:34px!important}
 }
+
+
+@media(max-width:700px){
+  button:active, .sidebar-link:active, .period-tab:active, .primary-btn:active, .export-btn:active, .profile-card:active {
+    transform: scale(0.98);
+    transition: transform 0.1s ease;
+  }
+  .inventory-page { animation: mobilePageIn 0.35s cubic-bezier(.22,1,.36,1) both; }
+  .filter-panel { animation: mobilePageIn 0.35s cubic-bezier(.22,1,.36,1) 0.05s both; }
+  .data-table-wrap, .data-panel { animation: mobilePageIn 0.35s cubic-bezier(.22,1,.36,1) 0.1s both; }
+  .sidebar.sidebar-open .sidebar-brand { animation: mobileSidebarIn 0.25s ease 0.02s both; }
+  .sidebar.sidebar-open .workspace-label { animation: mobileSidebarIn 0.25s ease 0.05s both; }
+  .sidebar.sidebar-open .sidebar-nav:nth-of-type(1) { animation: mobileSidebarIn 0.25s ease 0.08s both; }
+  .sidebar.sidebar-open .settings-label { animation: mobileSidebarIn 0.25s ease 0.11s both; }
+  .sidebar.sidebar-open .sidebar-nav:nth-of-type(2) { animation: mobileSidebarIn 0.25s ease 0.14s both; }
+  .sidebar.sidebar-open .mobile-theme-toggle-wrap { animation: mobileSidebarIn 0.25s ease 0.17s both; }
+  .sidebar.sidebar-open .sidebar-bottom { animation: mobileSidebarIn 0.25s ease 0.20s both; }
+}
+
+@keyframes mobilePageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes mobileSidebarIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media(prefers-reduced-motion: reduce) {
+  @media(max-width:700px) {
+    .inventory-page, .filter-panel, .data-table-wrap, .data-panel,
+    .sidebar.sidebar-open .sidebar-brand, .sidebar.sidebar-open .workspace-label,
+    .sidebar.sidebar-open .sidebar-nav, .sidebar.sidebar-open .settings-label,
+    .sidebar.sidebar-open .mobile-theme-toggle-wrap, .sidebar.sidebar-open .sidebar-bottom {
+      animation: none !important;
+      transform: none !important;
+    }
+  }
+}
