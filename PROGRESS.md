@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Restore "Tambah Ikan" Text with Stacked Icon/Text Layout on Mobile View
+- Change:
+  - Pada tampilan mobile (`max-width: 600px`), tombol tambah ikan (`.heading-actions .primary-btn`) diubah dari kotak ikon saja menjadi tombol dengan ikon plus di atas dan teks "Tambah ikan" di bawahnya (stacked layout), memberikan ruang teks yang leluasa tanpa mengubah tampilan PC.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Reorder Grand Total Box Above Owner Summary on Mobile View
 - Change:
   - Pada tampilan mobile (`max-width: 700px`), posisi footer dibalik menggunakan `flex-direction: column-reverse` sehingga kotak grand total berada di atas dan teks rangkuman owner berada di bawahnya (tampilan PC tetap tidak berubah).
