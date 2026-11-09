@@ -162,6 +162,7 @@ function App() {
   const [periodError,setPeriodError] = useState('')
   const [openPeriodMenu,setOpenPeriodMenu] = useState<{id:string;left:number;top:number;width:number;height:number}|null>(null)
   const tabsRef = useRef<Record<string, HTMLDivElement | null>>({})
+  const periodTabsContainerRef = useRef<HTMLDivElement|null>(null)
   const [indicatorStyle, setIndicatorStyle] = useState({ left: 0, width: 0 })
   useEffect(() => {
     if (!isLoggedIn) return
@@ -173,6 +174,41 @@ function App() {
       })
     }
   }, [isLoggedIn, activePeriodId, periods])
+  useEffect(() => {
+    if (!isLoggedIn) return
+    const activeEl = tabsRef.current[activePeriodId]
+    const container = periodTabsContainerRef.current
+    if (activeEl && container) {
+      container.scrollTo({ left: activeEl.offsetLeft, behavior: 'smooth' })
+    }
+  }, [isLoggedIn, activePeriodId, periods])
+  useEffect(() => {
+    const container = periodTabsContainerRef.current
+    if (!container) return
+    let isDown = false, startX = 0, scrollLeft = 0
+    const onMouseDown = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('button')) return
+      isDown = true; container.style.cursor = 'grabbing'; container.style.userSelect = 'none'
+      startX = e.pageX - container.offsetLeft; scrollLeft = container.scrollLeft
+    }
+    const onMouseLeave = () => { isDown = false; container.style.cursor = ''; container.style.userSelect = '' }
+    const onMouseUp = () => { isDown = false; container.style.cursor = ''; container.style.userSelect = '' }
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return; e.preventDefault()
+      const x = e.pageX - container.offsetLeft
+      container.scrollLeft = scrollLeft - (x - startX)
+    }
+    container.addEventListener('mousedown', onMouseDown)
+    container.addEventListener('mouseleave', onMouseLeave)
+    container.addEventListener('mouseup', onMouseUp)
+    container.addEventListener('mousemove', onMouseMove)
+    return () => {
+      container.removeEventListener('mousedown', onMouseDown)
+      container.removeEventListener('mouseleave', onMouseLeave)
+      container.removeEventListener('mouseup', onMouseUp)
+      container.removeEventListener('mousemove', onMouseMove)
+    }
+  }, [])
   useEffect(() => {
     if (!isLoggedIn || !openPeriodMenu) return
     const handlePointerDown = (event:PointerEvent) => {
@@ -353,7 +389,7 @@ function App() {
         <div className="mobile-theme-toggle-wrap"><span style={{fontSize:'12px',fontWeight:600,color:'var(--text)'}}>Ubah Tampilan</span><ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={84}/></div>
         <div className="sidebar-bottom" style={{position:'relative'}}><div className="profile-card" onClick={(e)=>{e.stopPropagation();if(profileMenuOpen){closeProfileMenu()}else{setProfileMenuOpen(true)}}} role="button" aria-expanded={profileMenuOpen} tabIndex={0}><span className="profile-avatar" style={{overflow:'hidden'}}>{currentAvatar ? <img src={currentAvatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : currentUsername.slice(0,2).toUpperCase()}</span><span className="profile-user-info"><b>{currentUsername}</b><small>Workspace admin</small></span></div>{(profileMenuOpen || profileMenuClosing)&&<div className={`profile-popover-menu ${profileMenuClosing?'closing':''}`}><button onClick={()=>{setProfileModal(true);closeProfileMenu()}}><User size={13}/> Lihat Profil</button><button onClick={()=>{localStorage.removeItem('fish-logged-in');setIsLoggedIn(false);toast('Berhasil keluar sesi');closeProfileMenu()}}><LogOut size={13}/> Keluar</button></div>}</div>
       </aside>
-      <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab" key={activeSection}>Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" role="tablist" aria-label="Periode rekap ikan"><div className="period-tabs-indicator" style={{left:`${indicatorStyle.left}px`,width:`${indicatorStyle.width}px`}}/>{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id} ref={el=>{tabsRef.current[period.id]=el}}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
+      <div className="workspace-main"><header className="workspace-topbar"><span className="current-tab" key={activeSection}>Workspace/{activeSection}</span>{activeSection==='Rekap Ikan'&&<div className="period-tabs" ref={periodTabsContainerRef} role="tablist" aria-label="Periode rekap ikan"><div className="period-tabs-indicator" style={{left:`${indicatorStyle.left}px`,width:`${indicatorStyle.width}px`}}/>{periods.map(period=><div className={`period-tab ${activePeriodId===period.id?'active':''}`} key={period.id} ref={el=>{tabsRef.current[period.id]=el}}><button type="button" role="tab" aria-selected={activePeriodId===period.id} onClick={()=>{setActivePeriodId(period.id);setOpenPeriodMenu(null)}}>{period.name}</button><button type="button" className="period-tab-menu-trigger" aria-label={`Menu ${period.name}`} aria-expanded={openPeriodMenu?.id===period.id} onClick={event=>{
                     const tabEl=event.currentTarget.closest('.period-tab');
                     const rect=tabEl?tabEl.getBoundingClientRect():event.currentTarget.getBoundingClientRect();
                     setOpenPeriodMenu(openPeriodMenu?.id===period.id?null:{

@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Auto-scroll Active Period Tab to Left + Drag-to-Scroll Period Tabs on PC
+- Change:
+  - Menambahkan `periodTabsContainerRef` pada container `.period-tabs` dan `useEffect` auto-scroll: saat tab periode diklik, container otomatis scroll horizontal sehingga tab aktif bergeser ke posisi paling kiri (berlaku mobile & PC).
+  - Menambahkan `useEffect` drag-to-scroll pada `.period-tabs` di PC: user bisa klik-tahan lalu geser mouse horizontal untuk melihat tab yang overflow. Cursor berubah menjadi `grab`/`grabbing` sebagai indikator visual.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+
 ## 2026-11-09 — Make Mobile Workspace Topbar Positioned Fixed (`position: fixed`)
 - Change:
   - Mengubah posisi `.workspace-topbar` pada mobile view (`max-width: 700px`) dari `position: sticky` menjadi `position: fixed` (`top: 0; left: 0; right: 0; z-index: 50`) dan menambahkan `padding-top: 54px` pada `.workspace-main`. Ini memastikan topbar benar-benar membeku (*frozen*) di atas layar dan tidak pernah melompat atau berubah posisi saat membuka modal popup maupun sidebar di perangkat mobile.
