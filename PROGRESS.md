@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Fix PC Sidebar Theme Toggle Visibility & Robust Period Tab Scrolling
+- Change:
+  - Memperbaiki visibilitas toggle mode di sidebar: menyembunyikan `.mobile-theme-toggle-wrap` secara default di PC (`display: none`) dan hanya menampilkannya saat mode mobile (`@media(max-width:700px)`).
+  - Menyempurnakan fitur auto-scroll tab aktif ke kiri (menggunakan `requestAnimationFrame` dan penyesuaian posisi `offsetLeft`) serta drag-to-scroll pada tab periode di PC menggunakan koordinat `e.clientX`.
+- Files: `src/App.tsx`, `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Auto-scroll Active Period Tab to Left + Drag-to-Scroll Period Tabs on PC
 - Change:
   - Menambahkan `periodTabsContainerRef` pada container `.period-tabs` dan `useEffect` auto-scroll: saat tab periode diklik, container otomatis scroll horizontal sehingga tab aktif bergeser ke posisi paling kiri (berlaku mobile & PC).

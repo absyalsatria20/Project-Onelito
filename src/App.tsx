@@ -174,41 +174,7 @@ function App() {
       })
     }
   }, [isLoggedIn, activePeriodId, periods])
-  useEffect(() => {
-    if (!isLoggedIn) return
-    const activeEl = tabsRef.current[activePeriodId]
-    const container = periodTabsContainerRef.current
-    if (activeEl && container) {
-      container.scrollTo({ left: activeEl.offsetLeft, behavior: 'smooth' })
-    }
-  }, [isLoggedIn, activePeriodId, periods])
-  useEffect(() => {
-    const container = periodTabsContainerRef.current
-    if (!container) return
-    let isDown = false, startX = 0, scrollLeft = 0
-    const onMouseDown = (e: MouseEvent) => {
-      if ((e.target as HTMLElement).closest('button')) return
-      isDown = true; container.style.cursor = 'grabbing'; container.style.userSelect = 'none'
-      startX = e.pageX - container.offsetLeft; scrollLeft = container.scrollLeft
-    }
-    const onMouseLeave = () => { isDown = false; container.style.cursor = ''; container.style.userSelect = '' }
-    const onMouseUp = () => { isDown = false; container.style.cursor = ''; container.style.userSelect = '' }
-    const onMouseMove = (e: MouseEvent) => {
-      if (!isDown) return; e.preventDefault()
-      const x = e.pageX - container.offsetLeft
-      container.scrollLeft = scrollLeft - (x - startX)
-    }
-    container.addEventListener('mousedown', onMouseDown)
-    container.addEventListener('mouseleave', onMouseLeave)
-    container.addEventListener('mouseup', onMouseUp)
-    container.addEventListener('mousemove', onMouseMove)
-    return () => {
-      container.removeEventListener('mousedown', onMouseDown)
-      container.removeEventListener('mouseleave', onMouseLeave)
-      container.removeEventListener('mouseup', onMouseUp)
-      container.removeEventListener('mousemove', onMouseMove)
-    }
-  }, [])
+
   useEffect(() => {
     if (!isLoggedIn || !openPeriodMenu) return
     const handlePointerDown = (event:PointerEvent) => {
@@ -242,6 +208,47 @@ function App() {
     }, 160)
   }
   const [activeSection, setActiveSection] = useState('Rekap Ikan')
+  useEffect(() => {
+    if (!isLoggedIn) return
+    const activeEl = tabsRef.current[activePeriodId]
+    const container = periodTabsContainerRef.current
+    if (activeEl && container) {
+      requestAnimationFrame(() => {
+        container.scrollTo({ left: Math.max(0, activeEl.offsetLeft - 16), behavior: 'smooth' })
+      })
+    }
+  }, [isLoggedIn, activePeriodId, periods, activeSection])
+  useEffect(() => {
+    const container = periodTabsContainerRef.current
+    if (!container) return
+    let isDown = false, startX = 0, scrollLeft = 0
+    const onMouseDown = (e: MouseEvent) => {
+      if ((e.target as HTMLElement).closest('button')) return
+      isDown = true
+      container.style.cursor = 'grabbing'
+      container.style.userSelect = 'none'
+      startX = e.clientX
+      scrollLeft = container.scrollLeft
+    }
+    const onMouseLeave = () => { isDown = false; container.style.cursor = 'grab'; container.style.userSelect = '' }
+    const onMouseUp = () => { isDown = false; container.style.cursor = 'grab'; container.style.userSelect = '' }
+    const onMouseMove = (e: MouseEvent) => {
+      if (!isDown) return
+      e.preventDefault()
+      const walk = e.clientX - startX
+      container.scrollLeft = scrollLeft - walk
+    }
+    container.addEventListener('mousedown', onMouseDown)
+    container.addEventListener('mouseleave', onMouseLeave)
+    container.addEventListener('mouseup', onMouseUp)
+    container.addEventListener('mousemove', onMouseMove)
+    return () => {
+      container.removeEventListener('mousedown', onMouseDown)
+      container.removeEventListener('mouseleave', onMouseLeave)
+      container.removeEventListener('mouseup', onMouseUp)
+      container.removeEventListener('mousemove', onMouseMove)
+    }
+  }, [activeSection])
   useEffect(() => {
     if (!isLoggedIn) return
     const handleOutsideClick = (e: MouseEvent) => {
