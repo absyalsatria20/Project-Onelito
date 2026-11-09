@@ -304,7 +304,7 @@ function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,cu
         <div style={{display:'flex',alignItems:'center',gap:'16px',padding:'16px 20px',background:'linear-gradient(135deg, var(--panel-muted) 0%, var(--panel) 100%)',borderRadius:'10px',border:'1px solid var(--line)',marginBottom:'16px',position:'relative',overflow:'hidden'}}>
           <div style={{position:'relative',cursor:'pointer',flexShrink:0}} onClick={()=>openModal('avatar')} title="Klik untuk ubah avatar">
             <span className="profile-avatar" style={{width:'50px',height:'50px',borderRadius:'50%',background:'var(--primary)',color:'#fff',display:'flex',alignItems:'center',justifyContent:'center',fontWeight:700,fontSize:'17px',overflow:'hidden',boxShadow:'0 4px 12px rgba(0,0,0,0.1)'}}>{currentAvatar ? <img src={currentAvatar} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/> : currentUsername.slice(0,2).toUpperCase()}</span>
-            <span style={{position:'absolute',bottom:0,right:0,width:'18px',height:'18px',background:'var(--primary)',color:'#fff',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',fontSize:'9px',border:'2px solid var(--panel)'}}><Camera size={10}/></span>
+            <span style={{position:'absolute',bottom:-2,right:-2,width:'20px',height:'20px',background:'#2563EB',color:'#FFFFFF',borderRadius:'50%',display:'flex',alignItems:'center',justifyContent:'center',boxShadow:'0 2px 6px rgba(0,0,0,0.2)',border:'2px solid var(--panel)'}}><Camera size={10}/></span>
           </div>
           <div style={{display:'flex',flexDirection:'column',gap:'2px',flex:1}}>
             <div style={{display:'flex',alignItems:'center',gap:'8px'}}>

@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Memperjelas Tampilan Badge Ikon Kamera pada Avatar Profil
+- Change:
+  - Mengubah latar belakang badge ikon kamera di pojok kanan bawah avatar profil menjadi biru terang (`#2563EB`) dengan ikon putih bersih (`#FFFFFF`), ukuran sedikit lebih besar (20px), serta tambahan *drop shadow* dan border panel agar terlihat sangat kontras dan jelas pada tema terang maupun gelap.
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Menambahkan Transisi Keluar (`closeWithAnimation`) pada Modal Akun & Akses
 - Change:
   - Mengintegrasikan fungsi transisi keluar (`closeWithAnimation`) pada semua modal Akun & Akses (Username, Password, Title, Avatar) saat ditutup, dibatalkan, maupun disimpan. Ini menyamakan animasi transisi *fade-out / slide-out* agar konsisten dengan modal-modal lain di aplikasi.
