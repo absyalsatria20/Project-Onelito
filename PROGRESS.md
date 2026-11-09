@@ -1,5 +1,15 @@
 # Project Progress
 
+## 2026-11-09 — Hapus Fitur Reset Data & Tambah Entrance Animation Halaman Setting
+- Change:
+  - Menghapus tombol **Reset ke Data Default** beserta handler-nya dari kartu Data & Backup untuk mencegah risiko kehilangan data.
+  - Menambahkan **entrance animation** halus di halaman Setting:
+    - Heading fade-in dari bawah (0.35s).
+    - Kartu-kartu muncul berurutan (*staggered*) dengan delay 70ms antar kartu (fade-in + translateY 12px, durasi 0.4s).
+  - Animasi menggunakan `cubic-bezier(.22,1,.36,1)` dan otomatis nonaktif pada `prefers-reduced-motion`.
+- Files: `src/App.tsx`, `src/App.css`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Mengubah Bagian "Data & Backup" Menjadi Fitur Siap Produksi (Production-Ready)
 - Change:
   - Mengubah kartu **Data & Backup** di menu Setting menjadi fungsional penuh layaknya aplikasi produksi nyata:
