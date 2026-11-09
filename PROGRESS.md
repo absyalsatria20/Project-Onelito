@@ -1,5 +1,17 @@
 # Project Progress
 
+## 2026-11-09 — Increase Mobile Theme Toggle Margin to 13px for Ideal Spacing
+- Change:
+  - Meningkatkan margin atas `.mobile-theme-toggle-wrap` pada mobile view menjadi `13px` agar jarak dengan menu Setting lebih pas dan proporsional.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
+## 2026-11-09 — Adjust Mobile Theme Toggle Margin to Prevent Overlap with Setting Menu
+- Change:
+  - Mengubah margin atas `.mobile-theme-toggle-wrap` pada mobile view dari `-3px` menjadi `8px` agar ada jarak yang pas dan tidak bertabrakan dengan menu Setting.
+- Files: `src/App.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Swap Mobile Theme Toggle Order (Text Left, Toggle Right)
 - Change:
   - Mengubah posisi teks "Ubah Tampilan" ke sebelah kiri dan tombol toggle ke sebelah kanan pada sidebar mobile view, dengan layout `justify-content: space-between` dan tetap mepet di bawah menu Setting.
