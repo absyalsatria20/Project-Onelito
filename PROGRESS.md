@@ -1,5 +1,10 @@
 # Project Progress
 
+## 2026-11-09 — Mengubah `overflow-y: hidden` pada `.table-wrap`
+- Change:
+  - Memperbarui `src/App.css` pada `.table-wrap` dengan menetapkan `overflow-x: auto; overflow-y: hidden;` agar tidak ada scrollbar vertical di dalam tabel, sementara tabel tetap fleksibel memanjang ke bawah dan scroll horizontal tetap aktif untuk layar sempit.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0); perubahan telah di-commit & di-push ke GitHub.
+
 ## 2026-11-09 — Menghapus Scroll Vertikal Tabel & Membuat Tabel Memanjang ke Bawah
 - Change:
   - Memperbarui `.table-wrap` di `src/App.css` dari `overflow: auto` menjadi `overflow-x: auto; overflow-y: visible;` agar scroll vertical di dalam tabel hilang dan tabel secara otomatis memanjang ke bawah mengikuti jumlah data.
