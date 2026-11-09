@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-09 — Memperbarui Teks Deskripsi Kartu "Akun & Akses" di Setting
+- Change:
+  - Mengubah teks sub-heading pada kartu **Akun & Akses** dari *"Profil pengguna, kredensial, dan hak akses."* menjadi *"Ubah profil username, password, title, dan avatar."*
+- Verification:
+  - `npm run lint` & `npm run build` sukses (exit code 0).
+  - Git diff check bersih.
+
 ## 2026-11-09 — Memperbaiki Prioritas CSS Hover (`!important`) pada Tombol Aksi "Akun & Akses"
 - Change:
   - Menambahkan modifier `!important` pada properti warna teks dan border saat `:hover` pada `.settings-action.secondary` untuk memastikan animasi hover teks & border biru langsung aktif tanpa terhalang gaya inline.

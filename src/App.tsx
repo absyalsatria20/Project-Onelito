@@ -299,7 +299,7 @@ function SettingsPanel({theme,onThemeToggle,onPrototypeAction,currentUsername,cu
       <article className="settings-card" style={{gridColumn:'span 1 / span 2'}}>
         <div className="settings-card-heading">
           <span className="settings-icon"><Shield size={19}/></span>
-          <div><h2>Akun &amp; Akses</h2><p>Profil pengguna, kredensial, dan hak akses.</p></div>
+          <div><h2>Akun &amp; Akses</h2><p>Ubah profil username, password, title, dan avatar.</p></div>
         </div>
         <div style={{display:'flex',alignItems:'center',gap:'16px',padding:'16px 20px',background:'linear-gradient(135deg, var(--panel-muted) 0%, var(--panel) 100%)',borderRadius:'10px',border:'1px solid var(--line)',marginBottom:'16px',position:'relative',overflow:'hidden'}}>
           <div style={{position:'relative',cursor:'pointer',flexShrink:0}} onClick={()=>openModal('avatar')} title="Klik untuk ubah avatar">
