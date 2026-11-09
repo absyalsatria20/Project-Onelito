@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-09 — Apply `sectionFadeIn` Animation to Workspace & Preferences Labels in Sidebar
+- Change:
+  - Mengubah animasi pada label `.workspace-label` dan `.settings-label` di `src/Sidebar.css` menggunakan keyframe `sectionFadeIn` (`0.45s cubic-bezier(.22,1,.36,1)` dengan transisi *fade*, *translateY*, dan *blur*), persis seperti animasi judul dan sub-teks halaman utama (*Kelola data ikan, harga, dan dokumen pemilik*).
+- Files: `src/Sidebar.css`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-09 — Ensure Consistent Font Size for Workspace & Preferences Labels in Collapsed Sidebar
 - Change:
   - Menambahkan `font-size: 9px !important` pada state sidebar collapsed untuk `.workspace-label` dan `.settings-label` di `src/Sidebar.css` guna memastikan ukuran font tetap konsisten dan tidak berubah-ubah saat sidebar ditutup maupun dibuka.
