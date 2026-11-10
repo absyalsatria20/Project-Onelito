@@ -414,9 +414,14 @@ function App() {
               <input 
                 value={query} 
                 onChange={e => {
-                  setQuery(e.target.value)
-                  if (!isGlobalSearch) setIsGlobalSearch(true)
-                  if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
+                  const val = e.target.value
+                  setQuery(val)
+                  if (val.trim() === '') {
+                    setIsGlobalSearch(false)
+                  } else {
+                    if (!isGlobalSearch) setIsGlobalSearch(true)
+                    if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
+                  }
                 }} 
                 placeholder="Cari semua ikan..." 
                 aria-label="Cari global"
@@ -454,12 +459,6 @@ function App() {
                 {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).length === 0 && (
                   <div style={{padding: '12px', textAlign: 'center', fontSize: '11px', color: 'var(--muted)'}}>Tidak ada ikan ditemukan</div>
                 )}
-              </div>
-            )}
-            {isGlobalSearch && (
-              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', padding: '0 2px'}}>
-                <small style={{fontSize: '10px', color: 'var(--blue)', fontWeight: 600}}>Global Search Aktif</small>
-                <button type="button" onClick={() => { setIsGlobalSearch(false); setQuery('') }} style={{background: 'none', border: '0', color: 'var(--muted)', fontSize: '10px', cursor: 'pointer', padding: 0}}>Reset</button>
               </div>
             )}
           </div>
