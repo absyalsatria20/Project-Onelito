@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Efek Fokus Garis Bawah Biru pada Kolom Search Global
+- Change:
+  - Menambahkan event handler `onFocusCapture` & `onBlur` untuk mengubah warna garis bawah (`borderBottomColor`) menjadi biru (`var(--blue)`) saat diklik/fokus tanpa memunculkan efek kotak/shadow.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `9509516`.
+
 ## 2026-11-10 — Restyle UI Kolom Search Global di Sidebar (Bottom Border & Label Aktif)
 - Change:
 - Mengubah gaya UI kolom search global di sidebar dari box penuh menjadi garis bawah saja (`borderBottom`), transparan tanpa kotak.
