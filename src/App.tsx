@@ -406,11 +406,8 @@ function App() {
           <button type="button" className="sidebar-close" onClick={()=>setSidebarOpen(false)} aria-label="Tutup navigasi"><X size={19}/></button>
         </div>
         <span className="nav-label workspace-label" title="WORKSPACE">WORKSPACE</span>
-        <nav className="sidebar-nav" aria-label="Navigasi utama">
-          <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><div className="fish-icon"><svg className="fish-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="koiBody"><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z"/></clipPath></defs><g className="fish-tail"><path d="M5 12 C3 9 1 7 0.8 7 C1 10 1 14 0.8 17 C3 15 4 14 5 12Z" fill="#F87171" stroke="#991B1B" strokeWidth="0.7"/></g><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z" fill="#FFFDF7" stroke="#475569" strokeWidth="0.7"/><g clipPath="url(#koiBody)"><path d="M16 5 C19 5 21 8 20 11 C18 12 16 11 15 9Z" fill="#DC2626"/><path d="M9 5 C12 5 14 7 13 10 C12 12 9 12 8 10 C7 8 8 6 9 5Z" fill="#DC2626"/><path d="M4 12 C5 9 7 9 8 11 C8 14 6 16 4 15Z" fill="#DC2626"/></g><path d="M10 7 Q12 3 15 6 L13 8" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><path d="M11 16 Q13 20 16 17 L14 15" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><circle cx="19" cy="11" r="0.8" fill="#1E293B"/><path d="M20 12.5 Q22 13 22.5 12 M20 13 Q22 14 22.5 14" stroke="#991B1B" strokeWidth="0.45" strokeLinecap="round"/></svg><span className="fish-bubble fish-bubble-one"></span><span className="fish-bubble fish-bubble-two"></span></div><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
-        </nav>
         {!sidebarCollapsed && (
-          <div style={{padding: '0 4px', marginTop: '8px', position: 'relative'}}>
+          <div style={{padding: '0 12px 6px', position: 'relative'}}>
             <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${isSearchFocused ? 'var(--blue)' : 'var(--line)'}`, borderRadius: '0', padding: '0 2px', boxShadow: 'none', transition: 'border-bottom-color 0.15s ease'}}>
               <Search size={15}/>
               <input 
@@ -450,7 +447,7 @@ function App() {
               </div>
             )}
             {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
-              <div style={{position: 'absolute', top: '42px', left: 0, right: 0, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
+              <div style={{position: 'absolute', top: '42px', left: 12, right: 12, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
                 {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map(item => (
                   <div 
                     key={`${item.periodId}-${item.id}`}
@@ -459,6 +456,7 @@ function App() {
                       setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name, owner: 'All Owners' } : { ...p, query: '', owner: 'All Owners' }))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
+                      setIsSearchFocused(false)
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
@@ -484,6 +482,9 @@ function App() {
             )}
           </div>
         )}
+        <nav className="sidebar-nav" aria-label="Navigasi utama">
+          <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><div className="fish-icon"><svg className="fish-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="koiBody"><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z"/></clipPath></defs><g className="fish-tail"><path d="M5 12 C3 9 1 7 0.8 7 C1 10 1 14 0.8 17 C3 15 4 14 5 12Z" fill="#F87171" stroke="#991B1B" strokeWidth="0.7"/></g><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z" fill="#FFFDF7" stroke="#475569" strokeWidth="0.7"/><g clipPath="url(#koiBody)"><path d="M16 5 C19 5 21 8 20 11 C18 12 16 11 15 9Z" fill="#DC2626"/><path d="M9 5 C12 5 14 7 13 10 C12 12 9 12 8 10 C7 8 8 6 9 5Z" fill="#DC2626"/><path d="M4 12 C5 9 7 9 8 11 C8 14 6 16 4 15Z" fill="#DC2626"/></g><path d="M10 7 Q12 3 15 6 L13 8" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><path d="M11 16 Q13 20 16 17 L14 15" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><circle cx="19" cy="11" r="0.8" fill="#1E293B"/><path d="M20 12.5 Q22 13 22.5 12 M20 13 Q22 14 22.5 14" stroke="#991B1B" strokeWidth="0.45" strokeLinecap="round"/></svg><span className="fish-bubble fish-bubble-one"></span><span className="fish-bubble fish-bubble-two"></span></div><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
+        </nav>
         <div className="sidebar-spacer"/><span className="nav-label settings-label" title="PREFERENCES">PREFERENCES</span>
         <nav className="sidebar-nav"><button className={`sidebar-link ${activeSection==='Setting'?'selected':''}`} onClick={()=>{setActiveSection('Setting');setSidebarOpen(false)}}><Settings size={18}/><span>Setting</span></button></nav>
         <div className="mobile-theme-toggle-wrap"><span style={{fontSize:'12px',fontWeight:600,color:'var(--text)'}}>Ubah Tampilan</span><ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={84}/></div>
