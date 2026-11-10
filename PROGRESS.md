@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Indikator jumlah data di kartu Data & Backup
+- Change:
+  - Menambahkan informasi "Jumlah Periode" dan "Total Record Ikan" secara real-time pada kartu Setting > Data & Backup.
+  - Membantu user mengetahui volume data yang tersimpan sebelum melakukan eksekusi backup atau impor.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `c1019c1`.
+
 ## 2026-11-10 — Validasi data impor lebih ketat
 - Change:
   - Menambahkan fungsi `validateBackup()` yang memvalidasi 3 level: root structure, setiap period, dan setiap fish record.
