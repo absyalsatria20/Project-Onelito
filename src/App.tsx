@@ -408,7 +408,7 @@ function App() {
           <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><div className="fish-icon"><svg className="fish-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="koiBody"><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z"/></clipPath></defs><g className="fish-tail"><path d="M5 12 C3 9 1 7 0.8 7 C1 10 1 14 0.8 17 C3 15 4 14 5 12Z" fill="#F87171" stroke="#991B1B" strokeWidth="0.7"/></g><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z" fill="#FFFDF7" stroke="#475569" strokeWidth="0.7"/><g clipPath="url(#koiBody)"><path d="M16 5 C19 5 21 8 20 11 C18 12 16 11 15 9Z" fill="#DC2626"/><path d="M9 5 C12 5 14 7 13 10 C12 12 9 12 8 10 C7 8 8 6 9 5Z" fill="#DC2626"/><path d="M4 12 C5 9 7 9 8 11 C8 14 6 16 4 15Z" fill="#DC2626"/></g><path d="M10 7 Q12 3 15 6 L13 8" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><path d="M11 16 Q13 20 16 17 L14 15" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><circle cx="19" cy="11" r="0.8" fill="#1E293B"/><path d="M20 12.5 Q22 13 22.5 12 M20 13 Q22 14 22.5 14" stroke="#991B1B" strokeWidth="0.45" strokeLinecap="round"/></svg><span className="fish-bubble fish-bubble-one"></span><span className="fish-bubble fish-bubble-two"></span></div><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
         </nav>
         {!sidebarCollapsed && (
-          <div style={{padding: '0 4px', marginTop: '8px'}}>
+          <div style={{padding: '0 4px', marginTop: '8px', position: 'relative'}}>
             <label className="search-field" style={{width: '100%', height: '36px', background: 'var(--panel-soft)', borderRadius: '6px'}}>
               <Search size={15}/>
               <input 
@@ -423,6 +423,38 @@ function App() {
                 style={{fontSize: '12px'}}
               />
             </label>
+            {isGlobalSearch && query.trim() !== '' && allRecordsWithPeriod.length > 0 && (
+              <div style={{position: 'absolute', top: '42px', left: 0, right: 0, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
+                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).slice(0, 6).map(item => (
+                  <div 
+                    key={`${item.periodId}-${item.id}`}
+                    onClick={() => {
+                      setActivePeriodId(item.periodId)
+                      setIsGlobalSearch(false)
+                      setQuery('')
+                      setActiveSection('Rekap Ikan')
+                      if (sidebarOpen) setSidebarOpen(false)
+                    }}
+                    style={{display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '6px', cursor: 'pointer', transition: 'background 0.15s'}}
+                    onMouseEnter={e => e.currentTarget.style.background = 'var(--panel-soft)'}
+                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                  >
+                    <div style={{width: '28px', height: '28px', borderRadius: '4px', overflow: 'hidden', flexShrink: '0', background: 'var(--line)'}}>
+                      <img src={item.image} alt="" style={{width: '100%', height: '100%', objectFit: 'cover'}} onError={e => { e.currentTarget.style.display = 'none' }} />
+                    </div>
+                    <div style={{flex: 1, minWidth: 0}}>
+                      <div style={{fontSize: '12px', fontWeight: 600, color: 'var(--text)', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis'}}>{item.name}</div>
+                      <div style={{fontSize: '10px', color: 'var(--muted)', display: 'flex', gap: '4px', alignItems: 'center'}}>
+                        <span>{item.owner}</span><span>·</span><span style={{color: 'var(--blue)', fontWeight: 600}}>{item.periodName}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).length === 0 && (
+                  <div style={{padding: '12px', textAlign: 'center', fontSize: '11px', color: 'var(--muted)'}}>Tidak ada ikan ditemukan</div>
+                )}
+              </div>
+            )}
             {isGlobalSearch && (
               <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', padding: '0 2px'}}>
                 <small style={{fontSize: '10px', color: 'var(--blue)', fontWeight: 600}}>Global Search Aktif</small>
