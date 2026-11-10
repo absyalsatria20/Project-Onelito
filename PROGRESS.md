@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Desain Tombol Clear (X) Berbentuk Bulat (Badge Style)
+- Change:
+  - Mempercantik tombol clear (ikon `X`) pada input pencarian global dan lokal dengan latar belakang bulat (`borderRadius: '50%'`) dan ikon berukuran proporsional yang rapi.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `ab15858`.
+
 ## 2026-11-10 — Tombol Clear (X) pada Kolom Pencarian Global & Lokal
 - Change:
   - Menambahkan tombol clear (ikon `X`) secara otomatis pada kolom pencarian global (sidebar) dan kolom pencarian lokal (toolbar tabel) saat terdapat teks yang diketik.
