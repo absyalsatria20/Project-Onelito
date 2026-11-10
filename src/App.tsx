@@ -72,6 +72,38 @@ function App() {
     toast('Backup data berhasil diunduh')
   }
 
+  const validateBackup = (data: unknown): { valid: true } | { valid: false; error: string } => {
+    const d = data as Record<string, unknown>
+    if (!d || typeof d !== 'object') return { valid: false, error: 'Format file backup tidak valid' }
+    if (!Array.isArray(d.periods)) return { valid: false, error: 'Format file backup tidak valid: field "periods" tidak ditemukan' }
+    if (d.periods.length === 0) return { valid: false, error: 'File backup tidak berisi data periode' }
+    const periodFields: [string, string][] = [['id','string'],['name','string'],['owner','string'],['certificate','string'],['query','string']]
+    const validSorts = ['name','owner','total']
+    for (let i = 0; i < d.periods.length; i++) {
+      const p = d.periods[i] as Record<string, unknown>
+      if (!p || typeof p !== 'object') return { valid: false, error: `Periode ke-${i + 1} bukan object yang valid` }
+      for (const [key, type] of periodFields) {
+        if (typeof p[key] !== type) return { valid: false, error: `Periode ke-${i + 1} tidak memiliki field wajib (${key})` }
+      }
+      if (!validSorts.includes(p.sort as string)) return { valid: false, error: `Periode ke-${i + 1} memiliki nilai "sort" tidak valid` }
+      if (!Array.isArray(p.records)) return { valid: false, error: `Periode ke-${i + 1} tidak memiliki field wajib (records)` }
+      const pName = (p.name as string) || `Periode ${i + 1}`
+      const recordFields: [string, string][] = [['name','string'],['owner','string'],['rupiah','number'],['feePercent','number'],['shipping','number'],['image','string'],['tc','string']]
+      for (let j = 0; j < (p.records as unknown[]).length; j++) {
+        const r = (p.records as Record<string, unknown>[])[j]
+        if (!r || typeof r !== 'object') return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' bukan object yang valid` }
+        if (typeof r.id !== 'number') return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' tidak valid (id)` }
+        for (const [key, type] of recordFields) {
+          if (typeof r[key] !== type) return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' tidak valid (${key})` }
+        }
+        if (r.yen !== null && typeof r.yen !== 'number') return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' tidak valid (yen)` }
+        if (r.rate !== null && typeof r.rate !== 'number') return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' tidak valid (rate)` }
+        if (typeof r.certificate !== 'boolean') return { valid: false, error: `Record ke-${j + 1} di periode '${pName}' tidak valid (certificate)` }
+      }
+    }
+    return { valid: true }
+  }
+
   const handleImportBackup = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
     if (!file) return
@@ -79,8 +111,9 @@ function App() {
     reader.onload = (event) => {
       try {
         const parsed = JSON.parse(String(event.target?.result))
-        if (!parsed.periods || !Array.isArray(parsed.periods)) {
-          toast('Format file backup tidak valid')
+        const result = validateBackup(parsed)
+        if (!result.valid) {
+          toast(result.error)
           return
         }
         setPendingImport({

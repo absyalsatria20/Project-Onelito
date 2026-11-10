@@ -3,13 +3,14 @@
 ## 2026-11-10 — Konfirmasi dialog sebelum impor backup data
 - Change:
   - Menambahkan dialog konfirmasi sebelum data backup ditimpa ke aplikasi. Sebelumnya, impor langsung menimpa data tanpa konfirmasi.
-  - Flow baru: pilih file → parse & validasi → tampilkan dialog konfirmasi (menampilkan jumlah periode, nama periode, username dari backup) → user klik "Timpa Data" atau "Batal".
+  - Flow baru: pilih file → parse & validasi → tampilkan dialog konfirmasi (menampilkan jumlah periode dan nama periode dari backup) → user klik "Timpa Data" atau "Batal".
+  - Backup sekarang hanya berisi data rekap ikan (periods + activePeriodId). Profil (username, title, avatar) dihapus dari export dan import karena itu setting personal, bukan data kerja.
   - Menambahkan state `pendingImport` untuk menyimpan data sementara sebelum dikonfirmasi.
   - Fungsi `confirmImportBackup` menerapkan data hanya setelah user konfirmasi.
   - Dialog menggunakan pattern `confirm-dialog` yang sama dengan dialog hapus, icon Database, tombol destructive "Timpa Data".
   - `pendingImport` ditambahkan ke `hasActiveModal` untuk lock background scroll.
 - Files: `src/App.tsx`, `PROGRESS.md`
-- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `1a4c01b`.
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `58dfb40`.
 
 ## 2026-11-10 — Fix patah-patah scroll tab periode
 - Change:
