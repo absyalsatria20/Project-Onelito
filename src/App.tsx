@@ -407,7 +407,7 @@ function App() {
         </div>
         <span className="nav-label workspace-label" title="WORKSPACE">WORKSPACE</span>
         {!sidebarCollapsed && (
-          <div style={{padding: '0 12px 6px', position: 'relative'}}>
+          <div style={{padding: '0 12px 6px', position: 'relative', animation: 'sidebarSearchIn 0.22s ease-out'}}>
             <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${isSearchFocused ? 'var(--blue)' : 'var(--line)'}`, borderRadius: '0', padding: '0 2px', boxShadow: 'none', transition: 'border-bottom-color 0.15s ease'}}>
               <Search size={15}/>
               <input 
