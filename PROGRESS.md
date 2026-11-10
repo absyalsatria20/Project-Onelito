@@ -1,6 +1,12 @@
 # Project Progress
 
-## 2026-11-10 — Penambahan Animasi Transisi Search Global di Sidebar
+## 2026-11-10 — Penambahan Navigasi Keyboard dan Sinkronisasi Filter pada Global Search
+- Change:
+  - Menambahkan dukungan navigasi keyboard (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) pada input search global di sidebar untuk memilih hasil ikan di dropdown dengan cepat.
+  - Menambahkan sinkronisasi filter kombinasi (otomatis reset owner ke 'All Owners' dan memasukkan query pada periode yang dituju saat item dipilih).
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`1b49405`).
 - Change:
   - Menambahkan keyframes `sidebarSearchIn` di `src/App.css` dan menerapkannya pada wrapper search global di sidebar agar muncul dengan transisi halus (`0.22s ease-out`).
 - Verification:
