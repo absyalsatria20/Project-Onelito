@@ -50,6 +50,7 @@ function App() {
   }
 
   const [lastBackupTime, setLastBackupTime] = useState(() => localStorage.getItem('fish-last-backup') || '')
+  const [pendingImport, setPendingImport] = useState<{username?:string;title?:string;avatar?:string;periods:Period[];activePeriodId?:string}|null>(null)
 
   const handleExportBackup = () => {
     const backupData = {
@@ -85,27 +86,39 @@ function App() {
           toast('Format file backup tidak valid')
           return
         }
-        if (parsed.username) {
-          setCurrentUsername(parsed.username)
-          localStorage.setItem('fish-username', parsed.username)
-        }
-        if (parsed.title) {
-          setCurrentTitle(parsed.title)
-          localStorage.setItem('fish-title', parsed.title)
-        }
-        if (parsed.avatar !== undefined) {
-          setCurrentAvatar(parsed.avatar)
-          localStorage.setItem('fish-avatar', parsed.avatar)
-        }
-        setPeriods(parsed.periods)
-        if (parsed.activePeriodId) setActivePeriodId(parsed.activePeriodId)
-        toast('Data berhasil dipulihkan dari backup')
+        setPendingImport({
+          username: parsed.username,
+          title: parsed.title,
+          avatar: parsed.avatar,
+          periods: parsed.periods,
+          activePeriodId: parsed.activePeriodId
+        })
       } catch (err) {
         toast('Gagal membaca file JSON backup')
       }
     }
     reader.readAsText(file)
     e.target.value = ''
+  }
+
+  const confirmImportBackup = () => {
+    if (!pendingImport) return
+    if (pendingImport.username) {
+      setCurrentUsername(pendingImport.username)
+      localStorage.setItem('fish-username', pendingImport.username)
+    }
+    if (pendingImport.title) {
+      setCurrentTitle(pendingImport.title)
+      localStorage.setItem('fish-title', pendingImport.title)
+    }
+    if (pendingImport.avatar !== undefined) {
+      setCurrentAvatar(pendingImport.avatar)
+      localStorage.setItem('fish-avatar', pendingImport.avatar)
+    }
+    setPeriods(pendingImport.periods)
+    if (pendingImport.activePeriodId) setActivePeriodId(pendingImport.activePeriodId)
+    closeWithAnimation('pendingImport', () => setPendingImport(null))
+    toast('Data berhasil dipulihkan dari backup')
   }
 
 
@@ -225,9 +238,8 @@ function App() {
       if (e.deltaY !== 0) {
         e.preventDefault()
         container.scrollBy({
-          left: e.deltaY * 0.75,
-          behavior: 'smooth'
-        })
+            left: e.deltaY * 0.75
+          })
       }
     }
     container.addEventListener('wheel', onWheel, { passive: false })
@@ -248,7 +260,7 @@ function App() {
 
   useEffect(() => {
     if (!isLoggedIn) return
-    const hasActiveModal = modal || periodDialog || deletePeriodTarget || preview || termsDetail || deleteTarget || profileModal || accountModal || sidebarOpen
+    const hasActiveModal = modal || periodDialog || deletePeriodTarget || preview || termsDetail || deleteTarget || profileModal || accountModal || pendingImport || sidebarOpen
     if (!hasActiveModal) return
 
     const scrollY = window.scrollY
@@ -420,6 +432,7 @@ function App() {
     {modal&&<FishForm key={`${activePeriod.id}-${editing?.id??'new'}`} initial={editing} owners={owners} closing={closingModal==='modal'} onClose={()=>closeWithAnimation('modal',()=>setModal(false))} onSave={record=>{setOwnerNames(items=>items.some(name=>name.toLocaleLowerCase()===record.owner.trim().toLocaleLowerCase())?items:[...items,record.owner.trim()]);setRecords(items=>editing?items.map(item=>item.id===editing.id?record:item):[{...record,id:Math.max(0,...items.map(item=>item.id))+1},...items]);closeWithAnimation('modal',()=>setModal(false));toast(editing?'Perubahan berhasil disimpan':'Ikan berhasil ditambahkan')}}/>}
     {periodDialog&&<div className={`modal-backdrop ${closingModal==='periodDialog'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}}><form className={`period-name-dialog ${closingModal==='periodDialog'?'closing':''}`} role="dialog" aria-modal="true" aria-labelledby="period-dialog-title" onSubmit={savePeriodName}><div className="period-dialog-heading"><div><span className="eyebrow">WORKSPACE</span><h2 id="period-dialog-title">{periodDialog.mode==='add'?'Tambah Tab Baru':'Ganti nama periode'}</h2></div><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))} aria-label="Tutup"><X size={20}/></button></div><label className="period-name-field" htmlFor="period-name">Nama Tab<input id="period-name" autoFocus value={periodName} onChange={event=>{setPeriodName(event.target.value);setPeriodError('')}} placeholder="Contoh: Periode 2027" aria-describedby={periodError?'period-name-error':undefined}/></label>{periodError&&<p className="period-form-error" id="period-name-error" role="alert">{periodError}</p>}<div className="period-dialog-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}>Batal</button><button type="submit" className="primary-btn">{periodDialog.mode==='add'?'Buat periode':'Simpan nama'}</button></div></form></div>}
     {deletePeriodTarget&&<div className={`modal-backdrop ${closingModal==='deletePeriodTarget'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}}><section className={`confirm-dialog ${closingModal==='deletePeriodTarget'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="period-delete-title" aria-describedby="period-delete-description"><div className="confirm-icon"><Trash2 size={21}/></div><h2 id="period-delete-title">Hapus periode?</h2><p id="period-delete-description">Periode <b>{deletePeriodTarget.name}</b> dan seluruh data di dalamnya akan dihapus. Tindakan ini tidak dapat dibatalkan.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={deletePeriod}>Hapus</button></div></section></div>}
+    {pendingImport&&<div className={`modal-backdrop ${closingModal==='pendingImport'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('pendingImport',()=>setPendingImport(null))}}><section className={`confirm-dialog ${closingModal==='pendingImport'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="import-confirm-title" aria-describedby="import-confirm-description"><div className="confirm-icon"><Database size={21}/></div><h2 id="import-confirm-title">Timpa data saat ini?</h2><p id="import-confirm-description">File backup berisi <b>{pendingImport.periods.length} periode</b>{pendingImport.periods.length>0&&<> ({pendingImport.periods.map(p=>p.name).join(', ')})</>}{pendingImport.username&&<> · Username: <b>{pendingImport.username}</b></>}. Semua data saat ini akan diganti dengan data dari backup.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('pendingImport',()=>setPendingImport(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={confirmImportBackup}>Timpa Data</button></div></section></div>}
     {preview&&<div className={`modal-backdrop ${closingModal==='preview'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('preview',()=>setPreview(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('preview',()=>setPreview(null))}}><section className={`image-dialog ${closingModal==='preview'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Foto ${preview.name}`}><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('preview',()=>setPreview(null))} aria-label="Tutup"><X size={20}/></button><img src={preview.image} alt={preview.name}/><div className="image-caption"><b>{preview.name}</b><span>{preview.owner}</span></div></section></div>}
     {termsDetail&&<div className={`modal-backdrop ${closingModal==='termsDetail'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('termsDetail',()=>setTermsDetail(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('termsDetail',()=>setTermsDetail(null))}}><section className={`terms-dialog ${closingModal==='termsDetail'?'closing':''}`} role="dialog" aria-modal="true" aria-label={`Term & Condition ${termsDetail.name}`}><div className="terms-heading"><div><h2>Term &amp; Condition</h2><p>{termsDetail.name}</p></div><button className="dialog-close" onClick={()=>closeWithAnimation('termsDetail',()=>setTermsDetail(null))} aria-label="Tutup"><X size={20}/></button></div><ul>{termsDetail.tc.split('\n').filter(Boolean).map(term=><li key={term}>{term}</li>)}</ul></section></div>}
     {deleteTarget&&<div className={`modal-backdrop ${closingModal==='deleteTarget'?'closing':''}`} onMouseDown={e=>{if(e.target===e.currentTarget)closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}} onKeyDown={e=>{if(e.key==='Escape')closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}}><section className={`confirm-dialog ${closingModal==='deleteTarget'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="delete-title" aria-describedby="delete-description"><div className="confirm-icon"><Trash2 size={21}/></div><h2 id="delete-title">Hapus data ikan?</h2><p id="delete-description">Data <b>{deleteTarget.name}</b> akan dihapus. Tindakan ini tidak dapat dibatalkan.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('deleteTarget',()=>setDeleteTarget(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={confirmDelete}>Hapus</button></div></section></div>}
