@@ -410,7 +410,7 @@ function App() {
         </nav>
         {!sidebarCollapsed && (
           <div style={{padding: '0 4px', marginTop: '8px', position: 'relative'}}>
-            <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: '1.5px solid var(--line)', borderRadius: '0', padding: '0 2px'}}>
+            <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: '1.5px solid var(--line)', borderRadius: '0', padding: '0 2px', boxShadow: 'none'}} onFocusCapture={e => e.currentTarget.style.borderBottomColor = 'var(--blue)'} onBlurCapture={e => e.currentTarget.style.borderBottomColor = 'var(--line)'}>
               <Search size={15}/>
               <input 
                 value={globalQuery} 
