@@ -430,7 +430,12 @@ function App() {
                 style={{fontSize: '12px'}}
               />
               {globalQuery && (
-                <button type="button" onClick={() => { setGlobalQuery(''); setIsGlobalSearch(false); setPeriods(items => items.map(p => ({ ...p, query: '' }))) }} style={{background:'var(--line)', border:0, cursor:'pointer', color:'var(--text)', display:'grid', placeItems:'center', width:'18px', height:'18px', borderRadius:'50%', padding:0, marginLeft:'auto', flexShrink:0}} title="Hapus pencarian">
+                <button type="button" onClick={(e) => { 
+                  setGlobalQuery('')
+                  setIsGlobalSearch(false)
+                  setPeriods(items => items.map(p => ({ ...p, query: '' })))
+                  ;(e.currentTarget.parentElement?.querySelector('input') as HTMLInputElement)?.blur()
+                }} style={{background:'var(--line)', border:0, cursor:'pointer', color:'var(--text)', display:'grid', placeItems:'center', width:'18px', height:'18px', borderRadius:'50%', padding:0, marginLeft:'auto', flexShrink:0}} title="Hapus pencarian">
                   <X size={11}/>
                 </button>
               )}
