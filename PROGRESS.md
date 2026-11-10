@@ -1,5 +1,13 @@
 # Project Progress
 
+## 2026-11-10 — Global Search Quick-Jump Dropdown di Sidebar
+- Change:
+  - Menambahkan dropdown autocomplete interaktif pada search bar sidebar.
+  - Saat user mengetik nama ikan atau owner, muncul daftar rekomendasi ikan dari seluruh periode beserta thumbnail, owner, dan badge nama periode.
+  - Ketika salah satu item diklik, aplikasi otomatis berpindah ke periode asal ikan tersebut (`activePeriodId`) dan menampilkan data terkait.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `d956540`.
+
 ## 2026-11-10 — Global Search di Sidebar
 - Change:
   - Menambahkan input pencarian global di sidebar (tepat di bawah menu Rekap Ikan).
