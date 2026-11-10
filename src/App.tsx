@@ -177,8 +177,10 @@ function App() {
 
     try {
       const { supabase } = await import('./supabaseClient')
+      const { data: existing } = await supabase.from('profiles').select('id').limit(1).maybeSingle()
+      const profileId = existing?.id || '00000000-0000-0000-0000-000000000001'
       await supabase.from('profiles').upsert({
-        id: '00000000-0000-0000-0000-000000000001',
+        id: profileId,
         username: u,
         title: t,
         avatar: a,
@@ -228,7 +230,7 @@ function App() {
           if (loaded[0]) setActivePeriodId(loaded[0].id)
         }
 
-        const { data: profData } = await supabase.from('profiles').select('*').eq('id', '00000000-0000-0000-0000-000000000001').single()
+        const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
           if (profData.username) { setCurrentUsername(profData.username); localStorage.setItem('fish-username', profData.username); }
           if (profData.title) { setCurrentTitle(profData.title); localStorage.setItem('fish-title', profData.title); }
@@ -736,7 +738,7 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
     }
     try {
       const { supabase } = await import('./supabaseClient')
-      const { data } = await supabase.from('profiles').select('*').eq('id', '00000000-0000-0000-0000-000000000001').single()
+      const { data } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
       const correctPass = data?.password_hash || 'adelia'
       if (!password) {
         setError('Password wajib diisi')
