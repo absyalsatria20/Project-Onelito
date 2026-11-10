@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan State Fokus Border Kolom Search Global Saat Tombol X Diklik
+- Change:
+  - Mengganti penanganan warna garis bawah fokus dari inline DOM manipulation ke React state reaktif (`isSearchFocused`).
+  - Ketika tombol `X` diklik, state `isSearchFocused` diset ke `false` bersamaan dengan `.blur()` sehingga garis bawah kembali ke warna standar tanpa tertinggal warna biru.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `9c2c691`.
+
 ## 2026-11-10 — Perbaikan Blur Warna Garis Bawah Saat Tombol Clear (X) Diklik
 - Change:
   - Menambahkan pemanggilan `.blur()` secara eksplisit pada input pencarian global ketika tombol clear (`X`) diklik.
