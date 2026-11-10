@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Perbaikan State Fokus Border Kolom Search Global Saat Tombol X Diklik
+## 2026-11-10 — Pemindahan Posisi Search Global di Sidebar
+- Change:
+  - Memindahkan posisi kotak search global di sidebar ke bagian atas (tepat di bawah label `WORKSPACE` dan di atas menu `Rekap Ikan`).
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`2907c0d`).
 - Change:
   - Mengganti penanganan warna garis bawah fokus dari inline DOM manipulation ke React state reaktif (`isSearchFocused`).
   - Ketika tombol `X` diklik, state `isSearchFocused` diset ke `false` bersamaan dengan `.blur()` sehingga garis bawah kembali ke warna standar tanpa tertinggal warna biru.
