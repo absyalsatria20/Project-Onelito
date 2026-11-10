@@ -167,6 +167,7 @@ function App() {
 
   const [periods, setPeriods] = useState<Period[]>([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
   const [activePeriodId, setActivePeriodId] = useState('period-2026')
+  const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
   const updateActivePeriod = (updates:Partial<Period>) => setPeriods(items=>items.map(period=>period.id===activePeriod.id?{...period,...updates}:period))
@@ -326,8 +327,10 @@ function App() {
       window.removeEventListener('touchend', handleTouchEnd)
     }
   }, [sidebarOpen])
-  const filtered = useMemo(() => records.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [records, owner, certificate, query, sort])
-  const selected = owner === 'All Owners' ? records : records.filter(r => r.owner === owner)
+  const allRecordsWithPeriod = useMemo(() => periods.flatMap(p => p.records.map(r => ({ ...r, periodName: p.name, periodId: p.id }))), [periods])
+  const sourceRecords = isGlobalSearch ? allRecordsWithPeriod : records
+  const filtered = useMemo(() => sourceRecords.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [sourceRecords, owner, certificate, query, sort])
+  const selected = owner === 'All Owners' ? sourceRecords : sourceRecords.filter(r => r.owner === owner)
   const grand = selected.reduce((sum, r) => sum + total(r), 0)
   const toastTimer = useRef<number | null>(null)
   const toast = (message: string) => {
@@ -404,6 +407,30 @@ function App() {
         <nav className="sidebar-nav" aria-label="Navigasi utama">
           <button className={`sidebar-link ${activeSection==='Rekap Ikan'?'selected':''}`} onClick={()=>{setActiveSection('Rekap Ikan');setSidebarOpen(false)}}><div className="fish-icon"><svg className="fish-svg" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><defs><clipPath id="koiBody"><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z"/></clipPath></defs><g className="fish-tail"><path d="M5 12 C3 9 1 7 0.8 7 C1 10 1 14 0.8 17 C3 15 4 14 5 12Z" fill="#F87171" stroke="#991B1B" strokeWidth="0.7"/></g><path d="M4 12 C6 7 10 5.5 15 7 C18 8 20 10 21 12 C19 15 16 17 12 17 C8 17 5 15 4 12Z" fill="#FFFDF7" stroke="#475569" strokeWidth="0.7"/><g clipPath="url(#koiBody)"><path d="M16 5 C19 5 21 8 20 11 C18 12 16 11 15 9Z" fill="#DC2626"/><path d="M9 5 C12 5 14 7 13 10 C12 12 9 12 8 10 C7 8 8 6 9 5Z" fill="#DC2626"/><path d="M4 12 C5 9 7 9 8 11 C8 14 6 16 4 15Z" fill="#DC2626"/></g><path d="M10 7 Q12 3 15 6 L13 8" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><path d="M11 16 Q13 20 16 17 L14 15" fill="#FFFDF7" stroke="#991B1B" strokeWidth="0.6"/><circle cx="19" cy="11" r="0.8" fill="#1E293B"/><path d="M20 12.5 Q22 13 22.5 12 M20 13 Q22 14 22.5 14" stroke="#991B1B" strokeWidth="0.45" strokeLinecap="round"/></svg><span className="fish-bubble fish-bubble-one"></span><span className="fish-bubble fish-bubble-two"></span></div><span>Rekap Ikan</span><b className="nav-badge">{records.length}</b></button>
         </nav>
+        {!sidebarCollapsed && (
+          <div style={{padding: '0 4px', marginTop: '8px'}}>
+            <label className="search-field" style={{width: '100%', height: '36px', background: 'var(--panel-soft)', borderRadius: '6px'}}>
+              <Search size={15}/>
+              <input 
+                value={query} 
+                onChange={e => {
+                  setQuery(e.target.value)
+                  if (!isGlobalSearch) setIsGlobalSearch(true)
+                  if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
+                }} 
+                placeholder="Cari semua periode..." 
+                aria-label="Cari global"
+                style={{fontSize: '12px'}}
+              />
+            </label>
+            {isGlobalSearch && (
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', padding: '0 2px'}}>
+                <small style={{fontSize: '10px', color: 'var(--blue)', fontWeight: 600}}>Global Search Aktif</small>
+                <button type="button" onClick={() => { setIsGlobalSearch(false); setQuery('') }} style={{background: 'none', border: '0', color: 'var(--muted)', fontSize: '10px', cursor: 'pointer', padding: 0}}>Reset</button>
+              </div>
+            )}
+          </div>
+        )}
         <div className="sidebar-spacer"/><span className="nav-label settings-label" title="PREFERENCES">PREFERENCES</span>
         <nav className="sidebar-nav"><button className={`sidebar-link ${activeSection==='Setting'?'selected':''}`} onClick={()=>{setActiveSection('Setting');setSidebarOpen(false)}}><Settings size={18}/><span>Setting</span></button></nav>
         <div className="mobile-theme-toggle-wrap"><span style={{fontSize:'12px',fontWeight:600,color:'var(--text)'}}>Ubah Tampilan</span><ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={84}/></div>
@@ -431,10 +458,10 @@ function App() {
           <div className="export-actions"><button className="export-btn pdf-btn" onClick={exportPdf}><FileText size={17}/><span>Export PDF</span></button></div>
         </div>
       <section className="data-panel" aria-label="Daftar inventaris ikan">
-        <div className="table-wrap"><table><colgroup><col className="fish-col"/><col className="yen-col"/><col className="rate-col"/><col className="idr-col"/><col className="fee-col"/><col className="shipping-col"/><col className="total-col"/><col className="cert-col"/><col className="tc-col"/><col className="action-col"/></colgroup><thead><tr><th><button onClick={()=>setSort('name')}>FISH</button></th><th className="numeric">HARGA (JPY)</th><th className="numeric">KURS</th><th className="numeric">HARGA (IDR)</th><th className="numeric">DEALER FEE</th><th className="numeric">SHIPPING COST</th><th className="numeric"><button onClick={()=>setSort('total')}>TOTAL</button></th><th>SERTIFIKAT</th><th>TERM &amp; CONDITION</th><th className="action-head">EDIT</th></tr></thead><tbody>{filtered.map(record=><tr key={record.id}>
-          <td><div className="fish-cell"><button className="thumb" onClick={()=>setPreview(record)} aria-label={`Lihat foto ${record.name}`} title="Klik untuk melihat gambar"><img src={record.image} alt={record.name} loading="lazy" onError={e=>{e.currentTarget.style.visibility='hidden'}}/><span className="thumb-fallback"><Fish size={18}/></span></button><span className="fish-info"><b title={record.name}>{record.name}</b>{owner==='All Owners'&&<small className="fish-owner">{record.owner}</small>}</span></div></td>
+        <div className="table-wrap"><table><colgroup><col className="fish-col"/><col className="yen-col"/><col className="rate-col"/><col className="idr-col"/><col className="fee-col"/><col className="shipping-col"/><col className="total-col"/><col className="cert-col"/><col className="tc-col"/><col className="action-col"/></colgroup><thead><tr><th><button onClick={()=>setSort('name')}>FISH</button></th><th className="numeric">HARGA (JPY)</th><th className="numeric">KURS</th><th className="numeric">HARGA (IDR)</th><th className="numeric">DEALER FEE</th><th className="numeric">SHIPPING COST</th><th className="numeric"><button onClick={()=>setSort('total')}>TOTAL</button></th><th>SERTIFIKAT</th><th>TERM &amp; CONDITION</th><th className="action-head">EDIT</th></tr></thead><tbody>{filtered.map(record=><tr key={`${(record as any).periodId || 'curr'}-${record.id}`}>
+          <td><div className="fish-cell"><button className="thumb" onClick={()=>{if((record as any).periodId)setActivePeriodId((record as any).periodId);setPreview(record)}} aria-label={`Lihat foto ${record.name}`} title="Klik untuk melihat gambar"><img src={record.image} alt={record.name} loading="lazy" onError={e=>{e.currentTarget.style.visibility='hidden'}}/><span className="thumb-fallback"><Fish size={18}/></span></button><span className="fish-info"><b title={record.name}>{record.name}</b><span style={{display:'flex',gap:'6px',alignItems:'center',flexWrap:'wrap'}}>{owner==='All Owners'&&<small className="fish-owner">{record.owner}</small>}{isGlobalSearch&&(record as any).periodName&&<small className="fish-owner" style={{padding:'1px 5px',borderRadius:'4px',background:'var(--panel-soft)',border:'1px solid var(--line)',color:'var(--blue)'}}>{(record as any).periodName}</small>}</span></span></div></td>
           <td className="numeric">{yenMoney(record.yen)}</td><td className="numeric">{record.rate ?? '—'}</td><td className="numeric">{money(record.rupiah)}</td><td className="numeric fee-cell"><span className="fee-percent">{record.feePercent}%</span><span className="fee-amount">{money(fee(record))}</span></td><td className="numeric">{money(record.shipping)}</td><td className="numeric total-value">{money(total(record))}</td><td><span className={`status ${record.certificate?'status-ok':'status-pending'}`}><i/>{record.certificate?'Ada':'Belum ada'}</span></td><td className="tc-cell">{record.tc ? <><span>{record.tc.split('\n')[0]}</span><button className="tc-detail-btn" onClick={()=>setTermsDetail(record)}>Detail</button></> : '—'}</td>
-          <td><div className="row-actions"><button className="row-action edit" onClick={()=>{setEditing(record);setModal(true)}} aria-label={`Edit ${record.name}`} title="Edit"><Pencil size={17}/></button><button className="row-action delete" onClick={()=>remove(record)} aria-label={`Hapus ${record.name}`} title="Hapus"><Trash2 size={17}/></button></div></td>
+          <td><div className="row-actions"><button className="row-action edit" onClick={()=>{if((record as any).periodId)setActivePeriodId((record as any).periodId);setEditing(record);setModal(true)}} aria-label={`Edit ${record.name}`} title="Edit"><Pencil size={17}/></button><button className="row-action delete" onClick={()=>{if((record as any).periodId)setActivePeriodId((record as any).periodId);remove(record)}} aria-label={`Hapus ${record.name}`} title="Hapus"><Trash2 size={17}/></button></div></td>
         </tr>)}</tbody></table>{filtered.length===0&&<div className="empty-state"><Search size={22}/><b>Data tidak ditemukan</b><span>Coba ubah kata pencarian atau filter pilihan.</span></div>}</div>
       </section>
       <footer className="table-footer"><div className="owner-summary"><span>Owner:</span><b>{owner==='All Owners'?'Semua owner':owner}</b><i>·</i><span>Menampilkan {filtered.length} data</span></div><div className="grand-total"><span>GRAND TOTAL:</span><strong>{money(grand)}</strong></div></footer>
