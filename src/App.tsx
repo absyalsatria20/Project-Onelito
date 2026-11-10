@@ -441,10 +441,10 @@ function App() {
                   if (results.length === 0) return
                   if (e.key === 'ArrowDown') {
                     e.preventDefault()
-                    setGlobalSelectedIndex(prev => (prev + 1) % results.length)
+                    setGlobalSelectedIndex(prev => Math.min(prev + 1, results.length - 1))
                   } else if (e.key === 'ArrowUp') {
                     e.preventDefault()
-                    setGlobalSelectedIndex(prev => (prev - 1 + results.length) % results.length)
+                    setGlobalSelectedIndex(prev => Math.max(prev - 1, 0))
                   } else if (e.key === 'Enter') {
                     e.preventDefault()
                     const item = results[globalSelectedIndex] || results[0]
