@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Tombol Clear (X) pada Kolom Pencarian Global & Lokal
+- Change:
+  - Menambahkan tombol clear (ikon `X`) secara otomatis pada kolom pencarian global (sidebar) dan kolom pencarian lokal (toolbar tabel) saat terdapat teks yang diketik.
+  - Klik pada tombol `X` langsung mereset/menghapus isi pencarian dengan cepat.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `0ed70f6`.
+
 ## 2026-11-10 — Grand Total Fleksibel Sesuai Data Filtered
 - Change:
   - Mengubah perhitungan `grand` di footer tabel agar bersumber dari `filtered` (data yang sedang tampil di tabel) alih-alih `selected`.
