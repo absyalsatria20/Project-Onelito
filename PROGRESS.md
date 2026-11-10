@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Auto-Reset Pencarian Saat Kosong & Hapus Tombol Reset
+- Change:
+  - Global search otomatis mereset dan menutup status pencarian lintas periode saat kotak pencarian dikosongkan (`val.trim() === ''`).
+  - Menghapus tombol "Reset" manual di bawah input pencarian sidebar sehingga antarmuka lebih bersih.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `94dd4d3`.
+
 ## 2026-11-10 — Perbaikan Filter Tabel Saat Quick-Jump Dipilih
 - Change:
   - Saat item ikan pada dropdown pencarian global diklik, `query` diset ke `item.name` (bukan dikosongkan).
