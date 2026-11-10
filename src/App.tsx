@@ -419,6 +419,7 @@ function App() {
                   setGlobalQuery(val)
                   if (val.trim() === '') {
                     setIsGlobalSearch(false)
+                    setPeriods(items => items.map(p => ({ ...p, query: '' })))
                   } else {
                     if (!isGlobalSearch) setIsGlobalSearch(true)
                     if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
@@ -436,7 +437,7 @@ function App() {
                     key={`${item.periodId}-${item.id}`}
                     onMouseDown={e => {
                       e.preventDefault()
-                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : p))
+                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : { ...p, query: '' }))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
                       setGlobalQuery('')
