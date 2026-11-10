@@ -410,7 +410,7 @@ function App() {
         </nav>
         {!sidebarCollapsed && (
           <div style={{padding: '0 4px', marginTop: '8px', position: 'relative'}}>
-            <label className="search-field" style={{width: '100%', height: '36px', background: 'var(--panel-soft)', borderRadius: '6px'}}>
+            <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: '1.5px solid var(--line)', borderRadius: '0', padding: '0 2px'}}>
               <Search size={15}/>
               <input 
                 value={globalQuery} 
@@ -435,6 +435,11 @@ function App() {
                 </button>
               )}
             </label>
+            {isGlobalSearch && (
+              <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '4px', padding: '0 2px'}}>
+                <small style={{fontSize: '10px', color: 'var(--blue)', fontWeight: 600}}>Global Search Aktif</small>
+              </div>
+            )}
             {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
               <div style={{position: 'absolute', top: '42px', left: 0, right: 0, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
                 {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map(item => (
