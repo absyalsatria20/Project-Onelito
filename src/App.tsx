@@ -140,7 +140,7 @@ function App() {
 
   const saveAccountModal = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!accountModalInput.trim() && accountModal !== 'password' && accountModal !== 'avatar') {
+    if (!accountModalInput.trim() && accountModal !== 'avatar') {
       toast('Nilai tidak boleh kosong')
       return
     }
@@ -155,7 +155,11 @@ function App() {
       localStorage.setItem('fish-username', u)
       toast('Username berhasil diubah')
     } else if (accountModal === 'password') {
-      p = accountModalInput
+      p = accountModalInput.trim()
+      if (!p) {
+        toast('Password tidak boleh kosong')
+        return
+      }
       setCurrentPassword(p)
       localStorage.setItem('fish-password', p)
       toast('Password berhasil diubah')
