@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Mempertahankan Teks Global Search Saat Dropdown Diklik
+- Change:
+  - Menghapus pemanggilan `setGlobalQuery('')` pada handler klik item dropdown quick-jump di sidebar.
+  - Teks pada kolom pencarian global di sidebar sekarang tetap utuh dan tidak tereset otomatis saat user memilih ikan dari dropdown.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `ba93adc`.
+
 ## 2026-11-10 — Auto-Reset Query Semua Tab Periode Saat Global Search Dikosongkan
 - Change:
   - Saat kotak pencarian global di sidebar dikosongkan (`val.trim() === ''`), property `query` pada seluruh tab periode otomatis di-reset menjadi kosong (`''`).
