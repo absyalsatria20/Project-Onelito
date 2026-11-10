@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Pengembalian Tinggi Dropdown dan Penambahan Custom Scrollbar Tipis
+## 2026-11-10 — Penyesuaian Gaya Scrollbar Global Search Sesuai Tabel Utama
+- Change:
+  - Memperbarui CSS `.global-search-dropdown` di `src/App.css` agar menggunakan standar scrollbar tipis (`scrollbar-width: thin`, `width: 6px`, radius 3px) yang serasi dengan scrollbar tabel aplikasi.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`7f06832`).
 - Change:
   - Mengembalikan `maxHeight` dropdown pencarian global ke ukuran semula (`260px`).
   - Menambahkan kelas CSS `.global-search-dropdown::-webkit-scrollbar` di `src/App.css` untuk membuat scrollbar dropdown menjadi tipis dan elegan.
