@@ -428,12 +428,13 @@ function App() {
                 {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).slice(0, 6).map(item => (
                   <div 
                     key={`${item.periodId}-${item.id}`}
-                    onClick={() => {
+                    onMouseDown={e => {
+                      e.preventDefault()
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
                       setQuery('')
                       setActiveSection('Rekap Ikan')
-                      if (sidebarOpen) setSidebarOpen(false)
+                      setSidebarOpen(false)
                     }}
                     style={{display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '6px', cursor: 'pointer', transition: 'background 0.15s'}}
                     onMouseEnter={e => e.currentTarget.style.background = 'var(--panel-soft)'}
