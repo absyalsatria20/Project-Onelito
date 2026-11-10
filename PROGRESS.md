@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Isolasi State Global Search di Sidebar
+- Change:
+  - Memisahkan state pencarian global di sidebar (`globalQuery`) dari pencarian lokal tiap tab periode (`query`).
+  - Mencegah bug hilangnya state pencarian atau ketidakkonsistenan antar tab periode saat menggunakan global search di sidebar.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `61d5c39`.
+
 ## 2026-11-10 — Perbaikan Target Period Query pada Quick-Jump Dropdown
 - Change:
   - Memperbaiki bug race condition state `setQuery` saat berpindah periode via dropdown quick-jump. Sekarang state `periods` pada `item.periodId` langsung di-set `query: item.name` sebelum `activePeriodId` diubah.
