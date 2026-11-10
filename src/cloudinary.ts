@@ -3,10 +3,10 @@ export const uploadToCloudinary = async (file: File): Promise<string> => {
   const uploadPreset = import.meta.env.VITE_CLOUDINARY_UPLOAD_PRESET
 
   if (!cloudName || !uploadPreset) {
-    // Fallback to Base64 data URL if Cloudinary not configured yet
+    // Fallback jika Cloudinary belum dikonfigurasi (menggunakan base64 lokal)
     return new Promise((resolve, reject) => {
       const reader = new FileReader()
-      reader.onload = () => resolve(String(reader.result))
+      reader.onload = () => resolve(reader.result as string)
       reader.onerror = reject
       reader.readAsDataURL(file)
     })
@@ -16,15 +16,25 @@ export const uploadToCloudinary = async (file: File): Promise<string> => {
   formData.append('file', file)
   formData.append('upload_preset', uploadPreset)
 
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/image/upload`, {
+  // Tentukan resource type otomatis (image atau video)
+  const resourceType = file.type.startsWith('video/') ? 'video' : 'image'
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${cloudName}/${resourceType}/upload`, {
     method: 'POST',
     body: formData,
   })
 
   if (!response.ok) {
-    throw new Error('Gagal mengunggah gambar ke Cloudinary')
+    const errorData = await response.json().catch(() => ({}))
+    throw new Error(errorData.error?.message || 'Gagal mengunggah ke Cloudinary')
   }
 
   const data = await response.json()
-  return data.secure_url
+  let url = data.secure_url
+
+  // Otomatis tambahkan transformasi optimasi kompresi (f_auto, q_auto) untuk gambar
+  if (resourceType === 'image' && url.includes('/upload/')) {
+    url = url.replace('/upload/', '/upload/f_auto,q_auto/')
+  }
+
+  return url
 }
