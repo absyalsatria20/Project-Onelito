@@ -1,6 +1,6 @@
 # PRD — Rekap Pembelian Ikan Jepang
 
-> Status implementasi: prototipe UI lokal React + Vite + TypeScript. PRD ini memisahkan perilaku yang sudah ada dari target integrasi online. Jangan anggap autentikasi, Supabase, Cloudinary, persistensi server, atau deployment sudah tersedia.
+> Status implementasi: Bertransisi dari prototipe UI lokal React + Vite + TypeScript menuju rilis produksi penuh (Full Production & Deployment). PRD ini kini mendefinisikan arsitektur produksi, database, autentikasi, dan deployment hosting.
 >
 > Sudah ada di UI lokal: dashboard responsif, Light/Dark mode, pencarian/filter, CRUD dalam memori selama sesi, kalkulasi harga, tabel finansial, owner summary dan grand total, PDF langsung-unduh dengan jsPDF, preview foto, T&C ringkas dengan Detail, modal form/hapus, dan toast. Excel/CSV tidak tersedia.
 >
