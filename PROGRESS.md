@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Auto-Reset Query Semua Tab Periode Saat Global Search Dikosongkan
+- Change:
+  - Saat kotak pencarian global di sidebar dikosongkan (`val.trim() === ''`), property `query` pada seluruh tab periode otomatis di-reset menjadi kosong (`''`).
+  - Saat item quick-jump dipilih, hanya tab periode target yang diset `query`-nya ke nama ikan tersebut, sementara tab periode lainnya di-reset bersih.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `1357081`.
+
 ## 2026-11-10 — Isolasi State Global Search di Sidebar
 - Change:
   - Memisahkan state pencarian global di sidebar (`globalQuery`) dari pencarian lokal tiap tab periode (`query`).
