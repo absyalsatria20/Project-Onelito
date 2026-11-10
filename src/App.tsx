@@ -733,14 +733,21 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
     try {
       const { supabase } = await import('./supabaseClient')
       const { data } = await supabase.from('profiles').select('*').eq('id', '00000000-0000-0000-0000-000000000001').single()
-      if (data && data.password_hash) {
-        if (password !== data.password_hash) {
-          setError('Password salah')
-          return
-        }
+      const correctPass = data?.password_hash || 'adelia'
+      if (!password) {
+        setError('Password wajib diisi')
+        return
+      }
+      if (password !== correctPass) {
+        setError('Password salah')
+        return
       }
     } catch (err) {
       console.error('Auth check error:', err)
+      if (!password || password !== 'adelia') {
+        setError('Password salah')
+        return
+      }
     }
     onLogin(username.trim())
   }
