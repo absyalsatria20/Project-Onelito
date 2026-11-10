@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan Filter Tabel Saat Quick-Jump Dipilih
+- Change:
+  - Saat item ikan pada dropdown pencarian global diklik, `query` diset ke `item.name` (bukan dikosongkan).
+  - Tabel utama otomatis beralih ke periode asal ikan tersebut dan memfilter baris sesuai nama ikan yang dipilih sehingga user langsung melihat data ikan tersebut.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `56de962`.
+
 ## 2026-11-10 — Perbaikan Mobile Touch Race Condition pada Quick-Jump Dropdown
 - Change:
   - Mengubah event handler dari `onClick` ke `onMouseDown` dengan `e.preventDefault()` pada item dropdown pencarian di sidebar.
