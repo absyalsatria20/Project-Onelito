@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Penyesuaian Gaya Scrollbar Global Search Sesuai Tabel Utama
+## 2026-11-10 — Perbaikan Batas Navigasi Keyboard Dropdown Global Search (Clamped Bounds)
+- Change:
+  - Mengubah logika penekanan tombol `ArrowDown` dan `ArrowUp` pada pencarian global dari looping (modulo) menjadi clamped (`Math.min` dan `Math.max`), sehingga kursor berhenti di ujung bawah atau atas tanpa melingkar kembali.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`5bdb329`).
 - Change:
   - Memperbarui CSS `.global-search-dropdown` di `src/App.css` agar menggunakan standar scrollbar tipis (`scrollbar-width: thin`, `width: 6px`, radius 3px) yang serasi dengan scrollbar tabel aplikasi.
 - Verification:
