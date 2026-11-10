@@ -432,7 +432,7 @@ function App() {
                       e.preventDefault()
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
-                      setQuery('')
+                      setQuery(item.name)
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
