@@ -485,7 +485,7 @@ function App() {
               </div>
             )}
             {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
-              <div ref={globalDropdownRef} style={{position: 'absolute', top: '42px', left: 12, right: 12, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '200px', overflowY: 'auto', padding: '4px'}}>
+              <div ref={globalDropdownRef} className="global-search-dropdown" style={{position: 'absolute', top: '42px', left: 12, right: 12, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
                 {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map((item, idx) => (
                   <div 
                     key={`${item.periodId}-${item.id}`}
