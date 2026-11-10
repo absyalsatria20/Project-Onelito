@@ -429,6 +429,11 @@ function App() {
                 aria-label="Cari global"
                 style={{fontSize: '12px'}}
               />
+              {globalQuery && (
+                <button type="button" onClick={() => { setGlobalQuery(''); setIsGlobalSearch(false); setPeriods(items => items.map(p => ({ ...p, query: '' }))) }} style={{background:'none', border:0, cursor:'pointer', color:'var(--muted)', display:'flex', padding:0, marginLeft:'auto'}} title="Hapus pencarian">
+                  <X size={14}/>
+                </button>
+              )}
             </label>
             {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
               <div style={{position: 'absolute', top: '42px', left: 0, right: 0, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
@@ -486,7 +491,7 @@ function App() {
       <header className="page-heading"><div className="heading-copy"><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
-          <label className="search-field"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari ikan atau pemilik..." aria-label="Cari ikan atau pemilik"/></label>
+          <label className="search-field"><Search size={17}/><input value={query} onChange={e=>setQuery(e.target.value)} placeholder="Cari ikan atau pemilik..." aria-label="Cari ikan atau pemilik"/>{query && (<button type="button" onClick={() => setQuery('')} style={{background:'none', border:0, cursor:'pointer', color:'var(--muted)', display:'flex', padding:0, marginLeft:'auto'}} title="Hapus pencarian"><X size={14}/></button>)}</label>
           <label className="select-wrap"><span className="sr-only">Pilih owner</span><select value={owner} onChange={e=>setOwner(e.target.value)}><option>All Owners</option>{owners.map(name=><option key={name}>{name}</option>)}</select><ChevronDown size={15}/></label>
           <label className="select-wrap status-select"><span className="sr-only">Filter status sertifikat</span><select value={certificate} onChange={e=>setCertificate(e.target.value)}><option>All Status</option><option>Ada</option><option>Belum ada</option></select><ChevronDown size={15}/></label>
           <div className="export-actions"><button className="export-btn pdf-btn" onClick={exportPdf}><FileText size={17}/><span>Export PDF</span></button></div>
