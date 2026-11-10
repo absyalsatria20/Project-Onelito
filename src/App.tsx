@@ -169,6 +169,7 @@ function App() {
   const [activePeriodId, setActivePeriodId] = useState('period-2026')
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
+  const [isSearchFocused, setIsSearchFocused] = useState(false)
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
   const updateActivePeriod = (updates:Partial<Period>) => setPeriods(items=>items.map(period=>period.id===activePeriod.id?{...period,...updates}:period))
@@ -410,10 +411,12 @@ function App() {
         </nav>
         {!sidebarCollapsed && (
           <div style={{padding: '0 4px', marginTop: '8px', position: 'relative'}}>
-            <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: '1.5px solid var(--line)', borderRadius: '0', padding: '0 2px', boxShadow: 'none'}} onFocusCapture={e => e.currentTarget.style.borderBottomColor = 'var(--blue)'} onBlurCapture={e => e.currentTarget.style.borderBottomColor = 'var(--line)'}>
+            <label className="search-field" style={{width: '100%', height: '36px', background: 'transparent', border: 'none', borderBottom: `1.5px solid ${isSearchFocused ? 'var(--blue)' : 'var(--line)'}`, borderRadius: '0', padding: '0 2px', boxShadow: 'none', transition: 'border-bottom-color 0.15s ease'}}>
               <Search size={15}/>
               <input 
                 value={globalQuery} 
+                onFocus={() => setIsSearchFocused(true)}
+                onBlur={() => setIsSearchFocused(false)}
                 onChange={e => {
                   const val = e.target.value
                   setGlobalQuery(val)
@@ -434,6 +437,7 @@ function App() {
                   setGlobalQuery('')
                   setIsGlobalSearch(false)
                   setPeriods(items => items.map(p => ({ ...p, query: '' })))
+                  setIsSearchFocused(false)
                   ;(e.currentTarget.parentElement?.querySelector('input') as HTMLInputElement)?.blur()
                 }} style={{background:'var(--line)', border:0, cursor:'pointer', color:'var(--text)', display:'grid', placeItems:'center', width:'18px', height:'18px', borderRadius:'50%', padding:0, marginLeft:'auto', flexShrink:0}} title="Hapus pencarian">
                   <X size={11}/>
