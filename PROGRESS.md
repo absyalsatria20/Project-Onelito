@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan Target Period Query pada Quick-Jump Dropdown
+- Change:
+  - Memperbaiki bug race condition state `setQuery` saat berpindah periode via dropdown quick-jump. Sekarang state `periods` pada `item.periodId` langsung di-set `query: item.name` sebelum `activePeriodId` diubah.
+  - Tabel utama sekarang langsung beralih ke periode yang tepat dan memfilter ikan yang dipilih secara akurat.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `5f772d2`.
+
 ## 2026-11-10 — Auto-Reset Pencarian Saat Kosong & Hapus Tombol Reset
 - Change:
   - Global search otomatis mereset dan menutup status pencarian lintas periode saat kotak pencarian dikosongkan (`val.trim() === ''`).
