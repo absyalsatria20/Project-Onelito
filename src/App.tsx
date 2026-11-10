@@ -437,7 +437,7 @@ function App() {
                     key={`${item.periodId}-${item.id}`}
                     onMouseDown={e => {
                       e.preventDefault()
-                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : { ...p, query: '' }))
+                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name, owner: 'All Owners' } : { ...p, query: '', owner: 'All Owners' }))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
                       setActiveSection('Rekap Ikan')
