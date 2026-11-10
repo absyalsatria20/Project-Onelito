@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Inisialisasi Integrasi Produksi (Supabase & Cloudflare R2)
+## 2026-11-10 — Integrasi Fetch Data Supabase di App.tsx
+- Change:
+  - Menambahkan `useEffect` async pada `App.tsx` untuk memuat data periode dan record ikan dari Supabase saat aplikasi dimulai, dengan fallback ke data lokal jika offline atau belum dikonfigurasi.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`d9fb400`).
 - Change:
   - Menginstal `@supabase/supabase-js` dan membuat file client `src/supabaseClient.ts`.
   - Membuat skema database PostgreSQL (`supabase_schema.sql`) untuk tabel `periods` dan `fish_records` dengan Row Level Security (RLS).
