@@ -421,7 +421,7 @@ function App() {
                     })
                   }}><MoreHorizontal size={16}/></button></div>)}<button type="button" className="period-add" onClick={openAddPeriod} aria-label="Tambah periode" title="Tambah periode"><Plus size={17}/></button></div>}<ThemeToggle isDark={theme === 'dark'} onToggle={themeToggle} size={80}/></header>
       {openPeriodMenu&&periods.find(period=>period.id===openPeriodMenu.id)&&<div className="period-tab-menu" style={{position:'fixed',left:openPeriodMenu.left,top:openPeriodMenu.top,width:openPeriodMenu.width}}><button type="button" onClick={()=>{openRenamePeriod(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Pencil size={14}/>Ganti nama</button><button type="button" disabled={periods.length===1} onClick={()=>{setDeletePeriodTarget(periods.find(p=>p.id===openPeriodMenu.id)!);setOpenPeriodMenu(null)}}><Trash2 size={14}/>Hapus</button></div>}
-      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} currentUsername={currentUsername} currentTitle={currentTitle} currentAvatar={currentAvatar} openModal={openAccountModal} lastBackupTime={lastBackupTime} onExportBackup={handleExportBackup} onImportBackup={handleImportBackup}/> : <>
+      <main className="inventory-page" key={activeSection==='Setting'?'setting':activePeriodId}>{activeSection==='Setting' ? <SettingsPanel theme={theme} onThemeToggle={themeToggle} currentUsername={currentUsername} currentTitle={currentTitle} currentAvatar={currentAvatar} openModal={openAccountModal} lastBackupTime={lastBackupTime} onExportBackup={handleExportBackup} onImportBackup={handleImportBackup} totalPeriods={periods.length} totalRecords={periods.reduce((acc, p) => acc + p.records.length, 0)}/> : <>
       <header className="page-heading"><div className="heading-copy"><h1>Rekap Pembelian Ikan Jepang</h1><p>Kelola data ikan, harga, dan dokumen pemilik.</p></div><div className="heading-actions"><button className="primary-btn" onClick={() => { setEditing(null); setModal(true) }}><Plus size={17}/>Tambah ikan</button></div></header>
       <section className="filter-panel" aria-label="Filter dan inventaris ikan">
         <div className="toolbar">
@@ -457,7 +457,7 @@ function App() {
   </div>
 }
 
-function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,currentAvatar,openModal,lastBackupTime,onExportBackup,onImportBackup}:{theme:'light'|'dark';onThemeToggle:()=>void;currentUsername:string;currentTitle:string;currentAvatar:string;openModal:(type:'username'|'password'|'title'|'avatar')=>void;lastBackupTime:string;onExportBackup:()=>void;onImportBackup:(e:React.ChangeEvent<HTMLInputElement>)=>void}){
+function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,currentAvatar,openModal,lastBackupTime,onExportBackup,onImportBackup,totalPeriods,totalRecords}:{theme:'light'|'dark';onThemeToggle:()=>void;currentUsername:string;currentTitle:string;currentAvatar:string;openModal:(type:'username'|'password'|'title'|'avatar')=>void;lastBackupTime:string;onExportBackup:()=>void;onImportBackup:(e:React.ChangeEvent<HTMLInputElement>)=>void;totalPeriods:number;totalRecords:number}){
   return <section className="settings-page" aria-labelledby="settings-title">
     <header className="settings-heading"><div><span className="eyebrow">WORKSPACE PREFERENCES</span><h1 id="settings-title">Setting</h1><p>Kelola backup data, akun, dan tampilan aplikasi.</p></div><span className="prototype-badge">SYSTEM ACTIVE</span></header>
     <div className="settings-grid">
@@ -467,6 +467,14 @@ function SettingsPanel({theme,onThemeToggle,currentUsername,currentTitle,current
           <div><h2>Data &amp; Backup</h2><p>Ekspor, impor, dan manajemen penyimpanan data.</p></div>
         </div>
         <div className="settings-info" style={{display:'grid',gap:'8px',marginBottom:'16px'}}>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{color:'var(--muted)',fontSize:'12px'}}>Jumlah Periode</span>
+            <b style={{fontSize:'12px',color:'var(--text)'}}>{totalPeriods} Periode</b>
+          </div>
+          <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
+            <span style={{color:'var(--muted)',fontSize:'12px'}}>Total Record Ikan</span>
+            <b style={{fontSize:'12px',color:'var(--text)'}}>{totalRecords} Ikan</b>
+          </div>
           <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
             <span style={{color:'var(--muted)',fontSize:'12px'}}>Penyimpanan Lokal</span>
             <b style={{fontSize:'12px',color:'var(--text)'}}>Aktif (LocalStorage)</b>

@@ -1,5 +1,15 @@
 # Project Progress
 
+## 2026-11-10 — Validasi data impor lebih ketat
+- Change:
+  - Menambahkan fungsi `validateBackup()` yang memvalidasi 3 level: root structure, setiap period, dan setiap fish record.
+  - Root: cek `periods` ada, bertipe array, tidak kosong.
+  - Period: cek field wajib `id`, `name`, `owner`, `certificate`, `query` (string), `sort` (harus 'name'|'owner'|'total'), `records` (array).
+  - Record: cek `id` (number), `name`, `owner`, `image`, `tc` (string), `rupiah`, `feePercent`, `shipping` (number), `yen`/`rate` (number atau null), `certificate` (boolean).
+  - Pesan error spesifik menunjuk ke periode/record mana yang bermasalah dan field apa yang salah.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `597880f`.
+
 ## 2026-11-10 — Konfirmasi dialog sebelum impor backup data
 - Change:
   - Menambahkan dialog konfirmasi sebelum data backup ditimpa ke aplikasi. Sebelumnya, impor langsung menimpa data tanpa konfirmasi.
