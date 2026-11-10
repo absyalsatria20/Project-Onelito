@@ -332,7 +332,7 @@ function App() {
   const sourceRecords = isGlobalSearch ? allRecordsWithPeriod : records
   const filtered = useMemo(() => sourceRecords.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(isGlobalSearch ? globalQuery.toLowerCase() : query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [sourceRecords, owner, certificate, query, globalQuery, isGlobalSearch, sort])
   const selected = owner === 'All Owners' ? sourceRecords : sourceRecords.filter(r => r.owner === owner)
-  const grand = selected.reduce((sum, r) => sum + total(r), 0)
+  const grand = filtered.reduce((sum, r) => sum + total(r), 0)
   const toastTimer = useRef<number | null>(null)
   const toast = (message: string) => {
     if (toastTimer.current !== null) window.clearTimeout(toastTimer.current)
