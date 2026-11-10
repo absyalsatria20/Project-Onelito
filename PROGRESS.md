@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan Blur Warna Garis Bawah Saat Tombol Clear (X) Diklik
+- Change:
+  - Menambahkan pemanggilan `.blur()` secara eksplisit pada input pencarian global ketika tombol clear (`X`) diklik.
+  - Garis bawah sekarang langsung kehilangan fokus dan kembali ke warna standar (`var(--line)`) dengan mulus saat pencarian dihapus via tombol `X`.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `fecd712`.
+
 ## 2026-11-10 — Efek Fokus Garis Bawah Biru pada Kolom Search Global
 - Change:
   - Menambahkan event handler `onFocusCapture` & `onBlur` untuk mengubah warna garis bawah (`borderBottomColor`) menjadi biru (`var(--blue)`) saat diklik/fokus tanpa memunculkan efek kotak/shadow.
