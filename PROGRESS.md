@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Restyle UI Kolom Search Global di Sidebar (Bottom Border & Label Aktif)
+- Change:
+- Mengubah gaya UI kolom search global di sidebar dari box penuh menjadi garis bawah saja (`borderBottom`), transparan tanpa kotak.
+- Mengembalikan teks label indikator **"Global Search Aktif"** di bawah kolom pencarian saat mode pencarian global diaktifkan.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `bc00206`.
+
 ## 2026-11-10 — Desain Tombol Clear (X) Berbentuk Bulat (Badge Style)
 - Change:
   - Mempercantik tombol clear (ikon `X`) pada input pencarian global dan lokal dengan latar belakang bulat (`borderRadius: '50%'`) dan ikon berukuran proporsional yang rapi.
