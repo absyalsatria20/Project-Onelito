@@ -418,7 +418,7 @@ function App() {
                   if (!isGlobalSearch) setIsGlobalSearch(true)
                   if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
                 }} 
-                placeholder="Cari semua periode..." 
+                placeholder="Cari semua ikan..." 
                 aria-label="Cari global"
                 style={{fontSize: '12px'}}
               />
