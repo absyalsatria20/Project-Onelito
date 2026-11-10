@@ -1,6 +1,13 @@
 # Project Progress
 
-## 2026-11-10 — Penghapusan Label 'Global Search Aktif'
+## 2026-11-10 — Inisialisasi Integrasi Produksi (Supabase & Cloudflare R2)
+- Change:
+  - Menginstal `@supabase/supabase-js` dan membuat file client `src/supabaseClient.ts`.
+  - Membuat skema database PostgreSQL (`supabase_schema.sql`) untuk tabel `periods` dan `fish_records` dengan Row Level Security (RLS).
+  - Membuat Vercel Serverless Function (`api/r2-upload.ts`) untuk pembuatan presigned upload URL Cloudflare R2 secara aman.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`1682a5a`).
 - Change:
   - Menghapus teks label indikator 'Global Search Aktif' di bawah input search global untuk menghindari tumpang tindih dengan dropdown hasil pencarian.
 - Verification:
