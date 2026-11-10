@@ -440,7 +440,6 @@ function App() {
                       setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : { ...p, query: '' }))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
-                      setGlobalQuery('')
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
