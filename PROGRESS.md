@@ -1,6 +1,12 @@
 # Project Progress
 
-## 2026-11-10 — Penambahan Navigasi Keyboard dan Sinkronisasi Filter pada Global Search
+## 2026-11-10 — Perbaikan Tinggi Dropdown dan Auto-Scroll pada Global Search
+- Change:
+  - Memperkecil `maxHeight` dropdown pencarian global dari `260px` menjadi `200px`.
+  - Menambahkan `useEffect` dengan `scrollIntoView({ block: 'nearest', behavior: 'smooth' })` pada kontainer dropdown agar otomatis melakukan scroll mengikuti item yang dipilih via navigasi keyboard (`ArrowUp` / `ArrowDown`).
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`25dad9a`).
 - Change:
   - Menambahkan dukungan navigasi keyboard (`ArrowDown`, `ArrowUp`, `Enter`, `Escape`) pada input search global di sidebar untuk memilih hasil ikan di dropdown dengan cepat.
   - Menambahkan sinkronisasi filter kombinasi (otomatis reset owner ke 'All Owners' dan memasukkan query pada periode yang dituju saat item dipilih).
