@@ -435,9 +435,9 @@ function App() {
                     key={`${item.periodId}-${item.id}`}
                     onMouseDown={e => {
                       e.preventDefault()
+                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : p))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
-                      setQuery(item.name)
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
