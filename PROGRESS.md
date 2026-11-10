@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Perbaikan Batas Navigasi Keyboard Dropdown Global Search (Clamped Bounds)
+## 2026-11-10 — Penghapusan Label 'Global Search Aktif'
+- Change:
+  - Menghapus teks label indikator 'Global Search Aktif' di bawah input search global untuk menghindari tumpang tindih dengan dropdown hasil pencarian.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`a6d261f`).
 - Change:
   - Mengubah logika penekanan tombol `ArrowDown` dan `ArrowUp` pada pencarian global dari looping (modulo) menjadi clamped (`Math.min` dan `Math.max`), sehingga kursor berhenti di ujung bawah atau atas tanpa melingkar kembali.
 - Verification:
