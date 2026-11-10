@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Grand Total Fleksibel Sesuai Data Filtered
+- Change:
+  - Mengubah perhitungan `grand` di footer tabel agar bersumber dari `filtered` (data yang sedang tampil di tabel) alih-alih `selected`.
+  - Grand total dan jumlah item di footer sekarang otomatis menyesuaikan secara fleksibel dengan hasil pencarian (baik global maupun lokal), filter owner, dan filter sertifikat.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `646960c`.
+
 ## 2026-11-10 — Reset Owner Filter ke 'All Owners' Saat Quick-Jump Dipilih
 - Change:
   - Saat item quick-jump dipilih dari sidebar, periode target tidak hanya diset `query`-nya ke nama ikan, tetapi filter owner-nya juga otomatis di-reset ke `'All Owners'` (serta mereset query dan owner pada tab periode lainnya).
