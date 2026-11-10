@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan Mobile Touch Race Condition pada Quick-Jump Dropdown
+- Change:
+  - Mengubah event handler dari `onClick` ke `onMouseDown` dengan `e.preventDefault()` pada item dropdown pencarian di sidebar.
+  - Mencegah input search kehilangan fokus (blur) duluan saat disentuh di perangkat mobile, sehingga perpindahan periode (`activePeriodId`) dan penutupan sidebar (`setSidebarOpen(false)`) tereksekusi dengan sempurna.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `330ce22`.
+
 ## 2026-11-10 — Global Search Quick-Jump Dropdown di Sidebar
 - Change:
   - Menambahkan dropdown autocomplete interaktif pada search bar sidebar.
