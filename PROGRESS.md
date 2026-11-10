@@ -1,6 +1,12 @@
 # Project Progress
 
-## 2026-11-10 — Integrasi Fetch Data Supabase di App.tsx
+## 2026-11-10 — Integrasi Cloudinary untuk Upload Gambar
+- Change:
+  - Menghapus modul R2 lama dan membuat helper `src/cloudinary.ts` untuk mengunggah gambar langsung ke Cloudinary (dengan fallback ke base64 jika env belum diset).
+  - Memperbarui `FishForm` di `App.tsx` agar menggunakan asinkronus `uploadToCloudinary`.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`f875dc4`).
 - Change:
   - Menambahkan `useEffect` async pada `App.tsx` untuk memuat data periode dan record ikan dari Supabase saat aplikasi dimulai, dengan fallback ke data lokal jika offline atau belum dikonfigurasi.
 - Verification:
