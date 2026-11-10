@@ -168,6 +168,7 @@ function App() {
   const [periods, setPeriods] = useState<Period[]>([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
   const [activePeriodId, setActivePeriodId] = useState('period-2026')
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
+  const [globalQuery, setGlobalQuery] = useState('')
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
   const updateActivePeriod = (updates:Partial<Period>) => setPeriods(items=>items.map(period=>period.id===activePeriod.id?{...period,...updates}:period))
@@ -329,7 +330,7 @@ function App() {
   }, [sidebarOpen])
   const allRecordsWithPeriod = useMemo(() => periods.flatMap(p => p.records.map(r => ({ ...r, periodName: p.name, periodId: p.id }))), [periods])
   const sourceRecords = isGlobalSearch ? allRecordsWithPeriod : records
-  const filtered = useMemo(() => sourceRecords.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [sourceRecords, owner, certificate, query, sort])
+  const filtered = useMemo(() => sourceRecords.filter(r => (owner === 'All Owners' || r.owner === owner) && (certificate === 'All Status' || (certificate === 'Ada' ? r.certificate : !r.certificate)) && `${r.name} ${r.owner}`.toLowerCase().includes(isGlobalSearch ? globalQuery.toLowerCase() : query.toLowerCase())).sort((a,b) => sort === 'total' ? total(b)-total(a) : sort === 'owner' ? a.owner.localeCompare(b.owner) : a.name.localeCompare(b.name)), [sourceRecords, owner, certificate, query, globalQuery, isGlobalSearch, sort])
   const selected = owner === 'All Owners' ? sourceRecords : sourceRecords.filter(r => r.owner === owner)
   const grand = selected.reduce((sum, r) => sum + total(r), 0)
   const toastTimer = useRef<number | null>(null)
@@ -412,10 +413,10 @@ function App() {
             <label className="search-field" style={{width: '100%', height: '36px', background: 'var(--panel-soft)', borderRadius: '6px'}}>
               <Search size={15}/>
               <input 
-                value={query} 
+                value={globalQuery} 
                 onChange={e => {
                   const val = e.target.value
-                  setQuery(val)
+                  setGlobalQuery(val)
                   if (val.trim() === '') {
                     setIsGlobalSearch(false)
                   } else {
@@ -428,9 +429,9 @@ function App() {
                 style={{fontSize: '12px'}}
               />
             </label>
-            {isGlobalSearch && query.trim() !== '' && allRecordsWithPeriod.length > 0 && (
+            {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
               <div style={{position: 'absolute', top: '42px', left: 0, right: 0, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
-                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).slice(0, 6).map(item => (
+                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map(item => (
                   <div 
                     key={`${item.periodId}-${item.id}`}
                     onMouseDown={e => {
@@ -438,6 +439,7 @@ function App() {
                       setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name } : p))
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
+                      setGlobalQuery('')
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
@@ -456,7 +458,7 @@ function App() {
                     </div>
                   </div>
                 ))}
-                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(query.toLowerCase()) || r.owner.toLowerCase().includes(query.toLowerCase())).length === 0 && (
+                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).length === 0 && (
                   <div style={{padding: '12px', textAlign: 'center', fontSize: '11px', color: 'var(--muted)'}}>Tidak ada ikan ditemukan</div>
                 )}
               </div>
