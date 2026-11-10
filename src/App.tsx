@@ -171,6 +171,38 @@ function App() {
   const [globalQuery, setGlobalQuery] = useState('')
   const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const { supabase } = await import('./supabaseClient')
+        const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
+        if (!error && data && data.length > 0) {
+          const loaded = data.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            owner: p.owner || 'All Owners',
+            certificate: p.certificate || 'All Status',
+            query: p.query || '',
+            sort: p.sort || 'name',
+            records: (p.fish_records || []).map((r: any) => ({
+              id: r.id,
+              name: r.name,
+              owner: r.owner,
+              rupiah: Number(r.price_idr || r.price_jpy * r.rate || 0),
+              feePercent: Number(r.dealer_fee_pct || 0),
+              shipping: Number(r.shipping_cost || 0),
+              certificate: Boolean(r.certificate),
+              tc: r.terms || '',
+              image: r.image || ''
+            }))
+          }))
+          setPeriods(loaded)
+          if (loaded[0]) setActivePeriodId(loaded[0].id)
+        }
+      } catch {}
+    })()
+  }, [])
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
   const updateActivePeriod = (updates:Partial<Period>) => setPeriods(items=>items.map(period=>period.id===activePeriod.id?{...period,...updates}:period))
