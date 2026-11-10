@@ -169,6 +169,7 @@ function App() {
   const [activePeriodId, setActivePeriodId] = useState('period-2026')
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
+  const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
@@ -417,6 +418,7 @@ function App() {
                 onChange={e => {
                   const val = e.target.value
                   setGlobalQuery(val)
+                  setGlobalSelectedIndex(0)
                   if (val.trim() === '') {
                     setIsGlobalSearch(false)
                     setPeriods(items => items.map(p => ({ ...p, query: '' })))
@@ -425,6 +427,32 @@ function App() {
                     if (activeSection !== 'Rekap Ikan') setActiveSection('Rekap Ikan')
                   }
                 }} 
+                onKeyDown={e => {
+                  const results = allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6)
+                  if (results.length === 0) return
+                  if (e.key === 'ArrowDown') {
+                    e.preventDefault()
+                    setGlobalSelectedIndex(prev => (prev + 1) % results.length)
+                  } else if (e.key === 'ArrowUp') {
+                    e.preventDefault()
+                    setGlobalSelectedIndex(prev => (prev - 1 + results.length) % results.length)
+                  } else if (e.key === 'Enter') {
+                    e.preventDefault()
+                    const item = results[globalSelectedIndex] || results[0]
+                    if (item) {
+                      setPeriods(items => items.map(p => p.id === item.periodId ? { ...p, query: item.name, owner: 'All Owners' } : { ...p, query: '', owner: 'All Owners' }))
+                      setActivePeriodId(item.periodId)
+                      setIsGlobalSearch(false)
+                      setIsSearchFocused(false)
+                      setGlobalSelectedIndex(0)
+                      setActiveSection('Rekap Ikan')
+                      setSidebarOpen(false)
+                    }
+                  } else if (e.key === 'Escape') {
+                    setIsGlobalSearch(false)
+                    ;(e.currentTarget as HTMLInputElement).blur()
+                  }
+                }}
                 placeholder="Cari semua ikan..." 
                 aria-label="Cari global"
                 style={{fontSize: '12px'}}
@@ -435,6 +463,7 @@ function App() {
                   setIsGlobalSearch(false)
                   setPeriods(items => items.map(p => ({ ...p, query: '' })))
                   setIsSearchFocused(false)
+                  setGlobalSelectedIndex(0)
                   ;(e.currentTarget.parentElement?.querySelector('input') as HTMLInputElement)?.blur()
                 }} style={{background:'var(--line)', border:0, cursor:'pointer', color:'var(--text)', display:'grid', placeItems:'center', width:'18px', height:'18px', borderRadius:'50%', padding:0, marginLeft:'auto', flexShrink:0}} title="Hapus pencarian">
                   <X size={11}/>
@@ -448,7 +477,7 @@ function App() {
             )}
             {isGlobalSearch && globalQuery.trim() !== '' && allRecordsWithPeriod.length > 0 && (
               <div style={{position: 'absolute', top: '42px', left: 12, right: 12, background: 'var(--panel)', border: '1px solid var(--line)', borderRadius: '8px', boxShadow: '0 8px 24px rgba(0,0,0,0.15)', zIndex: 100, maxHeight: '260px', overflowY: 'auto', padding: '4px'}}>
-                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map(item => (
+                {allRecordsWithPeriod.filter(r => r.name.toLowerCase().includes(globalQuery.toLowerCase()) || r.owner.toLowerCase().includes(globalQuery.toLowerCase())).slice(0, 6).map((item, idx) => (
                   <div 
                     key={`${item.periodId}-${item.id}`}
                     onMouseDown={e => {
@@ -457,12 +486,13 @@ function App() {
                       setActivePeriodId(item.periodId)
                       setIsGlobalSearch(false)
                       setIsSearchFocused(false)
+                      setGlobalSelectedIndex(0)
                       setActiveSection('Rekap Ikan')
                       setSidebarOpen(false)
                     }}
-                    style={{display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '6px', cursor: 'pointer', transition: 'background 0.15s'}}
-                    onMouseEnter={e => e.currentTarget.style.background = 'var(--panel-soft)'}
-                    onMouseLeave={e => e.currentTarget.style.background = 'transparent'}
+                    style={{display: 'flex', alignItems: 'center', gap: '8px', padding: '8px', borderRadius: '6px', cursor: 'pointer', transition: 'background 0.15s', background: idx === globalSelectedIndex ? 'var(--panel-soft)' : 'transparent'}}
+                    onMouseEnter={e => { e.currentTarget.style.background = 'var(--panel-soft)'; setGlobalSelectedIndex(idx) }}
+                    onMouseLeave={e => { if (idx !== globalSelectedIndex) e.currentTarget.style.background = 'transparent' }}
                   >
                     <div style={{width: '28px', height: '28px', borderRadius: '4px', overflow: 'hidden', flexShrink: '0', background: 'var(--line)'}}>
                       <img src={item.image} alt="" style={{width: '100%', height: '100%', objectFit: 'cover'}} onError={e => { e.currentTarget.style.display = 'none' }} />
