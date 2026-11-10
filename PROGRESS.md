@@ -1,6 +1,12 @@
 # Project Progress
 
-## 2026-11-10 — Perbaikan Tinggi Dropdown dan Auto-Scroll pada Global Search
+## 2026-11-10 — Pengembalian Tinggi Dropdown dan Penambahan Custom Scrollbar Tipis
+- Change:
+  - Mengembalikan `maxHeight` dropdown pencarian global ke ukuran semula (`260px`).
+  - Menambahkan kelas CSS `.global-search-dropdown::-webkit-scrollbar` di `src/App.css` untuk membuat scrollbar dropdown menjadi tipis dan elegan.
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`ec6cfca`).
 - Change:
   - Memperkecil `maxHeight` dropdown pencarian global dari `260px` menjadi `200px`.
   - Menambahkan `useEffect` dengan `scrollIntoView({ block: 'nearest', behavior: 'smooth' })` pada kontainer dropdown agar otomatis melakukan scroll mengikuti item yang dipilih via navigasi keyboard (`ArrowUp` / `ArrowDown`).
