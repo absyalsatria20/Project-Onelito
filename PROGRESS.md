@@ -1,6 +1,11 @@
 # Project Progress
 
-## 2026-11-10 — Pemindahan Posisi Search Global di Sidebar
+## 2026-11-10 — Penambahan Animasi Transisi Search Global di Sidebar
+- Change:
+  - Menambahkan keyframes `sidebarSearchIn` di `src/App.css` dan menerapkannya pada wrapper search global di sidebar agar muncul dengan transisi halus (`0.22s ease-out`).
+- Verification:
+  - `npm run lint` dan `npm run build` sukses (exit code 0).
+  - Di-commit dan di-push ke GitHub (`3c0dd08`).
 - Change:
   - Memindahkan posisi kotak search global di sidebar ke bagian atas (tepat di bawah label `WORKSPACE` dan di atas menu `Rekap Ikan`).
 - Verification:
