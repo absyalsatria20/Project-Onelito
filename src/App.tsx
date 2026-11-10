@@ -138,29 +138,52 @@ function App() {
 
 
 
-  const saveAccountModal = (e: React.FormEvent) => {
+  const saveAccountModal = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!accountModalInput.trim() && accountModal !== 'password' && accountModal !== 'avatar') {
       toast('Nilai tidak boleh kosong')
       return
     }
+    let u = currentUsername
+    let t = currentTitle
+    let a = currentAvatar
+    let p = currentPassword
+
     if (accountModal === 'username') {
-      setCurrentUsername(accountModalInput.trim())
-      localStorage.setItem('fish-username', accountModalInput.trim())
+      u = accountModalInput.trim()
+      setCurrentUsername(u)
+      localStorage.setItem('fish-username', u)
       toast('Username berhasil diubah')
     } else if (accountModal === 'password') {
-      setCurrentPassword(accountModalInput)
-      localStorage.setItem('fish-password', accountModalInput)
+      p = accountModalInput
+      setCurrentPassword(p)
+      localStorage.setItem('fish-password', p)
       toast('Password berhasil diubah')
     } else if (accountModal === 'title') {
-      setCurrentTitle(accountModalInput.trim())
-      localStorage.setItem('fish-title', accountModalInput.trim())
+      t = accountModalInput.trim()
+      setCurrentTitle(t)
+      localStorage.setItem('fish-title', t)
       toast('Title berhasil diubah')
     } else if (accountModal === 'avatar') {
-      setCurrentAvatar(accountModalInput)
-      localStorage.setItem('fish-avatar', accountModalInput)
+      a = accountModalInput
+      setCurrentAvatar(a)
+      localStorage.setItem('fish-avatar', a)
       toast('Avatar berhasil diperbarui')
     }
+
+    try {
+      const { supabase } = await import('./supabaseClient')
+      await supabase.from('profiles').upsert({
+        id: '00000000-0000-0000-0000-000000000001',
+        username: u,
+        title: t,
+        avatar: a,
+        password_hash: p
+      })
+    } catch (err) {
+      console.error('Failed to sync profile to Supabase:', err)
+    }
+
     closeWithAnimation('accountModal', () => setAccountModal(null))
   }
   const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
@@ -199,6 +222,14 @@ function App() {
           }))
           setPeriods(loaded)
           if (loaded[0]) setActivePeriodId(loaded[0].id)
+        }
+
+        const { data: profData } = await supabase.from('profiles').select('*').eq('id', '00000000-0000-0000-0000-000000000001').single()
+        if (profData) {
+          if (profData.username) { setCurrentUsername(profData.username); localStorage.setItem('fish-username', profData.username); }
+          if (profData.title) { setCurrentTitle(profData.title); localStorage.setItem('fish-title', profData.title); }
+          if (profData.avatar) { setCurrentAvatar(profData.avatar); localStorage.setItem('fish-avatar', profData.avatar); }
+          if (profData.password_hash) { setCurrentPassword(profData.password_hash); localStorage.setItem('fish-password', profData.password_hash); }
         }
       } catch {}
     })()
