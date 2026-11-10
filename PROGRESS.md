@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Reset Owner Filter ke 'All Owners' Saat Quick-Jump Dipilih
+- Change:
+  - Saat item quick-jump dipilih dari sidebar, periode target tidak hanya diset `query`-nya ke nama ikan, tetapi filter owner-nya juga otomatis di-reset ke `'All Owners'` (serta mereset query dan owner pada tab periode lainnya).
+  - Mencegah ikan tidak tampil di tabel akibat terhalang filter owner spesifik yang sedang aktif sebelumnya.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `a6043a8`.
+
 ## 2026-11-10 — Mempertahankan Teks Global Search Saat Dropdown Diklik
 - Change:
   - Menghapus pemanggilan `setGlobalQuery('')` pada handler klik item dropdown quick-jump di sidebar.
