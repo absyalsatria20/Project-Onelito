@@ -1,5 +1,13 @@
 # Project Progress
 
+## 2026-11-10 — Global Search di Sidebar
+- Change:
+  - Menambahkan input pencarian global di sidebar (tepat di bawah menu Rekap Ikan).
+  - Mengaktifkan pencarian lintas seluruh periode saat user mengetik di sidebar search.
+  - Menampilkan badge nama periode pada setiap baris hasil pencarian global serta otomatis berpindah ke periode asal saat ikan diedit atau dipratinjau.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `aef064e`.
+
 ## 2026-11-10 — Indikator jumlah data di kartu Data & Backup
 - Change:
   - Menambahkan informasi "Jumlah Periode" dan "Total Record Ikan" secara real-time pada kartu Setting > Data & Backup.
