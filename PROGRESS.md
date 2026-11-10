@@ -1,5 +1,23 @@
 # Project Progress
 
+## 2026-11-10 — Konfirmasi dialog sebelum impor backup data
+- Change:
+  - Menambahkan dialog konfirmasi sebelum data backup ditimpa ke aplikasi. Sebelumnya, impor langsung menimpa data tanpa konfirmasi.
+  - Flow baru: pilih file → parse & validasi → tampilkan dialog konfirmasi (menampilkan jumlah periode, nama periode, username dari backup) → user klik "Timpa Data" atau "Batal".
+  - Menambahkan state `pendingImport` untuk menyimpan data sementara sebelum dikonfirmasi.
+  - Fungsi `confirmImportBackup` menerapkan data hanya setelah user konfirmasi.
+  - Dialog menggunakan pattern `confirm-dialog` yang sama dengan dialog hapus, icon Database, tombol destructive "Timpa Data".
+  - `pendingImport` ditambahkan ke `hasActiveModal` untuk lock background scroll.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), committed & pushed `1a4c01b`.
+
+## 2026-11-10 — Fix patah-patah scroll tab periode
+- Change:
+  - Menghapus `behavior: 'smooth'` dari `container.scrollBy()` di wheel event handler tab periode.
+  - Penyebab: setiap wheel event memicu animasi smooth baru yang saling tumpuk, menyebabkan scroll tersendat.
+- Files: `src/App.tsx`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0).
+
 ## 2026-11-09 — Force Animation & Overflow Override on Workspace & Preferences Labels on Refresh
 - Change:
   - Menambahkan modifier `!important` pada properti `animation`, `overflow`, dan `height` untuk `.workspace-label` dan `.settings-label` di `src/Sidebar.css`. Ini memastikan aturan layout dasar `.nav-label` (seperti `overflow: hidden` dan pembatasan tinggi) tidak menimpa animasi `sectionFadeIn` saat halaman dimuat atau direfresh.
