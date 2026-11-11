@@ -64,10 +64,10 @@ export default function OnelitoPreloader({
     ];
 
     const lotusPads = [
-      { angle: 0.25, distOffset: 90, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 1.15, distOffset: 98, r: 20, rot: 1.8, hasFlower: false, flowerColor: '' },
-      { angle: 4.15, distOffset: 88, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 5.15, distOffset: 95, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
+      { angle: 2.5, distOffset: 90, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
+      { angle: 3.8, distOffset: 92, r: 20, rot: 1.8, hasFlower: false, flowerColor: '' },
+      { angle: 5.9, distOffset: 90, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
+      { angle: 0.4, distOffset: 95, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
     ];
 
     const sakuraPetals = Array.from({ length: 12 }, () => ({
