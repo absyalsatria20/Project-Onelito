@@ -42,18 +42,39 @@ alter table periods enable row level security;
 alter table fish_records enable row level security;
 alter table profiles enable row level security;
 
--- Policies for public access (or authenticated admin)
+-- Policies for public access (idempotent drop & create)
+drop policy if exists "Allow public read periods" on periods;
 create policy "Allow public read periods" on periods for select using (true);
+
+drop policy if exists "Allow public insert periods" on periods;
 create policy "Allow public insert periods" on periods for insert with check (true);
+
+drop policy if exists "Allow public update periods" on periods;
 create policy "Allow public update periods" on periods for update using (true);
+
+drop policy if exists "Allow public delete periods" on periods;
 create policy "Allow public delete periods" on periods for delete using (true);
 
+drop policy if exists "Allow public read fish_records" on fish_records;
 create policy "Allow public read fish_records" on fish_records for select using (true);
+
+drop policy if exists "Allow public insert fish_records" on fish_records;
 create policy "Allow public insert fish_records" on fish_records for insert with check (true);
+
+drop policy if exists "Allow public update fish_records" on fish_records;
 create policy "Allow public update fish_records" on fish_records for update using (true);
+
+drop policy if exists "Allow public delete fish_records" on fish_records;
 create policy "Allow public delete fish_records" on fish_records for delete using (true);
 
+drop policy if exists "Allow public read profiles" on profiles;
 create policy "Allow public read profiles" on profiles for select using (true);
+
+drop policy if exists "Allow public insert profiles" on profiles;
 create policy "Allow public insert profiles" on profiles for insert with check (true);
+
+drop policy if exists "Allow public update profiles" on profiles;
 create policy "Allow public update profiles" on profiles for update using (true);
+
+drop policy if exists "Allow public delete profiles" on profiles;
 create policy "Allow public delete profiles" on profiles for delete using (true);

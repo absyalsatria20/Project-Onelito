@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Membuat Skema Supabase SQL Bersifat Idempotent (DROP POLICY IF EXISTS)
+- Change:
+  - Menambahkan pernyataan `DROP POLICY IF EXISTS` sebelum setiap `CREATE POLICY` pada `supabase_schema.sql` untuk mencegah error "policy already exists" saat skema dijalankan ulang di Supabase SQL Editor.
+- Files: `supabase_schema.sql`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Penambahan Tabel `profiles` pada Skema Supabase SQL
 - Change:
   - Menambahkan tabel `profiles` beserta RLS policies ke dalam `supabase_schema.sql` untuk memastikan sinkronisasi profil akun (username, title, avatar, password_hash) berfungsi sempurna pada database Supabase baru.
