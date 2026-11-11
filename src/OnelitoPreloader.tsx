@@ -64,10 +64,10 @@ export default function OnelitoPreloader({
     ];
 
     const lotusPads = [
-      { angle: 0.45, distOffset: 75, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 2.15, distOffset: 85, r: 20, rot: 2.1, hasFlower: false, flowerColor: '' },
-      { angle: 3.85, distOffset: 70, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 5.45, distOffset: 80, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
+      { angle: 0.25, distOffset: 90, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
+      { angle: 1.15, distOffset: 98, r: 20, rot: 1.8, hasFlower: false, flowerColor: '' },
+      { angle: 4.15, distOffset: 88, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
+      { angle: 5.15, distOffset: 95, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
     ];
 
     const sakuraPetals = Array.from({ length: 12 }, () => ({
@@ -398,22 +398,24 @@ export default function OnelitoPreloader({
       }
     }
 
-    const koiList = [
-      new ProceduralKoi({ startAngle: 0, speed: 0.0072, variant: 'showa', phase: 0 }),
-      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0072, variant: 'tancho', phase: Math.PI }),
-    ];
-
     function updateCenterFromMedallion() {
       if (medallionRef.current) {
         const rect = medallionRef.current.getBoundingClientRect();
         centerX = rect.left + rect.width / 2;
         centerY = rect.top + rect.height / 2;
-        baseOrbitRadius = Math.max(125, rect.width * 0.78);
+        baseOrbitRadius = Math.max(135, rect.width * 0.82);
       } else {
         centerX = width / 2;
         centerY = height / 2;
       }
     }
+
+    updateCenterFromMedallion();
+
+    const koiList = [
+      new ProceduralKoi({ startAngle: 0, speed: 0.0072, variant: 'showa', phase: 0 }),
+      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0072, variant: 'tancho', phase: Math.PI }),
+    ];
 
     function resizeCanvas() {
       if (!canvas) return;

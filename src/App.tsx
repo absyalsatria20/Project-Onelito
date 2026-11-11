@@ -213,16 +213,18 @@ function App() {
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
   useEffect(() => {
-    let channel: any
-    let progressInterval: any
+    let channel: any;
+    let progressInterval: any;
+    const startTime = Date.now();
     (async () => {
       try {
-        let currentProg = 15
+        let currentProg = 10
         setLoadProgress(currentProg)
         progressInterval = setInterval(() => {
-          currentProg = Math.min(92, currentProg + Math.floor(Math.random() * 6) + 2)
-          setLoadProgress(currentProg)
-        }, 180)
+          const elapsed = Date.now() - startTime
+          const targetProg = Math.min(95, Math.round((elapsed / 5000) * 90) + 10)
+          setLoadProgress(targetProg)
+        }, 100)
 
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
