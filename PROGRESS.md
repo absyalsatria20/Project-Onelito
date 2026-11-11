@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Memastikan Urutan Tab Periode Tetap Konsisten (.order created_at)
+- Change:
+  - Menambahkan `.order('created_at', { ascending: true })` pada query Supabase `periods` agar urutan tab periode selalu konsisten berdasarkan waktu pembuatan dan tidak bergeser/tertukar saat terjadi update/realtime sync.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Penambahan Publikasi Realtime pada Skema Supabase SQL
 - Change:
   - Menambahkan konfigurasi `supabase_realtime` publication (`periods`, `fish_records`, `profiles`) ke dalam `supabase_schema.sql` agar fitur Supabase Realtime WebSocket dapat berfungsi secara aktif di database produksi.

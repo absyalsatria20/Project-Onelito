@@ -216,7 +216,7 @@ function App() {
       try {
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
-          const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
+          const { data, error } = await supabase.from('periods').select('*, fish_records(*)').order('created_at', { ascending: true })
           if (!error && data && data.length > 0) {
             const loaded = data.map((p: any) => ({
               id: p.id,
