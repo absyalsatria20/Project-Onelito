@@ -441,10 +441,27 @@ export default function OnelitoPreloader({
 
     function drawLotusPadAndFlower(ctx: CanvasRenderingContext2D, pad: any, time: number, isDark: boolean) {
       const floatBob = Math.sin(time * 0.0014 + pad.angle) * 2.5;
-      const dist = baseOrbitRadius + pad.distOffset + floatBob;
+
+      // Check proximity to swimming koi fish
+      let koiBoost = 0;
+      for (let k = 0; k < koiList.length; k++) {
+        const koi = koiList[k];
+        for (let j = 0; j < koi.joints.length; j += 3) {
+          const joint = koi.joints[j];
+          const approxLx = centerX + Math.cos(pad.angle) * (baseOrbitRadius + pad.distOffset);
+          const approxLy = centerY + Math.sin(pad.angle) * (baseOrbitRadius + pad.distOffset);
+          const d = Math.hypot(approxLx - joint.x, approxLy - joint.y);
+          if (d < 75) {
+            koiBoost = Math.max(koiBoost, 1 - d / 75);
+          }
+        }
+      }
+
+      const interactiveBob = floatBob - koiBoost * 6;
+      const dist = baseOrbitRadius + pad.distOffset + interactiveBob;
       const lx = centerX + Math.cos(pad.angle) * dist;
       const ly = centerY + Math.sin(pad.angle) * dist;
-      const currentRot = pad.rot + Math.sin(time * 0.0009 + pad.angle) * 0.06;
+      const currentRot = pad.rot + Math.sin(time * 0.0009 + pad.angle) * 0.06 + koiBoost * 0.15 * Math.sin(time * 0.01);
 
       ctx.save();
       ctx.translate(lx, ly);
@@ -482,8 +499,8 @@ export default function OnelitoPreloader({
 
       if (pad.hasFlower) {
         const petalCount = 8;
-        // Option 1: Gentle petal breathing / blooming scale effect
-        const flowerScale = 1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06;
+        // Option 1: Gentle petal breathing / blooming scale effect + reaction to nearby koi fish
+        const flowerScale = (1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06) + koiBoost * 0.22;
         ctx.save();
         ctx.scale(flowerScale, flowerScale);
 
@@ -512,14 +529,14 @@ export default function OnelitoPreloader({
 
       ctx.restore();
 
-      // Sparse lotus ripple emission randomly and not too frequently
-      if (Math.random() < 0.0015) {
+      // Emit ripple when koi swims close by
+      if (koiBoost > 0.6 && Math.random() < 0.04) {
         ripples.push({
           x: lx,
           y: ly,
-          r: 3,
-          maxR: 30 + Math.random() * 12,
-          alpha: 0.18,
+          r: 2,
+          maxR: 35,
+          alpha: 0.25,
           color: '#22C55E',
         });
       }
