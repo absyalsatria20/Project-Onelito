@@ -523,13 +523,13 @@ export default function OnelitoPreloader({
     }
 
     const handlePointerMove = (e: PointerEvent) => {
-      if (Math.random() < 0.05) {
+      if (Math.random() < 0.28) {
         ripples.push({
           x: e.clientX,
           y: e.clientY,
           r: 3,
           maxR: 38 + Math.random() * 24,
-          alpha: 0.25,
+          alpha: 0.32,
           color: '#D61F26',
         });
       }
@@ -552,7 +552,7 @@ export default function OnelitoPreloader({
     resizeCanvas();
 
     const rippleInterval = setInterval(() => {
-      if (ripples.length < 2) {
+      if (ripples.length < 6) {
         const targetKoi = koiList[Math.floor(Math.random() * koiList.length)];
         const head = targetKoi.joints[0];
         ripples.push({
@@ -560,11 +560,11 @@ export default function OnelitoPreloader({
           y: head.y,
           r: 6,
           maxR: 45 + Math.random() * 20,
-          alpha: 0.2,
+          alpha: 0.24,
           color: Math.random() > 0.5 ? '#D61F26' : '#888888',
         });
       }
-    }, 3500);
+    }, 1100);
 
     function renderLoop(timestamp: number) {
       const time = timestamp || performance.now();
