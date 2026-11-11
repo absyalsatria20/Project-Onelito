@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Ekstraksi Otomatis Nama Owner dari Data Supabase saat Startup
+- Change:
+  - Menambahkan ekstraksi nama owner unik dari record ikan yang dimuat dari Supabase ke state `ownerNames` pada `useEffect`, sehingga daftar owner di dropdown filter muncul dengan benar setelah refresh.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Membuat Skema Supabase SQL Bersifat Idempotent (DROP POLICY IF EXISTS)
 - Change:
   - Menambahkan pernyataan `DROP POLICY IF EXISTS` sebelum setiap `CREATE POLICY` pada `supabase_schema.sql` untuk mencegah error "policy already exists" saat skema dijalankan ulang di Supabase SQL Editor.

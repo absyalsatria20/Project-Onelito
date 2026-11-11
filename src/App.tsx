@@ -219,6 +219,11 @@ function App() {
           }))
           setPeriods(loaded)
           if (loaded[0]) setActivePeriodId(loaded[0].id)
+
+          const allOwners = Array.from(new Set(loaded.flatMap((p: any) => p.records.map((r: any) => r.owner)).filter(Boolean)))
+          if (allOwners.length > 0) {
+            setOwnerNames(allOwners as string[])
+          }
         }
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
