@@ -153,13 +153,18 @@ export async function downloadRekapPdf(owner: string, records: ExportFishRecord[
       const { x, y, width, height } = data.cell
       const imageWidth = 20
       const imageHeight = 20
-      const imageInfo = pdf.getImageProperties(source)
-      const scale = Math.min(imageWidth / imageInfo.width, imageHeight / imageInfo.height)
-      const renderedWidth = imageInfo.width * scale
-      const renderedHeight = imageInfo.height * scale
-      const imageX = x + (width - renderedWidth) / 2
-      const imageY = y + (height - renderedHeight) / 2
-      pdf.addImage(source, source.startsWith('data:image/png') ? 'PNG' : 'JPEG', imageX, imageY, renderedWidth, renderedHeight, undefined, 'FAST')
+      try {
+        const imageInfo = pdf.getImageProperties(source)
+        const scale = Math.min(imageWidth / imageInfo.width, imageHeight / imageInfo.height)
+        const renderedWidth = imageInfo.width * scale
+        const renderedHeight = imageInfo.height * scale
+        const imageX = x + (width - renderedWidth) / 2
+        const imageY = y + (height - renderedHeight) / 2
+        const format = imageInfo.fileType ? imageInfo.fileType.toUpperCase() : 'JPEG'
+        pdf.addImage(source, format === 'JPG' ? 'JPEG' : format, imageX, imageY, renderedWidth, renderedHeight, undefined, 'FAST')
+      } catch (imgErr) {
+        console.warn('Skipping unparseable image in PDF:', imgErr)
+      }
     },
   })
 
