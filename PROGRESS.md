@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Integrasi Supabase Realtime & Loading Splash Screen Profesional
+- Change:
+  - Mengaktifkan **Supabase Realtime WebSockets** (`postgres_changes`) pada tabel `periods` dan `fish_records` untuk sinkronisasi otomatis antar perangkat secara instan tanpa perlu refresh.
+  - Menambahkan **Loading Splash Screen** profesional saat aplikasi pertama kali dimuat untuk menghilangkan kedip putih/kosong (white flash) saat menarik data awal dari Supabase.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Perbaikan Cache State & Upsert Supabase untuk Tab Periode
 - Change:
   - Menginisialisasi state `periods` dan `activePeriodId` dari `localStorage` untuk mencegah kedipan "Periode 1" saat halaman direfresh.

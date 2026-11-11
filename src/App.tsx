@@ -204,46 +204,50 @@ function App() {
   useEffect(() => {
     localStorage.setItem('fish-active-period', activePeriodId)
   }, [activePeriodId])
+  const [isLoading, setIsLoading] = useState(true)
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
   const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
   const [isSearchFocused, setIsSearchFocused] = useState(false)
 
   useEffect(() => {
+    let channel: any
     (async () => {
       try {
         const { supabase } = await import('./supabaseClient')
-        const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
-        if (!error && data && data.length > 0) {
-          const loaded = data.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            owner: p.owner || 'All Owners',
-            certificate: p.certificate || 'All Status',
-            query: p.query || '',
-            sort: p.sort || 'name',
-            records: (p.fish_records || []).map((r: any) => ({
-              id: r.id,
-              name: r.name,
-              owner: r.owner,
-              yen: r.price_jpy ?? null,
-              rate: r.rate ?? null,
-              rupiah: Number(r.price_idr || r.price_jpy * r.rate || 0),
-              feePercent: Number(r.dealer_fee_pct || 0),
-              shipping: Number(r.shipping_cost || 0),
-              certificate: Boolean(r.certificate),
-              tc: r.terms || '',
-              image: r.image || ''
+        const fetchData = async () => {
+          const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
+          if (!error && data && data.length > 0) {
+            const loaded = data.map((p: any) => ({
+              id: p.id,
+              name: p.name,
+              owner: p.owner || 'All Owners',
+              certificate: p.certificate || 'All Status',
+              query: p.query || '',
+              sort: p.sort || 'name',
+              records: (p.fish_records || []).map((r: any) => ({
+                id: r.id,
+                name: r.name,
+                owner: r.owner,
+                yen: r.price_jpy ?? null,
+                rate: r.rate ?? null,
+                rupiah: Number(r.price_idr || r.price_jpy * r.rate || 0),
+                feePercent: Number(r.dealer_fee_pct || 0),
+                shipping: Number(r.shipping_cost || 0),
+                certificate: Boolean(r.certificate),
+                tc: r.terms || '',
+                image: r.image || ''
+              }))
             }))
-          }))
-          setPeriods(loaded)
-          if (loaded[0]) setActivePeriodId(loaded[0].id)
-
-          const allOwners = Array.from(new Set(loaded.flatMap((p: any) => p.records.map((r: any) => r.owner)).filter(Boolean)))
-          if (allOwners.length > 0) {
-            setOwnerNames(allOwners as string[])
+            setPeriods(loaded)
+            const allOwners = Array.from(new Set(loaded.flatMap((p: any) => p.records.map((r: any) => r.owner)).filter(Boolean)))
+            if (allOwners.length > 0) {
+              setOwnerNames(allOwners as string[])
+            }
           }
         }
+
+        await fetchData()
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
@@ -252,10 +256,31 @@ function App() {
           if (profData.avatar) { setCurrentAvatar(profData.avatar); localStorage.setItem('fish-avatar', profData.avatar); }
           if (profData.password_hash) { setCurrentPassword(profData.password_hash); localStorage.setItem('fish-password', profData.password_hash); }
         }
+
+        channel = supabase
+          .channel('public-db-changes')
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'periods' }, () => {
+            fetchData()
+          })
+          .on('postgres_changes', { event: '*', schema: 'public', table: 'fish_records' }, () => {
+            fetchData()
+          })
+          .subscribe()
+
       } catch (err) {
-        console.error('Failed to load from Supabase:', err)
+        console.error('Failed to load from Supabase or setup realtime:', err)
+      } finally {
+        setIsLoading(false)
       }
     })()
+
+    return () => {
+      if (channel) {
+        import('./supabaseClient').then(({ supabase }) => {
+          supabase.removeChannel(channel)
+        })
+      }
+    }
   }, [])
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
   const {records,owner,certificate,query,sort}=activePeriod
@@ -528,6 +553,36 @@ function App() {
       console.error(err)
       toast('Gagal mengexport PDF')
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div style={{
+        position: 'fixed',
+        inset: 0,
+        background: theme === 'dark' ? '#0f172a' : '#f8fafc',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '20px',
+        zIndex: 99999,
+        color: theme === 'dark' ? '#f8fafc' : '#0f172a',
+        fontFamily: 'Inter, system-ui, sans-serif'
+      }}>
+        <img src="/logo-onelito.png" alt="Logo" style={{ width: '80px', height: 'auto', objectFit: 'contain' }} />
+        <div style={{
+          width: '36px',
+          height: '36px',
+          border: '3px solid var(--line, #cbd5e1)',
+          borderTopColor: '#3b82f6',
+          borderRadius: '50%',
+          animation: 'spin 0.8s linear infinite'
+        }} />
+        <p style={{ fontSize: '14px', fontWeight: 500, opacity: 0.8 }}>Memuat data database Onelito...</p>
+        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+      </div>
+    )
   }
 
   if (!isLoggedIn) {
