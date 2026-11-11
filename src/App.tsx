@@ -216,16 +216,19 @@ function App() {
     let channel: any;
     let progressInterval: any;
     const startTime = Date.now();
+
+    progressInterval = setInterval(() => {
+      const elapsed = Date.now() - startTime;
+      const targetProg = Math.min(100, Math.round((elapsed / 20000) * 100));
+      setLoadProgress(targetProg);
+      if (elapsed >= 20000) {
+        clearInterval(progressInterval);
+        setIsLoading(false);
+      }
+    }, 150);
+
     (async () => {
       try {
-        let currentProg = 10
-        setLoadProgress(currentProg)
-        progressInterval = setInterval(() => {
-          const elapsed = Date.now() - startTime
-          const targetProg = Math.min(98, Math.round((elapsed / 20000) * 92) + 8)
-          setLoadProgress(targetProg)
-        }, 150)
-
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
           const { data, error } = await supabase.from('periods').select('*, fish_records(*)').order('created_at', { ascending: true })
@@ -279,20 +282,13 @@ function App() {
           })
           .subscribe()
 
-        if (progressInterval) clearInterval(progressInterval)
-        setLoadProgress(100)
-        await new Promise(r => setTimeout(r, 800))
-
       } catch (err) {
         console.error('Failed to load from Supabase or setup realtime:', err)
-        if (progressInterval) clearInterval(progressInterval)
-        setLoadProgress(100)
-      } finally {
-        setIsLoading(false)
       }
     })()
 
     return () => {
+      clearInterval(progressInterval);
       if (channel) {
         import('./supabaseClient').then(({ supabase }) => {
           supabase.removeChannel(channel)
