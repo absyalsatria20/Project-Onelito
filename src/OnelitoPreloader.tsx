@@ -494,6 +494,18 @@ export default function OnelitoPreloader({
       }
 
       ctx.restore();
+
+      // Sparse lotus ripple emission randomly and not too frequently
+      if (Math.random() < 0.0015) {
+        ripples.push({
+          x: lx,
+          y: ly,
+          r: 3,
+          maxR: 30 + Math.random() * 12,
+          alpha: 0.18,
+          color: '#22C55E',
+        });
+      }
     }
 
     function drawSakuraPetal(ctx: CanvasRenderingContext2D, petal: any, time: number) {
