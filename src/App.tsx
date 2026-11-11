@@ -924,12 +924,18 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
       setError('Username wajib diisi')
       return
     }
+    if (!password) {
+      setError('Password wajib diisi')
+      return
+    }
     try {
       const { supabase } = await import('./supabaseClient')
       const { data } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
-      const correctPass = data?.password_hash || 'adelia'
-      if (!password) {
-        setError('Password wajib diisi')
+      const correctUsername = data?.username || localStorage.getItem('fish-username') || 'adelia'
+      const correctPass = data?.password_hash || localStorage.getItem('fish-password') || 'adelia'
+
+      if (username.trim().toLowerCase() !== correctUsername.toLowerCase()) {
+        setError('Username tidak terdaftar')
         return
       }
       if (password !== correctPass) {
@@ -938,7 +944,13 @@ function LoginForm({onLogin, theme, themeToggle}:{onLogin:(username:string)=>voi
       }
     } catch (err) {
       console.error('Auth check error:', err)
-      if (!password || password !== 'adelia') {
+      const correctUsername = localStorage.getItem('fish-username') || 'adelia'
+      const correctPass = localStorage.getItem('fish-password') || 'adelia'
+      if (username.trim().toLowerCase() !== correctUsername.toLowerCase()) {
+        setError('Username tidak terdaftar')
+        return
+      }
+      if (password !== correctPass) {
         setError('Password salah')
         return
       }
