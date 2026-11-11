@@ -64,11 +64,11 @@ export default function OnelitoPreloader({
     ];
 
     const lotusPads = [
-      { angle: 0.7, distOffset: 15, r: 28, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 1.9, distOffset: 22, r: 16, rot: 1.8, hasFlower: false, flowerColor: '' },
-      { angle: 3.0, distOffset: 14, r: 22, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 4.1, distOffset: 24, r: 30, rot: 5.1, hasFlower: true, flowerColor: '#EC4899' },
-      { angle: 5.2, distOffset: 18, r: 18, rot: 2.2, hasFlower: false, flowerColor: '' },
+      { angle: 0.7, distOffset: 15, r: 28, rot: 0.4, hasFlower: true, flowerColor: '#F472B6', reaction: 0 },
+      { angle: 1.9, distOffset: 22, r: 16, rot: 1.8, hasFlower: false, flowerColor: '', reaction: 0 },
+      { angle: 3.0, distOffset: 14, r: 22, rot: 3.8, hasFlower: true, flowerColor: '#FB7185', reaction: 0 },
+      { angle: 4.1, distOffset: 24, r: 30, rot: 5.1, hasFlower: true, flowerColor: '#EC4899', reaction: 0 },
+      { angle: 5.2, distOffset: 18, r: 18, rot: 2.2, hasFlower: false, flowerColor: '', reaction: 0 },
     ];
 
     const sakuraPetals = Array.from({ length: 12 }, () => ({
@@ -442,26 +442,28 @@ export default function OnelitoPreloader({
     function drawLotusPadAndFlower(ctx: CanvasRenderingContext2D, pad: any, time: number, isDark: boolean) {
       const floatBob = Math.sin(time * 0.0014 + pad.angle) * 2.5;
 
-      // Check proximity to swimming koi fish
-      let koiBoost = 0;
+      let targetKoiBoost = 0;
       for (let k = 0; k < koiList.length; k++) {
         const koi = koiList[k];
-        for (let j = 0; j < koi.joints.length; j += 3) {
+        for (let j = 0; j < koi.joints.length; j += 2) {
           const joint = koi.joints[j];
           const approxLx = centerX + Math.cos(pad.angle) * (baseOrbitRadius + pad.distOffset);
           const approxLy = centerY + Math.sin(pad.angle) * (baseOrbitRadius + pad.distOffset);
           const d = Math.hypot(approxLx - joint.x, approxLy - joint.y);
-          if (d < 75) {
-            koiBoost = Math.max(koiBoost, 1 - d / 75);
+          if (d < 85) {
+            targetKoiBoost = Math.max(targetKoiBoost, Math.pow(1 - d / 85, 2));
           }
         }
       }
 
-      const interactiveBob = floatBob - koiBoost * 6;
+      pad.reaction = pad.reaction || 0;
+      pad.reaction += (targetKoiBoost - pad.reaction) * 0.12;
+
+      const interactiveBob = floatBob - pad.reaction * 4.5;
       const dist = baseOrbitRadius + pad.distOffset + interactiveBob;
       const lx = centerX + Math.cos(pad.angle) * dist;
       const ly = centerY + Math.sin(pad.angle) * dist;
-      const currentRot = pad.rot + Math.sin(time * 0.0009 + pad.angle) * 0.06 + koiBoost * 0.15 * Math.sin(time * 0.01);
+      const currentRot = pad.rot + Math.sin(time * 0.0009 + pad.angle) * 0.06 + pad.reaction * 0.1 * Math.sin(time * 0.008);
 
       ctx.save();
       ctx.translate(lx, ly);
@@ -499,8 +501,8 @@ export default function OnelitoPreloader({
 
       if (pad.hasFlower) {
         const petalCount = 8;
-        // Option 1: Gentle petal breathing / blooming scale effect + reaction to nearby koi fish
-        const flowerScale = (1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06) + koiBoost * 0.22;
+        // Option 1: Gentle petal breathing / blooming scale effect + smooth natural reaction to nearby koi fish
+        const flowerScale = (1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06) + pad.reaction * 0.15;
         ctx.save();
         ctx.scale(flowerScale, flowerScale);
 
@@ -529,14 +531,14 @@ export default function OnelitoPreloader({
 
       ctx.restore();
 
-      // Emit ripple when koi swims close by
-      if (koiBoost > 0.6 && Math.random() < 0.04) {
+      // Emit ripple when koi swims close by smoothly
+      if (pad.reaction > 0.45 && Math.random() < 0.035) {
         ripples.push({
           x: lx,
           y: ly,
           r: 2,
           maxR: 35,
-          alpha: 0.25,
+          alpha: 0.22,
           color: '#22C55E',
         });
       }
