@@ -71,17 +71,21 @@ export default function OnelitoPreloader({
       { angle: 5.2, distOffset: 18, r: 18, rot: 2.2, hasFlower: false, flowerColor: '' },
     ];
 
-    const sakuraPetals = Array.from({ length: 12 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: 6 + Math.random() * 5,
-      rot: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.008,
-      vx: 0.15 + Math.random() * 0.22,
-      vy: 0.1 + Math.random() * 0.18,
-      swayPhase: Math.random() * Math.PI * 2,
-      alpha: 0.55 + Math.random() * 0.3,
-    }));
+    const sakuraPetals = Array.from({ length: 16 }, () => {
+      const angle = Math.random() * Math.PI * 2;
+      const spawnDist = baseOrbitRadius + 10 + Math.random() * 90;
+      return {
+        x: centerX + Math.cos(angle) * spawnDist,
+        y: centerY + Math.sin(angle) * spawnDist,
+        size: 5 + Math.random() * 6,
+        rot: Math.random() * Math.PI * 2,
+        rotSpeed: (Math.random() - 0.5) * 0.008,
+        vx: (Math.random() - 0.5) * 1.2,
+        vy: (Math.random() - 0.5) * 1.2,
+        swayPhase: Math.random() * Math.PI * 2,
+        alpha: 0.5 + Math.random() * 0.4,
+      };
+    });
 
     class ProceduralKoi {
       angle: number
@@ -497,12 +501,30 @@ export default function OnelitoPreloader({
     }
 
     function drawSakuraPetal(ctx: CanvasRenderingContext2D, petal: any, time: number) {
-      petal.x += petal.vx + Math.sin(time * 0.001 + petal.swayPhase) * 0.15;
+      const dx = centerX - petal.x;
+      const dy = centerY - petal.y;
+      const dist = Math.hypot(dx, dy);
+
+      const targetDist = baseOrbitRadius + 15;
+      const pullStrength = 0.003 * (dist - targetDist);
+      petal.vx += (dx / (dist || 1)) * pullStrength + Math.cos(time * 0.001 + petal.swayPhase) * 0.05;
+      petal.vy += (dy / (dist || 1)) * pullStrength + Math.sin(time * 0.001 + petal.swayPhase) * 0.05;
+
+      petal.vx *= 0.96;
+      petal.vy *= 0.96;
+
+      petal.x += petal.vx;
       petal.y += petal.vy;
       petal.rot += petal.rotSpeed;
 
-      if (petal.x > width + 20) petal.x = -20;
-      if (petal.y > height + 20) petal.y = -20;
+      if (dist > width * 0.65 || dist < 35) {
+        const angle = Math.random() * Math.PI * 2;
+        const spawnDist = baseOrbitRadius + 30 + Math.random() * 80;
+        petal.x = centerX + Math.cos(angle) * spawnDist;
+        petal.y = centerY + Math.sin(angle) * spawnDist;
+        petal.vx = (Math.random() - 0.5) * 1.2;
+        petal.vy = (Math.random() - 0.5) * 1.2;
+      }
 
       ctx.save();
       ctx.translate(petal.x, petal.y);
