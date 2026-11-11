@@ -216,16 +216,20 @@ function App() {
     let channel: any;
     let progressInterval: any;
     const startTime = Date.now();
+    const hasOpened = sessionStorage.getItem('onelito_opened');
+    const loadDuration = hasOpened ? 3000 : 10000;
+    sessionStorage.setItem('onelito_opened', 'true');
+    let dbLoaded = false;
 
     progressInterval = setInterval(() => {
       const elapsed = Date.now() - startTime;
-      const targetProg = Math.min(100, Math.round((elapsed / 20000) * 100));
+      const targetProg = Math.min(100, Math.round((elapsed / loadDuration) * 100));
       setLoadProgress(targetProg);
-      if (elapsed >= 20000) {
+      if (elapsed >= loadDuration || (hasOpened && dbLoaded)) {
         clearInterval(progressInterval);
         setIsLoading(false);
       }
-    }, 150);
+    }, 100);
 
     (async () => {
       try {
@@ -263,6 +267,12 @@ function App() {
         }
 
         await fetchData()
+        dbLoaded = true;
+        if (hasOpened && Date.now() - startTime >= 1500) {
+          setLoadProgress(100);
+          clearInterval(progressInterval);
+          setIsLoading(false);
+        }
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
