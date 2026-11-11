@@ -482,6 +482,11 @@ export default function OnelitoPreloader({
 
       if (pad.hasFlower) {
         const petalCount = 8;
+        // Option 1: Gentle petal breathing / blooming scale effect
+        const flowerScale = 1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06;
+        ctx.save();
+        ctx.scale(flowerScale, flowerScale);
+
         for (let layer = 0; layer < 2; layer++) {
           const pRadius = layer === 0 ? pad.r * 0.55 : pad.r * 0.38;
           for (let p = 0; p < petalCount; p++) {
@@ -501,6 +506,8 @@ export default function OnelitoPreloader({
         ctx.arc(0, 0, 3.2, 0, Math.PI * 2);
         ctx.fillStyle = '#FACC15';
         ctx.fill();
+
+        ctx.restore();
       }
 
       ctx.restore();
