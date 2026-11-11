@@ -214,9 +214,16 @@ function App() {
 
   useEffect(() => {
     let channel: any
+    let progressInterval: any
     (async () => {
       try {
-        setLoadProgress(40)
+        let currentProg = 15
+        setLoadProgress(currentProg)
+        progressInterval = setInterval(() => {
+          currentProg = Math.min(92, currentProg + Math.floor(Math.random() * 6) + 2)
+          setLoadProgress(currentProg)
+        }, 180)
+
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
           const { data, error } = await supabase.from('periods').select('*, fish_records(*)').order('created_at', { ascending: true })
@@ -251,7 +258,6 @@ function App() {
         }
 
         await fetchData()
-        setLoadProgress(80)
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
@@ -271,10 +277,15 @@ function App() {
           })
           .subscribe()
 
+        if (progressInterval) clearInterval(progressInterval)
+        setLoadProgress(100)
+        await new Promise(r => setTimeout(r, 800))
+
       } catch (err) {
         console.error('Failed to load from Supabase or setup realtime:', err)
-      } finally {
+        if (progressInterval) clearInterval(progressInterval)
         setLoadProgress(100)
+      } finally {
         setIsLoading(false)
       }
     })()

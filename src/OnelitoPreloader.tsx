@@ -217,7 +217,7 @@ export default function OnelitoPreloader({
         bodyPath.quadraticCurveTo(rightPts[0].x, rightPts[0].y, snoutX, snoutY);
         bodyPath.closePath();
 
-        ctx.fillStyle = this.variant === 'showa' ? '#FFFFFF' : '#141416';
+        ctx.fillStyle = this.variant === 'showa' ? '#FFFFFF' : (isDark ? '#27272a' : '#141616');
         ctx.fill(bodyPath);
 
         ctx.shadowColor = 'transparent';
@@ -249,7 +249,7 @@ export default function OnelitoPreloader({
               ? 'rgba(255,255,255,0.25)'
               : 'rgba(17,17,17,0.3)'
             : isDark
-            ? 'rgba(255,255,255,0.4)'
+            ? 'rgba(255,255,255,0.5)'
             : 'rgba(17,17,17,0.65)';
         ctx.lineWidth = 1.2;
         ctx.stroke(bodyPath);
