@@ -7,415 +7,69 @@ interface OnelitoPreloaderProps {
   onFinish?: () => void
 }
 
-export default function OnelitoPreloader({
-  progress = 0,
-  isLoaded = false,
-  logoSrc = '/logo-vertical.png',
-  onFinish,
-}: OnelitoPreloaderProps) {
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const medallionRef = useRef<HTMLDivElement | null>(null);
-  const [imgError, setImgError] = useState(false);
+export default function OnelitoPreloader({ progress = 0, isLoaded = false, logoSrc, onFinish }: OnelitoPreloaderProps) {
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [shouldUnmount, setShouldUnmount] = useState(false);
   const [isDarkInitial] = useState(() => document.documentElement.classList.contains('dark'));
-
-  const clampedProgress = Math.min(100, Math.max(0, Math.round(progress)));
-  const isComplete = isLoaded || clampedProgress >= 100;
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const medallionRef = useRef<HTMLDivElement | null>(null);
+  const [displayProgress, setDisplayProgress] = useState(10);
 
   useEffect(() => {
-    if (isComplete) {
-      const fadeTimer = setTimeout(() => {
+    let current = 10;
+    const interval = setInterval(() => {
+      const target = isLoaded ? 100 : Math.min(95, progress);
+      if (current < target) {
+        current += 1;
+        setDisplayProgress(current);
+      }
+    }, 40);
+    return () => clearInterval(interval);
+  }, [progress, isLoaded]);
+
+  useEffect(() => {
+    if (isLoaded || progress >= 100) {
+      setDisplayProgress(100);
+      const timer = setTimeout(() => {
         setIsFadingOut(true);
-      }, 900);
-
-      const unmountTimer = setTimeout(() => {
-        setShouldUnmount(true);
-        if (onFinish) onFinish();
-      }, 1600);
-
-      return () => {
-        clearTimeout(fadeTimer);
-        clearTimeout(unmountTimer);
-      };
+        const unmountTimer = setTimeout(() => {
+          setShouldUnmount(true);
+          if (onFinish) onFinish();
+        }, 700);
+        return () => clearTimeout(unmountTimer);
+      }, 500);
+      return () => clearTimeout(timer);
     }
-  }, [isComplete, onFinish]);
+  }, [isLoaded, progress, onFinish]);
 
   useEffect(() => {
-    if (shouldUnmount) return;
-
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext('2d')!;
     if (!ctx) return;
 
     let animationFrameId: number;
-    let width = window.innerWidth;
-    let height = window.innerHeight;
+    let width = (canvas.width = window.innerWidth);
+    let height = (canvas.height = window.innerHeight);
+
+    const handleResize = () => {
+      if (!canvas) return;
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      updateCenterFromMedallion();
+    };
+    window.addEventListener('resize', handleResize);
+
     let centerX = width / 2;
     let centerY = height / 2;
     let baseOrbitRadius = 150;
-
-    const ripples: Array<{ x: number; y: number; r: number; maxR: number; alpha: number; color: string }> = [];
-    const bubbles: Array<{ x: number; y: number; r: number; alpha: number; color: string }> = [];
-
-    const bodyWidthProfile: number[] = [
-      7.5, 13.5, 16.5, 16.2, 14.8, 13.0, 11.0,
-      9.0, 7.2, 5.6, 4.3, 3.3, 2.5, 1.8
-    ];
-
-    // Lotus pads positioned safely in upper/side quadrants away from text
-    const lotusPads = [
-      { angle: 0.18, distOffset: 120, r: 26, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 1.25, distOffset: 130, r: 22, rot: 1.8, hasFlower: false, flowerColor: '' },
-      { angle: 4.15, distOffset: 115, r: 28, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 5.15, distOffset: 125, r: 24, rot: 5.1, hasFlower: false, flowerColor: '' },
-    ];
-
-    const sakuraPetals = Array.from({ length: 16 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      size: 6 + Math.random() * 6,
-      rot: Math.random() * Math.PI * 2,
-      rotSpeed: (Math.random() - 0.5) * 0.008,
-      vx: 0.15 + Math.random() * 0.22,
-      vy: 0.1 + Math.random() * 0.18,
-      swayPhase: Math.random() * Math.PI * 2,
-      alpha: 0.55 + Math.random() * 0.35,
-    }));
-
-    class ProceduralKoi {
-      angle: number
-      speed: number
-      variant: string
-      phase: number
-      segCount: number
-      segDist: number
-      rawJoints: Array<{ x: number; y: number; angle: number }>
-      joints: Array<{ x: number; y: number; angle: number }>
-
-      constructor(config: { startAngle?: number; speed?: number; variant?: string; phase?: number }) {
-        this.angle = config.startAngle || 0;
-        this.speed = config.speed || 0.0072;
-        this.variant = config.variant || 'showa';
-        this.phase = config.phase || 0;
-        this.segCount = bodyWidthProfile.length;
-        this.segDist = 6.2;
-        this.rawJoints = [];
-        this.joints = [];
-
-        for (let i = 0; i < this.segCount; i++) {
-          const a = this.angle - i * (this.segDist / baseOrbitRadius);
-          const x = centerX + Math.cos(a) * baseOrbitRadius;
-          const y = centerY + Math.sin(a) * baseOrbitRadius;
-          this.rawJoints.push({ x, y, angle: a + Math.PI / 2 });
-          this.joints.push({ x, y, angle: a + Math.PI / 2 });
-        }
-      }
-
-      update(time: number) {
-        this.phase += 0.075;
-        const speedMod = 1 + 0.08 * Math.sin(time * 0.001 + (this.variant === 'showa' ? 0 : 3.14));
-        this.angle += this.speed * speedMod;
-
-        const currentRadius =
-          baseOrbitRadius + Math.sin(time * 0.0009 + (this.variant === 'showa' ? 1.5 : 4.5)) * 5;
-
-        const headSway = Math.sin(this.phase) * 1.6;
-        const headX = centerX + Math.cos(this.angle) * (currentRadius + headSway);
-        const headY = centerY + Math.sin(this.angle) * (currentRadius + headSway);
-
-        const prevX = this.rawJoints[0].x;
-        const prevY = this.rawJoints[0].y;
-        const moveAngle = Math.atan2(headY - prevY, headX - prevX);
-
-        this.rawJoints[0].x = headX;
-        this.rawJoints[0].y = headY;
-        this.rawJoints[0].angle = moveAngle;
-
-        for (let i = 1; i < this.segCount; i++) {
-          const prev = this.rawJoints[i - 1];
-          const curr = this.rawJoints[i];
-          const segAngle = Math.atan2(prev.y - curr.y, prev.x - curr.x);
-          curr.x = prev.x - Math.cos(segAngle) * this.segDist;
-          curr.y = prev.y - Math.sin(segAngle) * this.segDist;
-          curr.angle = segAngle;
-        }
-
-        for (let i = 0; i < this.segCount; i++) {
-          const raw = this.rawJoints[i];
-          const perpAngle = raw.angle + Math.PI / 2;
-          const progressRatio = i / (this.segCount - 1);
-          const waveAmp = Math.pow(progressRatio, 1.35) * 5.2;
-          const waveOffset = Math.sin(this.phase - i * 0.45) * waveAmp;
-
-          this.joints[i].x = raw.x + Math.cos(perpAngle) * waveOffset;
-          this.joints[i].y = raw.y + Math.sin(perpAngle) * waveOffset;
-        }
-
-        this.joints[0].angle = this.rawJoints[0].angle;
-        for (let i = 1; i < this.segCount; i++) {
-          const dx = this.joints[i - 1].x - this.joints[i].x;
-          const dy = this.joints[i - 1].y - this.joints[i].y;
-          this.joints[i].angle = Math.atan2(dy, dx);
-        }
-
-        // Swimming ripples and bubbles behind tail
-        if (Math.random() < 0.15) {
-          const tailJoint = this.joints[this.segCount - 1];
-          bubbles.push({
-            x: tailJoint.x + (Math.random() - 0.5) * 5,
-            y: tailJoint.y + (Math.random() - 0.5) * 5,
-            r: 1.1 + Math.random() * 1.5,
-            alpha: 0.35,
-            color: this.variant === 'showa' ? '#D61F26' : '#888888',
-          });
-          if (Math.random() < 0.35) {
-            ripples.push({
-              x: tailJoint.x,
-              y: tailJoint.y,
-              r: 2,
-              maxR: 32 + Math.random() * 18,
-              alpha: 0.28,
-              color: '#D61F26',
-            });
-          }
-        }
-      }
-
-      draw(ctx: CanvasRenderingContext2D, isDark: boolean) {
-        const leftPts: Array<{ x: number; y: number }> = [];
-        const rightPts: Array<{ x: number; y: number }> = [];
-
-        for (let i = 0; i < this.segCount; i++) {
-          const j = this.joints[i];
-          const w = bodyWidthProfile[i];
-          const perp = j.angle + Math.PI / 2;
-          leftPts.push({ x: j.x + Math.cos(perp) * w, y: j.y + Math.sin(perp) * w });
-          rightPts.push({ x: j.x - Math.cos(perp) * w, y: j.y - Math.sin(perp) * w });
-        }
-
-        ctx.save();
-        ctx.shadowColor = isDark ? 'rgba(0, 0, 0, 0.55)' : 'rgba(17, 17, 17, 0.14)';
-        ctx.shadowBlur = 10;
-        ctx.shadowOffsetY = 5;
-
-        this.drawPairedFins(ctx, 2, 22, 11, 0.55);
-        this.drawPairedFins(ctx, 6, 13, 6.5, 0.45);
-        this.drawCaudalTail(ctx);
-
-        const head = this.joints[0];
-        const headAngle = head.angle;
-        const snoutX = head.x + Math.cos(headAngle) * 9.5;
-        const snoutY = head.y + Math.sin(headAngle) * 9.5;
-
-        const bodyPath = new Path2D();
-        bodyPath.moveTo(snoutX, snoutY);
-
-        for (let i = 0; i < this.segCount - 1; i++) {
-          const xc = (leftPts[i].x + leftPts[i + 1].x) / 2;
-          const yc = (leftPts[i].y + leftPts[i + 1].y) / 2;
-          bodyPath.quadraticCurveTo(leftPts[i].x, leftPts[i].y, xc, yc);
-        }
-        const lastL = leftPts[this.segCount - 1];
-        const lastR = rightPts[this.segCount - 1];
-        bodyPath.lineTo(lastL.x, lastL.y);
-        bodyPath.lineTo(lastR.x, lastR.y);
-
-        for (let i = this.segCount - 1; i > 0; i--) {
-          const xc = (rightPts[i].x + rightPts[i - 1].x) / 2;
-          const yc = (rightPts[i].y + rightPts[i - 1].y) / 2;
-          bodyPath.quadraticCurveTo(rightPts[i].x, rightPts[i].y, xc, yc);
-        }
-        bodyPath.quadraticCurveTo(rightPts[0].x, rightPts[0].y, snoutX, snoutY);
-        bodyPath.closePath();
-
-        ctx.fillStyle = this.variant === 'showa' ? '#FFFFFF' : (isDark ? '#27272a' : '#141616');
-        ctx.fill(bodyPath);
-
-        ctx.shadowColor = 'transparent';
-        ctx.shadowBlur = 0;
-        ctx.shadowOffsetY = 0;
-
-        ctx.save();
-        ctx.clip(bodyPath);
-
-        if (this.variant === 'showa') {
-          this.drawBodyPatch(ctx, 1, 5, 16, '#D61F26');
-          this.drawBodyPatch(ctx, 7, -4, 12, '#D61F26');
-          this.drawBodyPatch(ctx, 4, -7, 11, '#111111');
-          this.drawBodyPatch(ctx, 9, 5, 9.5, '#111111');
-        } else {
-          this.drawBodyPatch(ctx, 3, -6, 13, '#FFFFFF');
-          this.drawBodyPatch(ctx, 6, 5, 14, '#D61F26');
-          this.drawBodyPatch(ctx, 9, -4, 10, '#FFFFFF');
-          const headJ = this.joints[0];
-          const rx = headJ.x + Math.cos(headJ.angle) * 5;
-          const ry = headJ.y + Math.sin(headJ.angle) * 5;
-          ctx.beginPath();
-          ctx.arc(rx, ry, 5.0, 0, Math.PI * 2);
-          ctx.fillStyle = '#D61F26';
-          ctx.fill();
-        }
-        ctx.restore();
-
-        ctx.strokeStyle =
-          this.variant === 'showa'
-            ? isDark
-              ? 'rgba(255,255,255,0.25)'
-              : 'rgba(17,17,17,0.3)'
-            : isDark
-            ? 'rgba(255,255,255,0.5)'
-            : 'rgba(17,17,17,0.65)';
-        ctx.lineWidth = 1.2;
-        ctx.stroke(bodyPath);
-
-        this.drawDorsalFin(ctx);
-        this.drawHeadDetails(ctx, snoutX, snoutY);
-        ctx.restore();
-      }
-
-      drawPairedFins(ctx: CanvasRenderingContext2D, jointIndex: number, length: number, widthFin: number, baseSpread: number) {
-        const j = this.joints[jointIndex];
-        const bodyW = bodyWidthProfile[jointIndex] * 0.72;
-        const paddleSwing = Math.sin(this.phase - jointIndex * 0.3) * 0.12;
-
-        [-1, 1].forEach((side: number) => {
-          const perp = j.angle + side * (Math.PI / 2);
-          const baseX = j.x + Math.cos(perp) * bodyW;
-          const baseY = j.y + Math.sin(perp) * bodyW;
-          const finAngle = j.angle + Math.PI + side * (baseSpread + paddleSwing);
-
-          ctx.save();
-          ctx.translate(baseX, baseY);
-          ctx.rotate(finAngle);
-          ctx.beginPath();
-          ctx.moveTo(0, 0);
-          ctx.quadraticCurveTo(length * 0.55, side * widthFin, length, side * (widthFin * 0.25));
-          ctx.quadraticCurveTo(length * 0.45, -side * (widthFin * 0.2), 0, 0);
-          ctx.closePath();
-
-          if (this.variant === 'showa') {
-            ctx.fillStyle = side === 1 ? 'rgba(214, 31, 38, 0.88)' : 'rgba(255, 255, 255, 0.9)';
-            ctx.strokeStyle = 'rgba(17, 17, 17, 0.3)';
-          } else {
-            ctx.fillStyle = side === -1 ? 'rgba(214, 31, 38, 0.88)' : 'rgba(24, 24, 27, 0.9)';
-            ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
-          }
-          ctx.lineWidth = 1;
-          ctx.fill();
-          ctx.stroke();
-          ctx.restore();
-        });
-      }
-
-      drawCaudalTail(ctx: CanvasRenderingContext2D) {
-        const baseJ = this.joints[this.segCount - 2];
-        const tipJ = this.joints[this.segCount - 1];
-        const tailAngle = tipJ.angle + Math.PI;
-        const tailSway = Math.sin(this.phase - 4.2) * 0.18;
-
-        ctx.save();
-        ctx.translate(baseJ.x, baseJ.y);
-        ctx.rotate(tailAngle + tailSway);
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.bezierCurveTo(10, -8, 22, -16, 28, -11);
-        ctx.quadraticCurveTo(18, -2, 15, 0);
-        ctx.quadraticCurveTo(18, 2, 28, 11);
-        ctx.bezierCurveTo(22, 16, 10, 8, 0, 0);
-        ctx.closePath();
-
-        const grad = ctx.createLinearGradient(0, 0, 28, 0);
-        if (this.variant === 'showa') {
-          grad.addColorStop(0, '#111111');
-          grad.addColorStop(0.5, '#D61F26');
-          grad.addColorStop(1, 'rgba(255, 255, 255, 0.85)');
-        } else {
-          grad.addColorStop(0, '#141416');
-          grad.addColorStop(0.6, '#D61F26');
-          grad.addColorStop(1, 'rgba(214, 31, 38, 0.75)');
-        }
-        ctx.fillStyle = grad;
-        ctx.fill();
-        ctx.restore();
-      }
-
-      drawBodyPatch(ctx: CanvasRenderingContext2D, startIdx: number, sideOffset: number, radius: number, color: string) {
-        const j = this.joints[startIdx];
-        const perp = j.angle + Math.PI / 2;
-        const px = j.x + Math.cos(perp) * sideOffset;
-        const py = j.y + Math.sin(perp) * sideOffset;
-
-        ctx.save();
-        ctx.translate(px, py);
-        ctx.rotate(j.angle);
-        ctx.beginPath();
-        ctx.ellipse(0, 0, radius * 1.35, radius * 0.85, 0, 0, Math.PI * 2);
-        ctx.fillStyle = color;
-        ctx.fill();
-        ctx.restore();
-      }
-
-      drawDorsalFin(ctx: CanvasRenderingContext2D) {
-        ctx.beginPath();
-        const start = 3;
-        const end = 9;
-        ctx.moveTo(this.joints[start].x, this.joints[start].y);
-        for (let i = start + 1; i <= end; i++) {
-          const j = this.joints[i];
-          const sway = Math.sin(this.phase - i * 0.4) * 2.5;
-          const perp = j.angle + Math.PI / 2;
-          ctx.lineTo(j.x + Math.cos(perp) * sway, j.y + Math.sin(perp) * sway);
-        }
-        ctx.strokeStyle = this.variant === 'showa' ? '#111111' : '#D61F26';
-        ctx.lineWidth = 3;
-        ctx.lineCap = 'round';
-        ctx.stroke();
-      }
-
-      drawHeadDetails(ctx: CanvasRenderingContext2D, snoutX: number, snoutY: number) {
-        const head = this.joints[0];
-        const neck = this.joints[1];
-        const angle = head.angle;
-        const perp = angle + Math.PI / 2;
-
-        [-1, 1].forEach((side: number) => {
-          const bx = snoutX + Math.cos(perp) * (side * 3.5) - Math.cos(angle) * 2;
-          const by = snoutY + Math.sin(perp) * (side * 3.5) - Math.sin(angle) * 2;
-          const tipAngle = angle + side * 0.65;
-          ctx.beginPath();
-          ctx.moveTo(bx, by);
-          ctx.quadraticCurveTo(
-            bx + Math.cos(tipAngle) * 5,
-            by + Math.sin(tipAngle) * 5,
-            bx + Math.cos(tipAngle + side * 0.3) * 8,
-            by + Math.sin(tipAngle + side * 0.3) * 8
-          );
-          ctx.strokeStyle = '#D61F26';
-          ctx.lineWidth = 1.3;
-          ctx.lineCap = 'round';
-          ctx.stroke();
-        });
-
-        const eyeDist = 8.2;
-        [-1, 1].forEach((side: number) => {
-          const ex = head.x * 0.55 + neck.x * 0.45 + Math.cos(perp) * (side * eyeDist);
-          const ey = head.y * 0.55 + neck.y * 0.45 + Math.sin(perp) * (side * eyeDist);
-          ctx.beginPath();
-          ctx.arc(ex, ey, 2.0, 0, Math.PI * 2);
-          ctx.fillStyle = this.variant === 'showa' ? '#111111' : '#FFFFFF';
-          ctx.fill();
-        });
-      }
-    }
 
     function updateCenterFromMedallion() {
       if (medallionRef.current) {
         const rect = medallionRef.current.getBoundingClientRect();
         centerX = rect.left + rect.width / 2;
         centerY = rect.top + rect.height / 2;
-        baseOrbitRadius = Math.max(135, rect.width * 0.82);
+        baseOrbitRadius = Math.max(130, rect.width * 0.72);
       } else {
         centerX = width / 2;
         centerY = height / 2;
@@ -424,209 +78,285 @@ export default function OnelitoPreloader({
 
     updateCenterFromMedallion();
 
-    const koiList = [
-      new ProceduralKoi({ startAngle: 0, speed: 0.0072, variant: 'showa', phase: 0 }),
-      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0072, variant: 'tancho', phase: Math.PI }),
+    const ripples: Array<{ x: number; y: number; r: number; maxR: number; alpha: number; color: string }> = [];
+    const bubbles: Array<{ x: number; y: number; r: number; alpha: number; color: string }> = [];
+
+    // Lotus pads positioned surrounding the central logo badge ring naturally
+    const lotusPads = [
+      { angle: 0.15, distOffset: 25, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
+      { angle: 1.70, distOffset: 32, r: 20, rot: 1.8, hasFlower: false, flowerColor: '' },
+      { angle: 3.35, distOffset: 28, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
+      { angle: 4.85, distOffset: 30, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
     ];
 
-    function resizeCanvas() {
-      if (!canvas) return;
-      const dpr = window.devicePixelRatio || 1;
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width * dpr;
-      canvas.height = height * dpr;
-      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      updateCenterFromMedallion();
+    const sakuraPetals = Array.from({ length: 18 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      size: 5 + Math.random() * 6,
+      rot: Math.random() * Math.PI * 2,
+      rotSpeed: (Math.random() - 0.5) * 0.007,
+      vx: 0.12 + Math.random() * 0.18,
+      vy: 0.08 + Math.random() * 0.15,
+      swayPhase: Math.random() * Math.PI * 2,
+      alpha: 0.5 + Math.random() * 0.4,
+    }));
+
+    class ProceduralKoi {
+      angle: number
+      speed: number
+      variant: 'showa' | 'tancho'
+      joints: Array<{ x: number; y: number; angle: number }>
+      segCount: number = 14
+      segLength: number = 11
+
+      constructor(opts: { startAngle: number; speed: number; variant: 'showa' | 'tancho' }) {
+        this.angle = opts.startAngle;
+        this.speed = opts.speed;
+        this.variant = opts.variant;
+        this.joints = [];
+        for (let i = 0; i < this.segCount; i++) {
+          this.joints.push({
+            x: centerX + Math.cos(this.angle) * (baseOrbitRadius - i * this.segLength),
+            y: centerY + Math.sin(this.angle) * (baseOrbitRadius - i * this.segLength),
+            angle: this.angle,
+          });
+        }
+      }
+
+      update(time: number) {
+        this.angle += this.speed;
+        const targetX = centerX + Math.cos(this.angle) * baseOrbitRadius + Math.sin(time * 0.0015) * 12;
+        const targetY = centerY + Math.sin(this.angle) * baseOrbitRadius + Math.cos(time * 0.0012) * 12;
+
+        this.joints[0].x += (targetX - this.joints[0].x) * 0.22;
+        this.joints[0].y += (targetY - this.joints[0].y) * 0.22;
+
+        for (let i = 1; i < this.segCount; i++) {
+          const prev = this.joints[i - 1];
+          const curr = this.joints[i];
+          const dx = curr.x - prev.x;
+          const dy = curr.y - prev.y;
+          const angle = Math.atan2(dy, dx);
+
+          curr.x = prev.x + Math.cos(angle) * this.segLength;
+          curr.y = prev.y + Math.sin(angle) * this.segLength;
+          curr.angle = angle;
+        }
+
+        // Sparse & subtle tail ripples (not too frequent)
+        if (Math.random() < 0.035) {
+          const tailJoint = this.joints[this.segCount - 1];
+          bubbles.push({
+            x: tailJoint.x + (Math.random() - 0.5) * 4,
+            y: tailJoint.y + (Math.random() - 0.5) * 4,
+            r: 1 + Math.random() * 1.2,
+            alpha: 0.25,
+            color: this.variant === 'showa' ? '#D61F26' : '#888888',
+          });
+          if (Math.random() < 0.2) {
+            ripples.push({
+              x: tailJoint.x,
+              y: tailJoint.y,
+              r: 2,
+              maxR: 24 + Math.random() * 10,
+              alpha: 0.18,
+              color: '#D61F26',
+            });
+          }
+        }
+      }
+
+      draw(c: CanvasRenderingContext2D, isDark: boolean) {
+        const leftPts: Array<{ x: number; y: number }> = [];
+        const rightPts: Array<{ x: number; y: number }> = [];
+
+        for (let i = 0; i < this.segCount; i++) {
+          const j = this.joints[i];
+          const widthFactor = Math.sin((i / (this.segCount - 1)) * Math.PI) * 13 + 3;
+          const perp = j.angle + Math.PI / 2;
+          leftPts.push({ x: j.x + Math.cos(perp) * widthFactor, y: j.y + Math.sin(perp) * widthFactor });
+          rightPts.push({ x: j.x - Math.cos(perp) * widthFactor, y: j.y - Math.sin(perp) * widthFactor });
+        }
+
+        c.save();
+        c.beginPath();
+        c.moveTo(leftPts[0].x, leftPts[0].y);
+        for (let i = 1; i < leftPts.length; i++) c.lineTo(leftPts[i].x, leftPts[i].y);
+        for (let i = rightPts.length - 1; i >= 0; i--) c.lineTo(rightPts[i].x, rightPts[i].y);
+        c.closePath();
+
+        const bodyGrad = c.createLinearGradient(this.joints[0].x, this.joints[0].y, this.joints[this.segCount - 1].x, this.joints[this.segCount - 1].y);
+        if (this.variant === 'showa') {
+          bodyGrad.addColorStop(0, isDark ? '#27272a' : '#18181b');
+          bodyGrad.addColorStop(0.5, isDark ? '#d4d4d8' : '#fafafa');
+          bodyGrad.addColorStop(1, isDark ? '#b91c1c' : '#ef4444');
+        } else {
+          bodyGrad.addColorStop(0, isDark ? '#fafafa' : '#ffffff');
+          bodyGrad.addColorStop(0.7, isDark ? '#f43f5e' : '#e11d48');
+          bodyGrad.addColorStop(1, isDark ? '#e4e4e7' : '#f4f4f5');
+        }
+
+        c.fillStyle = bodyGrad;
+        c.shadowColor = isDark ? 'rgba(0,0,0,0.6)' : 'rgba(0,0,0,0.15)';
+        c.shadowBlur = 10;
+        c.shadowOffsetY = 4;
+        c.fill();
+        c.restore();
+
+        // Head accent / Tancho dot
+        const head = this.joints[0];
+        c.save();
+        c.beginPath();
+        c.arc(head.x + Math.cos(head.angle) * 3, head.y + Math.sin(head.angle) * 3, this.variant === 'tancho' ? 5.5 : 3.5, 0, Math.PI * 2);
+        c.fillStyle = '#ef4444';
+        c.fill();
+        c.restore();
+      }
     }
 
-    function drawLotusPadAndFlower(ctx: CanvasRenderingContext2D, pad: any, time: number, isDark: boolean) {
+    const koiList = [
+      new ProceduralKoi({ startAngle: 0, speed: 0.0065, variant: 'showa' }),
+      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0065, variant: 'tancho' }),
+    ];
+
+    function drawLotusPadAndFlower(c: CanvasRenderingContext2D, pad: any, time: number, isDark: boolean) {
       // Natural floating bob and swaying rotation
-      const floatBob = Math.sin(time * 0.0011 + pad.angle * 2) * 3.2;
-      const swayRot = Math.sin(time * 0.0008 + pad.angle) * 0.08;
+      const floatBob = Math.sin(time * 0.0011 + pad.angle * 2) * 2.8;
+      const swayRot = Math.sin(time * 0.0008 + pad.angle) * 0.06;
       const dist = baseOrbitRadius + pad.distOffset + floatBob;
       const lx = centerX + Math.cos(pad.angle) * dist;
       const ly = centerY + Math.sin(pad.angle) * dist;
       const currentRot = pad.rot + swayRot;
 
-      ctx.save();
-      ctx.translate(lx, ly);
-      ctx.rotate(currentRot);
+      c.save();
+      c.translate(lx, ly);
+      c.rotate(currentRot);
 
-      ctx.shadowColor = isDark ? 'rgba(0,0,0,0.5)' : 'rgba(17,17,17,0.12)';
-      ctx.shadowBlur = 8;
-      ctx.shadowOffsetY = 4;
+      c.shadowColor = isDark ? 'rgba(0,0,0,0.4)' : 'rgba(17,17,17,0.1)';
+      c.shadowBlur = 6;
+      c.shadowOffsetY = 3;
 
-      ctx.beginPath();
-      ctx.moveTo(0, 0);
-      ctx.arc(0, 0, pad.r, 0.22, Math.PI * 2 - 0.22);
-      ctx.closePath();
+      c.beginPath();
+      c.moveTo(0, 0);
+      c.arc(0, 0, pad.r, 0.22, Math.PI * 2 - 0.22);
+      c.closePath();
 
-      const leafGrad = ctx.createRadialGradient(0, 0, 2, 0, 0, pad.r);
+      const leafGrad = c.createRadialGradient(0, 0, 2, 0, 0, pad.r);
       leafGrad.addColorStop(0, isDark ? '#15803D' : '#22C55E');
       leafGrad.addColorStop(1, isDark ? '#14532D' : '#15803D');
-      ctx.fillStyle = leafGrad;
-      ctx.fill();
+      c.fillStyle = leafGrad;
+      c.fill();
 
-      ctx.shadowColor = 'transparent';
-      ctx.strokeStyle = isDark ? 'rgba(187, 247, 208, 0.22)' : 'rgba(255, 255, 255, 0.35)';
-      ctx.lineWidth = 1;
-      ctx.stroke();
+      c.shadowColor = 'transparent';
+      c.strokeStyle = isDark ? 'rgba(187, 247, 208, 0.2)' : 'rgba(255, 255, 255, 0.3)';
+      c.lineWidth = 1;
+      c.stroke();
 
-      for (let i = 0; i < 7; i++) {
-        const vAngle = 0.5 + i * 0.8;
-        ctx.beginPath();
-        ctx.moveTo(0, 0);
-        ctx.lineTo(Math.cos(vAngle) * (pad.r * 0.78), Math.sin(vAngle) * (pad.r * 0.78));
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.18)';
-        ctx.lineWidth = 0.8;
-        ctx.stroke();
+      for (let i = 0; i < 6; i++) {
+        const vAngle = 0.5 + i * 0.9;
+        c.beginPath();
+        c.moveTo(0, 0);
+        c.lineTo(Math.cos(vAngle) * (pad.r * 0.75), Math.sin(vAngle) * (pad.r * 0.75));
+        c.strokeStyle = 'rgba(255, 255, 255, 0.15)';
+        c.lineWidth = 0.8;
+        c.stroke();
       }
 
       if (pad.hasFlower) {
         const petalCount = 8;
         for (let layer = 0; layer < 2; layer++) {
-          const pRadius = layer === 0 ? pad.r * 0.55 : pad.r * 0.38;
+          const pRadius = layer === 0 ? pad.r * 0.52 : pad.r * 0.35;
           for (let p = 0; p < petalCount; p++) {
             const a = (p * Math.PI * 2) / petalCount + layer * 0.4;
-            ctx.save();
-            ctx.rotate(a);
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.quadraticCurveTo(pRadius * 0.5, -pRadius * 0.32, pRadius, 0);
-            ctx.quadraticCurveTo(pRadius * 0.5, pRadius * 0.32, 0, 0);
-            ctx.fillStyle = layer === 0 ? pad.flowerColor : '#FBCFE8';
-            ctx.fill();
-            ctx.restore();
+            c.save();
+            c.rotate(a);
+            c.beginPath();
+            c.moveTo(0, 0);
+            c.quadraticCurveTo(pRadius * 0.5, -pRadius * 0.3, pRadius, 0);
+            c.quadraticCurveTo(pRadius * 0.5, pRadius * 0.3, 0, 0);
+            c.fillStyle = layer === 0 ? pad.flowerColor : '#FBCFE8';
+            c.fill();
+            c.restore();
           }
         }
-        ctx.beginPath();
-        ctx.arc(0, 0, 3.2, 0, Math.PI * 2);
-        ctx.fillStyle = '#FACC15';
-        ctx.fill();
+        c.beginPath();
+        c.arc(0, 0, 3, 0, Math.PI * 2);
+        c.fillStyle = '#FACC15';
+        c.fill();
       }
 
-      ctx.restore();
+      c.restore();
 
-      // Infrequent lotus ripple emission
-      if (Math.random() < 0.003) {
+      // Sparse lotus ripple emission
+      if (Math.random() < 0.001) {
         ripples.push({
           x: lx,
           y: ly,
-          r: 4,
-          maxR: 35 + Math.random() * 15,
-          alpha: 0.22,
+          r: 3,
+          maxR: 28 + Math.random() * 10,
+          alpha: 0.15,
           color: '#22C55E',
         });
       }
     }
 
-    function drawSakuraPetal(ctx: CanvasRenderingContext2D, petal: any, time: number) {
-      // Gentle attraction towards koi heads for some petals
-      const head1 = koiList[0].joints[0];
-      const head2 = koiList[1].joints[0];
-      const dist1 = Math.hypot(head1.x - petal.x, head1.y - petal.y);
-      const dist2 = Math.hypot(head2.x - petal.x, head2.y - petal.y);
-      const targetHead = dist1 < dist2 ? head1 : head2;
-      const minDist = Math.min(dist1, dist2);
+    function drawSakuraPetal(c: CanvasRenderingContext2D, p: any, time: number) {
+      p.x += p.vx + Math.sin(time * 0.002 + p.swayPhase) * 0.25;
+      p.y += p.vy + Math.cos(time * 0.0015 + p.swayPhase) * 0.15;
+      p.rot += p.rotSpeed;
 
-      if (minDist < 180) {
-        const pullAngle = Math.atan2(targetHead.y - petal.y, targetHead.x - petal.x);
-        petal.vx += Math.cos(pullAngle) * 0.03;
-        petal.vy += Math.sin(pullAngle) * 0.03;
+      // Gentle magnetic pull toward koi head if close
+      const head = koiList[0].joints[0];
+      const dx = head.x - p.x;
+      const dy = head.y - p.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 140) {
+        p.x += (dx / dist) * 0.35;
+        p.y += (dy / dist) * 0.35;
       }
 
-      petal.x += petal.vx + Math.sin(time * 0.001 + petal.swayPhase) * 0.18;
-      petal.y += petal.vy;
-      petal.rot += petal.rotSpeed;
+      if (p.x > width + 30) p.x = -30;
+      if (p.y > height + 30) p.y = -30;
 
-      if (petal.x > width + 20) petal.x = -20;
-      if (petal.x < -20) petal.x = width + 20;
-      if (petal.y > height + 20) petal.y = -20;
-
-      ctx.save();
-      ctx.translate(petal.x, petal.y);
-      ctx.rotate(petal.rot);
-      ctx.globalAlpha = petal.alpha;
-
-      const s = petal.size;
-      ctx.beginPath();
-      ctx.moveTo(0, s * 0.6);
-      ctx.bezierCurveTo(-s * 0.8, s * 0.1, -s * 0.7, -s * 0.8, -s * 0.18, -s * 0.9);
-      ctx.lineTo(0, -s * 0.62);
-      ctx.lineTo(s * 0.18, -s * 0.9);
-      ctx.bezierCurveTo(s * 0.7, -s * 0.8, s * 0.8, s * 0.1, 0, s * 0.6);
-      ctx.closePath();
-
-      ctx.fillStyle = '#FDA4AF';
-      ctx.fill();
-      ctx.restore();
+      c.save();
+      c.translate(p.x, p.y);
+      c.rotate(p.rot);
+      c.beginPath();
+      c.ellipse(0, 0, p.size, p.size * 0.6, 0, 0, Math.PI * 2);
+      c.fillStyle = `rgba(244, 114, 182, ${p.alpha})`;
+      c.fill();
+      c.restore();
     }
 
-    const handlePointerMove = (e: PointerEvent) => {
-      if (Math.random() < 0.28) {
-        ripples.push({
-          x: e.clientX,
-          y: e.clientY,
-          r: 3,
-          maxR: 38 + Math.random() * 24,
-          alpha: 0.32,
-          color: '#D61F26',
-        });
+    let lastTime = performance.now();
+
+    function renderLoop(time: number) {
+      const dt = time - lastTime;
+      lastTime = time;
+      if (dt > 100) {
+        animationFrameId = requestAnimationFrame(renderLoop);
+        return;
       }
-    };
 
-    const handlePointerDown = (e: PointerEvent) => {
-      ripples.push({
-        x: e.clientX,
-        y: e.clientY,
-        r: 4,
-        maxR: 65,
-        alpha: 0.5,
-        color: '#D61F26',
-      });
-    };
-
-    window.addEventListener('resize', resizeCanvas);
-    window.addEventListener('pointermove', handlePointerMove);
-    window.addEventListener('pointerdown', handlePointerDown);
-    resizeCanvas();
-
-    const rippleInterval = setInterval(() => {
-      if (ripples.length < 6) {
-        const targetKoi = koiList[Math.floor(Math.random() * koiList.length)];
-        const head = targetKoi.joints[0];
-        ripples.push({
-          x: head.x,
-          y: head.y,
-          r: 6,
-          maxR: 45 + Math.random() * 20,
-          alpha: 0.24,
-          color: Math.random() > 0.5 ? '#D61F26' : '#888888',
-        });
-      }
-    }, 1100);
-
-    function renderLoop(timestamp: number) {
-      const time = timestamp || performance.now();
-      ctx.clearRect(0, 0, width, height);
       updateCenterFromMedallion();
-      const isDark = document.documentElement.classList.contains('dark');
+      ctx.clearRect(0, 0, width, height);
 
+      // Draw dashed orbit path
       ctx.save();
       ctx.beginPath();
       ctx.arc(centerX, centerY, baseOrbitRadius, 0, Math.PI * 2);
-      ctx.strokeStyle = isDark ? 'rgba(255, 255, 255, 0.06)' : 'rgba(17, 17, 17, 0.06)';
-      ctx.lineWidth = 1;
-      ctx.setLineDash([5, 9]);
+      ctx.strokeStyle = isDarkInitial ? 'rgba(255, 255, 255, 0.08)' : 'rgba(0, 0, 0, 0.06)';
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([5, 8]);
       ctx.stroke();
       ctx.restore();
 
+      // Update & draw ripples
       for (let i = ripples.length - 1; i >= 0; i--) {
         const rp = ripples[i];
-        rp.r += 0.48;
-        rp.alpha -= 0.004;
-        if (rp.alpha <= 0 || rp.r >= rp.maxR) {
+        rp.r += 0.55;
+        rp.alpha *= 0.97;
+        if (rp.r >= rp.maxR || rp.alpha <= 0.01) {
           ripples.splice(i, 1);
           continue;
         }
@@ -634,16 +364,17 @@ export default function OnelitoPreloader({
         ctx.beginPath();
         ctx.arc(rp.x, rp.y, rp.r, 0, Math.PI * 2);
         ctx.strokeStyle = rp.color;
-        ctx.globalAlpha = Math.max(0, rp.alpha);
         ctx.lineWidth = 1.2;
+        ctx.globalAlpha = Math.max(0, rp.alpha);
         ctx.stroke();
         ctx.restore();
       }
 
+      // Update & draw bubbles
       for (let i = bubbles.length - 1; i >= 0; i--) {
         const b = bubbles[i];
-        b.alpha -= 0.009;
-        b.r += 0.025;
+        b.y -= 0.35;
+        b.alpha -= 0.012;
         if (b.alpha <= 0) {
           bubbles.splice(i, 1);
           continue;
@@ -657,13 +388,13 @@ export default function OnelitoPreloader({
         ctx.restore();
       }
 
-      for (let i = 0; i < koiList.length; i++) {
-        koiList[i].update(time);
-        koiList[i].draw(ctx, isDark);
+      for (let i = 0; i < lotusPads.length; i++) {
+        drawLotusPadAndFlower(ctx, lotusPads[i], time, isDarkInitial);
       }
 
-      for (let i = 0; i < lotusPads.length; i++) {
-        drawLotusPadAndFlower(ctx, lotusPads[i], time, isDark);
+      for (let i = 0; i < koiList.length; i++) {
+        koiList[i].update(time);
+        koiList[i].draw(ctx, isDarkInitial);
       }
 
       for (let i = 0; i < sakuraPetals.length; i++) {
@@ -677,12 +408,9 @@ export default function OnelitoPreloader({
 
     return () => {
       cancelAnimationFrame(animationFrameId);
-      clearInterval(rippleInterval);
-      window.removeEventListener('resize', resizeCanvas);
-      window.removeEventListener('pointermove', handlePointerMove);
-      window.removeEventListener('pointerdown', handlePointerDown);
+      window.removeEventListener('resize', handleResize);
     };
-  }, [shouldUnmount]);
+  }, []);
 
   if (shouldUnmount) return null;
 
@@ -707,10 +435,6 @@ export default function OnelitoPreloader({
       }}
     >
       <style>{`
-        @keyframes rippleExpand {
-          0% { transform: scale(0.82); opacity: 0.55; }
-          100% { transform: scale(1.75); opacity: 0; }
-        }
         @keyframes floatPulse {
           0%, 100% { transform: translateY(0px) scale(1); }
           50% { transform: translateY(-3px) scale(1.01); }
@@ -719,145 +443,66 @@ export default function OnelitoPreloader({
           0% { transform: translateX(-100%); }
           100% { transform: translateX(200%); }
         }
-        .koi-ripple-1 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
-        .koi-ripple-2 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 1.3s; }
-        .koi-ripple-3 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 2.6s; }
         .koi-logo-float { animation: floatPulse 4.5s ease-in-out infinite; }
         .koi-shimmer { animation: shimmerSlide 1.6s infinite; }
       `}</style>
 
-      {/* Canvas Full Screen */}
+      {/* Canvas Full Screen Background */}
       <canvas
         ref={canvasRef}
         style={{
-          position: 'fixed',
-          inset: 0,
-          width: '100vw',
-          height: '100vh',
-          zIndex: 10,
-          pointerEvents: 'none',
-        }}
-      />
-
-      {/* Ambient Radial Glow */}
-      <div
-        style={{
           position: 'absolute',
-          width: '460px',
-          height: '460px',
-          borderRadius: '50%',
-          background: 'rgba(214, 31, 38, 0.08)',
-          filter: 'blur(50px)',
+          inset: 0,
           pointerEvents: 'none',
         }}
       />
 
-      {/* Central Pond Medallion Anchor */}
+      {/* Central Medallion */}
       <div
+        ref={medallionRef}
+        className="koi-logo-float relative z-10 flex flex-col items-center justify-center p-8 rounded-3xl"
         style={{
-          position: 'relative',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          width: '360px',
-          height: '360px',
-          marginBottom: '16px',
-          zIndex: 20,
+          backgroundColor: isDarkInitial ? 'rgba(24, 24, 27, 0.85)' : 'rgba(255, 255, 255, 0.88)',
+          border: `1px solid ${isDarkInitial ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.08)'}`,
+          boxShadow: isDarkInitial ? '0 20px 50px rgba(0,0,0,0.5)' : '0 20px 50px rgba(0,0,0,0.08)',
+          backdropFilter: 'blur(16px)',
+          minWidth: '280px',
         }}
       >
-        <div className="koi-ripple-1" style={{ position: 'absolute', width: '190px', height: '190px', borderRadius: '50%', border: '1px solid rgba(214, 31, 38, 0.3)', pointerEvents: 'none' }} />
-        <div className="koi-ripple-2" style={{ position: 'absolute', width: '190px', height: '190px', borderRadius: '50%', border: '1px solid rgba(17, 17, 17, 0.2)', pointerEvents: 'none' }} />
-        <div className="koi-ripple-3" style={{ position: 'absolute', width: '190px', height: '190px', borderRadius: '50%', border: '1px solid rgba(214, 31, 38, 0.25)', pointerEvents: 'none' }} />
-
-        {/* Medallion Logo */}
-        <div
-          ref={medallionRef}
-          className="koi-logo-float"
-          style={{
-            position: 'relative',
-            zIndex: 30,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            width: '160px',
-            height: '160px',
-            borderRadius: '50%',
-            backgroundColor: isDarkInitial ? '#141619' : 'rgba(255, 255, 255, 0.95)',
-            boxShadow: '0 14px 40px rgba(0, 0, 0, 0.1)',
-            border: '1px solid rgba(226, 232, 240, 0.8)',
-            padding: '16px',
-          }}
-        >
-          {!imgError ? (
-            <img
-              src={logoSrc}
-              alt="ONELITO KOI Logo"
-              style={{ width: '110px', height: '110px', objectFit: 'contain', userSelect: 'none' }}
-              onError={() => setImgError(true)}
-            />
-          ) : (
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
-              <div style={{ marginTop: '4px', letterSpacing: '0.05em', fontWeight: 800, fontSize: '14px', lineHeight: 1 }}>
-                <span style={{ color: isDarkInitial ? '#ffffff' : '#111111' }}>ONELITO</span>
-                <span style={{ color: '#D61F26', marginLeft: '4px' }}>KOI</span>
-              </div>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Database Sync Status & Welcome Text */}
-      <div style={{ position: 'relative', zIndex: 30, width: '100%', maxWidth: '320px', padding: '0 24px', textAlign: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '8px', marginBottom: '8px' }}>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '8px',
-              height: '8px',
-              borderRadius: '50%',
-              backgroundColor: isComplete ? '#10B981' : '#D61F26',
-            }}
-            className={isComplete ? '' : 'animate-ping'}
+        <div className="relative w-20 h-20 mb-4 flex items-center justify-center rounded-2xl overflow-hidden shadow-md"
+             style={{ backgroundColor: isDarkInitial ? '#27272a' : '#f4f4f5' }}>
+          <img
+            src={logoSrc || "https://images.unsplash.com/photo-1522069169874-c58ec4b76be5?w=160&auto=format&fit=crop&q=80"}
+            alt="Onelito Koi"
+            className="w-full h-full object-cover"
           />
-          <span style={{ fontSize: '11px', fontFamily: 'monospace', textTransform: 'uppercase', letterSpacing: '0.15em', color: '#64748B', fontWeight: 600 }}>
-            DATABASE SYNC ACTIVE
-          </span>
+          <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/20 to-transparent koi-shimmer pointer-events-none" />
         </div>
 
-        <p
-          style={{
-            fontSize: '15px',
-            fontWeight: 700,
-            transition: 'all 0.3s ease',
-            color: isComplete ? '#D61F26' : (isDarkInitial ? '#f8fafc' : '#111111'),
-            transform: isComplete ? 'scale(1.05)' : 'scale(1)',
-          }}
-        >
-          {isComplete ? 'Selamat datang di ONELITO KOI' : 'Menghubungkan ke Database'}
+        <h1 className="text-xl font-bold tracking-tight mb-1" style={{ color: isDarkInitial ? '#f4f4f5' : '#18181b' }}>
+          ONELITO KOI
+        </h1>
+        <p className="text-xs font-medium tracking-widest uppercase mb-6" style={{ color: isDarkInitial ? '#a1a1aa' : '#71717a' }}>
+          Japanese Koi Management
         </p>
 
         {/* Progress Bar */}
-        <div style={{ marginTop: '16px', position: 'relative', width: '100%', height: '10px', backgroundColor: isDarkInitial ? '#27272a' : 'rgba(226, 232, 240, 0.8)', borderRadius: '9999px', overflow: 'hidden', padding: '2px', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)' }}>
-          <div
-            style={{
-              position: 'relative',
-              height: '100%',
-              background: 'linear-gradient(to right, #111111, #D61F26, #D61F26)',
-              borderRadius: '9999px',
-              transition: 'width 0.2s ease-out',
-              width: `${clampedProgress}%`,
-              overflow: 'hidden',
-            }}
-          >
-            <div className="koi-shimmer" style={{ position: 'absolute', inset: 0, width: '50%', height: '100%', background: 'linear-gradient(to right, transparent, rgba(255,255,255,0.4), transparent)' }} />
+        <div className="w-full space-y-2">
+          <div className="flex justify-between text-xs font-semibold" style={{ color: isDarkInitial ? '#d4d4d8' : '#3f3f46' }}>
+            <span>MEMUAT DATA KOLAM</span>
+            <span>{displayProgress}%</span>
           </div>
-        </div>
-
-        <div style={{ marginTop: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-          <span style={{ fontFamily: 'monospace', fontWeight: 700, color: '#D61F26', fontSize: '14px' }}>
-            {clampedProgress}%
-          </span>
+          <div className="w-full h-2 rounded-full overflow-hidden" style={{ backgroundColor: isDarkInitial ? '#3f3f46' : '#e4e4e7' }}>
+            <div
+              style={{
+                width: `${displayProgress}%`,
+                height: '100%',
+                background: 'linear-gradient(90deg, #3b82f6, #ec4899)',
+                borderRadius: '9999px',
+                transition: 'width 0.25s cubic-bezier(0.4, 0, 0.2, 1)',
+              }}
+            />
+          </div>
         </div>
       </div>
     </div>
