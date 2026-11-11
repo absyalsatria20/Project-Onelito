@@ -423,7 +423,7 @@ function App() {
   const themeToggle = () => setTheme(value => { const next = value === 'light' ? 'dark' : 'light'; localStorage.setItem('fish-theme', next); return next })
   const openAddPeriod = () => { setPeriodName(''); setPeriodError(''); setPeriodDialog({mode:'add'}); setOpenPeriodMenu(null) }
   const openRenamePeriod = (period:Period) => { setPeriodName(period.name); setPeriodError(''); setPeriodDialog({mode:'rename',periodId:period.id}); setOpenPeriodMenu(null) }
-  const savePeriodName = (event:React.FormEvent) => {
+  const savePeriodName = async (event:React.FormEvent) => {
     event.preventDefault()
     const name=periodName.trim()
     if(!name){setPeriodError('Nama periode wajib diisi.');return}
@@ -431,23 +431,72 @@ function App() {
     if(periods.some(period=>period.id!==current&&period.name.trim().toLocaleLowerCase()===name.toLocaleLowerCase())){setPeriodError('Nama periode tersebut sudah digunakan.');return}
     if(periodDialog?.mode==='add'){
       const id=window.crypto?.randomUUID?.() ?? `period-${Date.now()}`
-      setPeriods(items=>[...items,{id,name,records:name.trim().toLocaleLowerCase()==='periode 2027'?sample2027.map(record=>({...record})):[],owner:'All Owners',certificate:'All Status',query:'',sort:'name'}])
+      const newRecords = name.trim().toLocaleLowerCase()==='periode 2027'?sample2027.map(record=>({...record})):[]
+      setPeriods(items=>[...items,{id,name,records:newRecords,owner:'All Owners',certificate:'All Status',query:'',sort:'name'}])
       setActivePeriodId(id)
+      try {
+        const { supabase } = await import('./supabaseClient')
+        await supabase.from('periods').insert({ id, name, owner: 'All Owners', certificate: 'All Status', query: '', sort: 'name' })
+        if (newRecords.length > 0) {
+          const recsToInsert = newRecords.map(r => ({
+            id: String(r.id),
+            period_id: id,
+            name: r.name,
+            owner: r.owner,
+            price_jpy: r.yen,
+            rate: r.rate,
+            price_idr: r.rupiah,
+            dealer_fee_pct: r.feePercent,
+            shipping_cost: r.shipping,
+            certificate: r.certificate,
+            terms: r.tc,
+            image: r.image
+          }))
+          await supabase.from('fish_records').insert(recsToInsert)
+        }
+      } catch (err) {
+        console.error('Failed to save period to Supabase:', err)
+      }
     }else if(periodDialog?.mode==='rename'){
       setPeriods(items=>items.map(period=>period.id===periodDialog.periodId?{...period,name}:period))
+      try {
+        const { supabase } = await import('./supabaseClient')
+        await supabase.from('periods').update({ name }).eq('id', periodDialog.periodId)
+      } catch (err) {
+        console.error('Failed to rename period in Supabase:', err)
+      }
     }
     setPeriodDialog(null)
   }
-  const deletePeriod = () => {
+  const deletePeriod = async () => {
     if(!deletePeriodTarget||periods.length<=1)return
-    const remaining=periods.filter(period=>period.id!==deletePeriodTarget.id)
+    const targetId = deletePeriodTarget.id
+    const remaining=periods.filter(period=>period.id!==targetId)
     setPeriods(remaining)
-    if(activePeriodId===deletePeriodTarget.id)setActivePeriodId(remaining[0].id)
+    if(activePeriodId===targetId)setActivePeriodId(remaining[0].id)
     setDeletePeriodTarget(null)
     setOpenPeriodMenu(null)
+    try {
+      const { supabase } = await import('./supabaseClient')
+      await supabase.from('periods').delete().eq('id', targetId)
+    } catch (err) {
+      console.error('Failed to delete period from Supabase:', err)
+    }
   }
   const remove = (record: FishRecord) => setDeleteTarget(record)
-  const confirmDelete = () => { if (!deleteTarget) return; setRecords(items => items.filter(item => item.id !== deleteTarget.id)); setDeleteTarget(null); toast('Data ikan berhasil dihapus') }
+  const confirmDelete = async () => {
+    if (!deleteTarget) return
+    const recordId = String(deleteTarget.id)
+    setRecords(items => items.filter(item => item.id !== deleteTarget.id))
+    setDeleteTarget(null)
+    toast('Data ikan berhasil dihapus')
+    try {
+      const { supabase } = await import('./supabaseClient')
+      await supabase.from('fish_records').delete().eq('id', recordId)
+    } catch (err) {
+      console.error('Failed to delete fish record from Supabase:', err)
+    }
+  }
 
   const exportPdf = async () => {
     if (owner === 'All Owners') {
@@ -628,7 +677,37 @@ function App() {
     </div>
 
 
-    {modal&&<FishForm key={`${activePeriod.id}-${editing?.id??'new'}`} initial={editing} owners={owners} closing={closingModal==='modal'} onClose={()=>closeWithAnimation('modal',()=>setModal(false))} onSave={record=>{setOwnerNames(items=>items.some(name=>name.toLocaleLowerCase()===record.owner.trim().toLocaleLowerCase())?items:[...items,record.owner.trim()]);setRecords(items=>editing?items.map(item=>item.id===editing.id?record:item):[{...record,id:Math.max(0,...items.map(item=>item.id))+1},...items]);closeWithAnimation('modal',()=>setModal(false));toast(editing?'Perubahan berhasil disimpan':'Ikan berhasil ditambahkan')}}/>}
+    {modal&&<FishForm key={`${activePeriod.id}-${editing?.id??'new'}`} initial={editing} owners={owners} closing={closingModal==='modal'} onClose={()=>closeWithAnimation('modal',()=>setModal(false))} onSave={async record => {
+      const isEditing = Boolean(editing)
+      const currentEditing = editing
+      const recordId = isEditing && currentEditing ? String(currentEditing.id) : `fish-${Date.now()}`
+      const finalRecord = isEditing ? record : {...record, id: recordId as any}
+
+      setOwnerNames(items=>items.some(name=>name.toLocaleLowerCase()===record.owner.trim().toLocaleLowerCase())?items:[...items,record.owner.trim()])
+      setRecords(items=>isEditing && currentEditing ? items.map(item=>item.id===currentEditing.id?finalRecord:item):[finalRecord,...items])
+      closeWithAnimation('modal',()=>setModal(false))
+      toast(isEditing?'Perubahan berhasil disimpan':'Ikan berhasil ditambahkan')
+
+      try {
+        const { supabase } = await import('./supabaseClient')
+        await supabase.from('fish_records').upsert({
+          id: String(finalRecord.id),
+          period_id: activePeriod.id,
+          name: finalRecord.name,
+          owner: finalRecord.owner,
+          price_jpy: finalRecord.yen,
+          rate: finalRecord.rate,
+          price_idr: finalRecord.rupiah,
+          dealer_fee_pct: finalRecord.feePercent,
+          shipping_cost: finalRecord.shipping,
+          certificate: finalRecord.certificate,
+          terms: finalRecord.tc,
+          image: finalRecord.image
+        })
+      } catch (err) {
+        console.error('Failed to save fish record to Supabase:', err)
+      }
+    }}/>}
     {periodDialog&&<div className={`modal-backdrop ${closingModal==='periodDialog'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}}><form className={`period-name-dialog ${closingModal==='periodDialog'?'closing':''}`} role="dialog" aria-modal="true" aria-labelledby="period-dialog-title" onSubmit={savePeriodName}><div className="period-dialog-heading"><div><span className="eyebrow">WORKSPACE</span><h2 id="period-dialog-title">{periodDialog.mode==='add'?'Tambah Tab Baru':'Ganti nama periode'}</h2></div><button type="button" className="dialog-close" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))} aria-label="Tutup"><X size={20}/></button></div><label className="period-name-field" htmlFor="period-name">Nama Tab<input id="period-name" autoFocus value={periodName} onChange={event=>{setPeriodName(event.target.value);setPeriodError('')}} placeholder="Contoh: Periode 2027" aria-describedby={periodError?'period-name-error':undefined}/></label>{periodError&&<p className="period-form-error" id="period-name-error" role="alert">{periodError}</p>}<div className="period-dialog-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('periodDialog',()=>setPeriodDialog(null))}>Batal</button><button type="submit" className="primary-btn">{periodDialog.mode==='add'?'Buat periode':'Simpan nama'}</button></div></form></div>}
     {deletePeriodTarget&&<div className={`modal-backdrop ${closingModal==='deletePeriodTarget'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}}><section className={`confirm-dialog ${closingModal==='deletePeriodTarget'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="period-delete-title" aria-describedby="period-delete-description"><div className="confirm-icon"><Trash2 size={21}/></div><h2 id="period-delete-title">Hapus periode?</h2><p id="period-delete-description">Periode <b>{deletePeriodTarget.name}</b> dan seluruh data di dalamnya akan dihapus. Tindakan ini tidak dapat dibatalkan.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('deletePeriodTarget',()=>setDeletePeriodTarget(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={deletePeriod}>Hapus</button></div></section></div>}
     {pendingImport&&<div className={`modal-backdrop ${closingModal==='pendingImport'?'closing':''}`} onMouseDown={event=>{if(event.target===event.currentTarget)closeWithAnimation('pendingImport',()=>setPendingImport(null))}}><section className={`confirm-dialog ${closingModal==='pendingImport'?'closing':''}`} role="alertdialog" aria-modal="true" aria-labelledby="import-confirm-title" aria-describedby="import-confirm-description"><div className="confirm-icon"><Database size={21}/></div><h2 id="import-confirm-title">Timpa data saat ini?</h2><p id="import-confirm-description">File backup berisi <b>{pendingImport.periods.length} periode</b>{pendingImport.periods.length>0&&<> ({pendingImport.periods.map(p=>p.name).join(', ')})</>}. Semua data saat ini akan diganti dengan data dari backup.</p><div className="confirm-actions"><button type="button" className="secondary-btn" onClick={()=>closeWithAnimation('pendingImport',()=>setPendingImport(null))}>Batal</button><button type="button" className="delete-confirm-btn" onClick={confirmImportBackup}>Timpa Data</button></div></section></div>}

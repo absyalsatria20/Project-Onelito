@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Sinkronisasi Penuh CRUD Periode & Ikan ke Database Supabase
+- Change:
+  - Menghubungkan seluruh operasi CRUD (Create, Update, Delete) pada tabel `periods` dan `fish_records` ke Supabase.
+  - Aksi tambah/rename periode, tambah/edit/hapus data ikan kini otomatis tersimpan secara permanen ke Supabase sehingga data tidak hilang saat halaman direfresh atau di-reset.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Integrasi Cloudinary untuk Upload Gambar
 - Change:
   - Menghapus modul R2 lama dan membuat helper `src/cloudinary.ts` untuk mengunggah gambar langsung ke Cloudinary (dengan fallback ke base64 jika env belum diset).
