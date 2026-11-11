@@ -422,7 +422,7 @@ function App() {
   }, [isLoggedIn, profileMenuOpen])
 
   useEffect(() => {
-    if (!isLoggedIn) return
+    if (!isLoggedIn || window.innerWidth > 700) return
     const hasActiveModal = modal || periodDialog || deletePeriodTarget || preview || termsDetail || deleteTarget || profileModal || accountModal || pendingImport || sidebarOpen
     if (!hasActiveModal) return
 
@@ -446,7 +446,7 @@ function App() {
       window.scrollTo(0, scrollY)
       document.removeEventListener('touchmove', handleTouchMove)
     }
-  }, [isLoggedIn, modal, periodDialog, deletePeriodTarget, preview, termsDetail, deleteTarget, profileModal, accountModal, sidebarOpen])
+  }, [isLoggedIn, modal, periodDialog, deletePeriodTarget, preview, termsDetail, deleteTarget, profileModal, accountModal, pendingImport, sidebarOpen])
 
   useEffect(() => {
     let touchStartX = 0
