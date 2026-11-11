@@ -64,10 +64,10 @@ export default function OnelitoPreloader({
     ];
 
     const lotusPads = [
-      { angle: 0.45, distOffset: 44, r: 26, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 2.35, distOffset: -42, r: 20, rot: 2.1, hasFlower: false, flowerColor: '' },
-      { angle: 3.75, distOffset: 48, r: 28, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 5.35, distOffset: 38, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
+      { angle: 0.45, distOffset: 75, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
+      { angle: 2.15, distOffset: 85, r: 20, rot: 2.1, hasFlower: false, flowerColor: '' },
+      { angle: 3.85, distOffset: 70, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
+      { angle: 5.45, distOffset: 80, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
     ];
 
     const sakuraPetals = Array.from({ length: 12 }, () => ({
@@ -236,8 +236,12 @@ export default function OnelitoPreloader({
           this.drawBodyPatch(ctx, 3, -6, 13, '#FFFFFF');
           this.drawBodyPatch(ctx, 6, 5, 14, '#D61F26');
           this.drawBodyPatch(ctx, 9, -4, 10, '#FFFFFF');
+          const headJ = this.joints[0];
+          const headAngle = headJ.angle;
+          const rx = headJ.x + Math.cos(headAngle) * 5;
+          const ry = headJ.y + Math.sin(headAngle) * 5;
           ctx.beginPath();
-          ctx.arc(this.joints[0].x, this.joints[0].y, 6.8, 0, Math.PI * 2);
+          ctx.arc(rx, ry, 5.0, 0, Math.PI * 2);
           ctx.fillStyle = '#D61F26';
           ctx.fill();
         }
