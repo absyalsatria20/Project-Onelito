@@ -18,6 +18,7 @@ export default function OnelitoPreloader({
   const [imgError, setImgError] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [shouldUnmount, setShouldUnmount] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   const clampedProgress = Math.min(100, Math.max(0, Math.round(progress)));
   const isComplete = isLoaded || clampedProgress >= 100;
@@ -605,6 +606,10 @@ export default function OnelitoPreloader({
     window.addEventListener('pointermove', handlePointerMove);
     window.addEventListener('pointerdown', handlePointerDown);
     resizeCanvas();
+    requestAnimationFrame(() => {
+      resizeCanvas();
+      setIsReady(true);
+    });
 
     const rippleInterval = setInterval(() => {
       if (ripples.length < 6) {
@@ -751,6 +756,8 @@ export default function OnelitoPreloader({
           height: '100vh',
           zIndex: 10,
           pointerEvents: 'none',
+          opacity: isReady ? 1 : 0,
+          transition: 'opacity 0.25s ease-in',
         }}
       />
 
