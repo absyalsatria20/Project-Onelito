@@ -18,6 +18,7 @@ export default function OnelitoPreloader({
   const [imgError, setImgError] = useState(false);
   const [isFadingOut, setIsFadingOut] = useState(false);
   const [shouldUnmount, setShouldUnmount] = useState(false);
+  const [isDarkInitial] = useState(() => document.documentElement.classList.contains('dark'));
 
   const clampedProgress = Math.min(100, Math.max(0, Math.round(progress)));
   const isComplete = isLoaded || clampedProgress >= 100;
@@ -53,7 +54,7 @@ export default function OnelitoPreloader({
     let height = window.innerHeight;
     let centerX = width / 2;
     let centerY = height / 2;
-    let baseOrbitRadius = 135;
+    let baseOrbitRadius = 150;
 
     const ripples: Array<{ x: number; y: number; r: number; maxR: number; alpha: number; color: string }> = [];
     const bubbles: Array<{ x: number; y: number; r: number; alpha: number; color: string }> = [];
@@ -63,23 +64,24 @@ export default function OnelitoPreloader({
       9.0, 7.2, 5.6, 4.3, 3.3, 2.5, 1.8
     ];
 
+    // Lotus pads positioned safely in upper/side quadrants away from text
     const lotusPads = [
-      { angle: 0.25, distOffset: 90, r: 24, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
-      { angle: 1.15, distOffset: 98, r: 20, rot: 1.8, hasFlower: false, flowerColor: '' },
-      { angle: 4.15, distOffset: 88, r: 26, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
-      { angle: 5.15, distOffset: 95, r: 22, rot: 5.1, hasFlower: false, flowerColor: '' },
+      { angle: 0.18, distOffset: 120, r: 26, rot: 0.4, hasFlower: true, flowerColor: '#F472B6' },
+      { angle: 1.25, distOffset: 130, r: 22, rot: 1.8, hasFlower: false, flowerColor: '' },
+      { angle: 4.15, distOffset: 115, r: 28, rot: 3.8, hasFlower: true, flowerColor: '#FB7185' },
+      { angle: 5.15, distOffset: 125, r: 24, rot: 5.1, hasFlower: false, flowerColor: '' },
     ];
 
-    const sakuraPetals = Array.from({ length: 12 }, () => ({
+    const sakuraPetals = Array.from({ length: 16 }, () => ({
       x: Math.random() * width,
       y: Math.random() * height,
-      size: 6 + Math.random() * 5,
+      size: 6 + Math.random() * 6,
       rot: Math.random() * Math.PI * 2,
       rotSpeed: (Math.random() - 0.5) * 0.008,
       vx: 0.15 + Math.random() * 0.22,
       vy: 0.1 + Math.random() * 0.18,
       swayPhase: Math.random() * Math.PI * 2,
-      alpha: 0.55 + Math.random() * 0.3,
+      alpha: 0.55 + Math.random() * 0.35,
     }));
 
     class ProceduralKoi {
@@ -158,7 +160,8 @@ export default function OnelitoPreloader({
           this.joints[i].angle = Math.atan2(dy, dx);
         }
 
-        if (Math.random() < 0.12) {
+        // Swimming ripples and bubbles behind tail
+        if (Math.random() < 0.15) {
           const tailJoint = this.joints[this.segCount - 1];
           bubbles.push({
             x: tailJoint.x + (Math.random() - 0.5) * 5,
@@ -167,6 +170,16 @@ export default function OnelitoPreloader({
             alpha: 0.35,
             color: this.variant === 'showa' ? '#D61F26' : '#888888',
           });
+          if (Math.random() < 0.35) {
+            ripples.push({
+              x: tailJoint.x,
+              y: tailJoint.y,
+              r: 2,
+              maxR: 32 + Math.random() * 18,
+              alpha: 0.28,
+              color: '#D61F26',
+            });
+          }
         }
       }
 
@@ -237,9 +250,8 @@ export default function OnelitoPreloader({
           this.drawBodyPatch(ctx, 6, 5, 14, '#D61F26');
           this.drawBodyPatch(ctx, 9, -4, 10, '#FFFFFF');
           const headJ = this.joints[0];
-          const headAngle = headJ.angle;
-          const rx = headJ.x + Math.cos(headAngle) * 5;
-          const ry = headJ.y + Math.sin(headAngle) * 5;
+          const rx = headJ.x + Math.cos(headJ.angle) * 5;
+          const ry = headJ.y + Math.sin(headJ.angle) * 5;
           ctx.beginPath();
           ctx.arc(rx, ry, 5.0, 0, Math.PI * 2);
           ctx.fillStyle = '#D61F26';
@@ -429,11 +441,13 @@ export default function OnelitoPreloader({
     }
 
     function drawLotusPadAndFlower(ctx: CanvasRenderingContext2D, pad: any, time: number, isDark: boolean) {
-      const floatBob = Math.sin(time * 0.0014 + pad.angle) * 2.5;
+      // Natural floating bob and swaying rotation
+      const floatBob = Math.sin(time * 0.0011 + pad.angle * 2) * 3.2;
+      const swayRot = Math.sin(time * 0.0008 + pad.angle) * 0.08;
       const dist = baseOrbitRadius + pad.distOffset + floatBob;
       const lx = centerX + Math.cos(pad.angle) * dist;
       const ly = centerY + Math.sin(pad.angle) * dist;
-      const currentRot = pad.rot + Math.sin(time * 0.0009 + pad.angle) * 0.06;
+      const currentRot = pad.rot + swayRot;
 
       ctx.save();
       ctx.translate(lx, ly);
@@ -493,14 +507,41 @@ export default function OnelitoPreloader({
       }
 
       ctx.restore();
+
+      // Infrequent lotus ripple emission
+      if (Math.random() < 0.003) {
+        ripples.push({
+          x: lx,
+          y: ly,
+          r: 4,
+          maxR: 35 + Math.random() * 15,
+          alpha: 0.22,
+          color: '#22C55E',
+        });
+      }
     }
 
     function drawSakuraPetal(ctx: CanvasRenderingContext2D, petal: any, time: number) {
-      petal.x += petal.vx + Math.sin(time * 0.001 + petal.swayPhase) * 0.15;
+      // Gentle attraction towards koi heads for some petals
+      const head1 = koiList[0].joints[0];
+      const head2 = koiList[1].joints[0];
+      const dist1 = Math.hypot(head1.x - petal.x, head1.y - petal.y);
+      const dist2 = Math.hypot(head2.x - petal.x, head2.y - petal.y);
+      const targetHead = dist1 < dist2 ? head1 : head2;
+      const minDist = Math.min(dist1, dist2);
+
+      if (minDist < 180) {
+        const pullAngle = Math.atan2(targetHead.y - petal.y, targetHead.x - petal.x);
+        petal.vx += Math.cos(pullAngle) * 0.03;
+        petal.vy += Math.sin(pullAngle) * 0.03;
+      }
+
+      petal.x += petal.vx + Math.sin(time * 0.001 + petal.swayPhase) * 0.18;
       petal.y += petal.vy;
       petal.rot += petal.rotSpeed;
 
       if (petal.x > width + 20) petal.x = -20;
+      if (petal.x < -20) petal.x = width + 20;
       if (petal.y > height + 20) petal.y = -20;
 
       ctx.save();
@@ -655,7 +696,7 @@ export default function OnelitoPreloader({
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.96)',
+        backgroundColor: isDarkInitial ? '#0B0C0E' : '#ffffff',
         backdropFilter: 'blur(12px)',
         transition: 'all 0.7s ease',
         opacity: isFadingOut ? 0 : 1,
@@ -664,7 +705,6 @@ export default function OnelitoPreloader({
         userSelect: 'none',
         fontFamily: 'DM Sans, Inter, system-ui, sans-serif',
       }}
-      className="dark:bg-[#0B0C0E]/96"
     >
       <style>{`
         @keyframes rippleExpand {
@@ -743,7 +783,7 @@ export default function OnelitoPreloader({
             width: '160px',
             height: '160px',
             borderRadius: '50%',
-            backgroundColor: 'rgba(255, 255, 255, 0.95)',
+            backgroundColor: isDarkInitial ? '#141619' : 'rgba(255, 255, 255, 0.95)',
             boxShadow: '0 14px 40px rgba(0, 0, 0, 0.1)',
             border: '1px solid rgba(226, 232, 240, 0.8)',
             padding: '16px',
@@ -759,7 +799,7 @@ export default function OnelitoPreloader({
           ) : (
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', height: '100%' }}>
               <div style={{ marginTop: '4px', letterSpacing: '0.05em', fontWeight: 800, fontSize: '14px', lineHeight: 1 }}>
-                <span style={{ color: '#111111' }}>ONELITO</span>
+                <span style={{ color: isDarkInitial ? '#ffffff' : '#111111' }}>ONELITO</span>
                 <span style={{ color: '#D61F26', marginLeft: '4px' }}>KOI</span>
               </div>
             </div>
@@ -790,16 +830,15 @@ export default function OnelitoPreloader({
             fontSize: '15px',
             fontWeight: 700,
             transition: 'all 0.3s ease',
-            color: isComplete ? '#D61F26' : '#111111',
+            color: isComplete ? '#D61F26' : (isDarkInitial ? '#f8fafc' : '#111111'),
             transform: isComplete ? 'scale(1.05)' : 'scale(1)',
           }}
-          className="dark:text-neutral-100"
         >
           {isComplete ? 'Selamat datang di ONELITO KOI' : 'Menghubungkan ke Database'}
         </p>
 
         {/* Progress Bar */}
-        <div style={{ marginTop: '16px', position: 'relative', width: '100%', height: '10px', backgroundColor: 'rgba(226, 232, 240, 0.8)', borderRadius: '9999px', overflow: 'hidden', padding: '2px', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)' }} className="dark:bg-neutral-800">
+        <div style={{ marginTop: '16px', position: 'relative', width: '100%', height: '10px', backgroundColor: isDarkInitial ? '#27272a' : 'rgba(226, 232, 240, 0.8)', borderRadius: '9999px', overflow: 'hidden', padding: '2px', boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.06)' }}>
           <div
             style={{
               position: 'relative',

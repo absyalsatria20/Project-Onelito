@@ -222,9 +222,9 @@ function App() {
         setLoadProgress(currentProg)
         progressInterval = setInterval(() => {
           const elapsed = Date.now() - startTime
-          const targetProg = Math.min(95, Math.round((elapsed / 5000) * 90) + 10)
+          const targetProg = Math.min(98, Math.round((elapsed / 20000) * 92) + 8)
           setLoadProgress(targetProg)
-        }, 100)
+        }, 150)
 
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
