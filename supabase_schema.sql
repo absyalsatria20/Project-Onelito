@@ -78,3 +78,20 @@ create policy "Allow public update profiles" on profiles for update using (true)
 
 drop policy if exists "Allow public delete profiles" on profiles;
 create policy "Allow public delete profiles" on profiles for delete using (true);
+
+-- Enable Supabase Realtime publication for tables
+do $$
+begin
+  begin
+    alter publication supabase_realtime add table periods;
+  exception when duplicate_object then null;
+  end;
+  begin
+    alter publication supabase_realtime add table fish_records;
+  exception when duplicate_object then null;
+  end;
+  begin
+    alter publication supabase_realtime add table profiles;
+  exception when duplicate_object then null;
+  end;
+end $$;

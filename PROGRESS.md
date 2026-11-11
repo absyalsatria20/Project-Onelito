@@ -1,5 +1,11 @@
 # Project Progress
 
+## 2026-11-10 — Penambahan Publikasi Realtime pada Skema Supabase SQL
+- Change:
+  - Menambahkan konfigurasi `supabase_realtime` publication (`periods`, `fish_records`, `profiles`) ke dalam `supabase_schema.sql` agar fitur Supabase Realtime WebSocket dapat berfungsi secara aktif di database produksi.
+- Files: `supabase_schema.sql`, `PROGRESS.md`
+- Verification: `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Integrasi Supabase Realtime & Loading Splash Screen Profesional
 - Change:
   - Mengaktifkan **Supabase Realtime WebSockets** (`postgres_changes`) pada tabel `periods` dan `fish_records` untuk sinkronisasi otomatis antar perangkat secara instan tanpa perlu refresh.
