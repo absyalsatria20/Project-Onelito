@@ -243,15 +243,6 @@ export default function OnelitoPreloader({
           this.drawBodyPatch(ctx, 7, -4, 12, '#D61F26');
           this.drawBodyPatch(ctx, 4, -7, 11, '#111111');
           this.drawBodyPatch(ctx, 9, 5, 9.5, '#111111');
-        } else if (this.variant === 'kohaku') {
-          this.drawBodyPatch(ctx, 2, 4, 17, '#E11D48');
-          this.drawBodyPatch(ctx, 7, -5, 14, '#E11D48');
-          this.drawBodyPatch(ctx, 11, 2, 9, '#E11D48');
-        } else if (this.variant === 'sanke') {
-          this.drawBodyPatch(ctx, 2, -4, 15, '#E11D48');
-          this.drawBodyPatch(ctx, 6, 6, 13, '#E11D48');
-          this.drawBodyPatch(ctx, 4, 2, 8, '#18181B');
-          this.drawBodyPatch(ctx, 10, -3, 8, '#18181B');
         } else {
           this.drawBodyPatch(ctx, 3, -6, 13, '#FFFFFF');
           this.drawBodyPatch(ctx, 6, 5, 14, '#D61F26');
@@ -437,8 +428,8 @@ export default function OnelitoPreloader({
     updateCenterFromMedallion();
 
     const koiList = [
-      new ProceduralKoi({ startAngle: 0, speed: 0.0072, variant: 'kohaku', phase: 0 }),
-      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0072, variant: 'sanke', phase: Math.PI }),
+      new ProceduralKoi({ startAngle: 0, speed: 0.0072, variant: 'showa', phase: 0 }),
+      new ProceduralKoi({ startAngle: Math.PI, speed: 0.0072, variant: 'tancho', phase: Math.PI }),
     ];
 
     function resizeCanvas() {
