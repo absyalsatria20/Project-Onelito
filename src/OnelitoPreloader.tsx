@@ -501,9 +501,11 @@ export default function OnelitoPreloader({
 
       if (pad.hasFlower) {
         const petalCount = 8;
-        // Option 1: Gentle petal breathing / blooming scale effect + smooth natural reaction to nearby koi fish
+        // Gentle smooth rotation + petal breathing scale + smooth natural reaction to nearby koi fish
+        const flowerRotation = time * 0.0004 + pad.angle + pad.reaction * 0.2 * Math.sin(time * 0.005);
         const flowerScale = (1 + Math.sin(time * 0.002 + pad.angle * 3) * 0.06) + pad.reaction * 0.15;
         ctx.save();
+        ctx.rotate(flowerRotation);
         ctx.scale(flowerScale, flowerScale);
 
         for (let layer = 0; layer < 2; layer++) {
