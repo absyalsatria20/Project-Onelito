@@ -593,9 +593,9 @@ function App() {
     try {
       await downloadRekapPdf(owner, selected, activePeriod.name)
       toast('PDF berhasil di-download')
-    } catch (err) {
+    } catch (err: any) {
       console.error(err)
-      toast('Gagal mengexport PDF')
+      toast(`Gagal mengexport PDF: ${err?.message || 'Unknown error'}`)
     }
   }
 
