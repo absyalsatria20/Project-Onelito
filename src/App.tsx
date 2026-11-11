@@ -183,8 +183,27 @@ function App() {
   }
   const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
 
-  const [periods, setPeriods] = useState<Period[]>([{id:'period-1',name:'Periode 1',records:[],owner:'All Owners',certificate:'All Status',query:'',sort:'name'}])
-  const [activePeriodId, setActivePeriodId] = useState('period-1')
+  const [periods, setPeriods] = useState<Period[]>(() => {
+    try {
+      const saved = localStorage.getItem('fish-periods')
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed
+      }
+    } catch (e) {}
+    return [{id:'period-1',name:'Periode 1',records:[],owner:'All Owners',certificate:'All Status',query:'',sort:'name'}]
+  })
+  const [activePeriodId, setActivePeriodId] = useState<string>(() => {
+    return localStorage.getItem('fish-active-period') || 'period-1'
+  })
+
+  useEffect(() => {
+    localStorage.setItem('fish-periods', JSON.stringify(periods))
+  }, [periods])
+
+  useEffect(() => {
+    localStorage.setItem('fish-active-period', activePeriodId)
+  }, [activePeriodId])
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
   const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
@@ -434,7 +453,7 @@ function App() {
       setActivePeriodId(id)
       try {
         const { supabase } = await import('./supabaseClient')
-        await supabase.from('periods').insert({ id, name, owner: 'All Owners', certificate: 'All Status', query: '', sort: 'name' })
+        await supabase.from('periods').upsert({ id, name, owner: 'All Owners', certificate: 'All Status', query: '', sort: 'name' })
         if (newRecords.length > 0) {
           const recsToInsert = newRecords.map(r => ({
             id: String(r.id),
@@ -450,7 +469,7 @@ function App() {
             terms: r.tc,
             image: r.image
           }))
-          await supabase.from('fish_records').insert(recsToInsert)
+          await supabase.from('fish_records').upsert(recsToInsert)
         }
       } catch (err) {
         console.error('Failed to save period to Supabase:', err)
@@ -459,7 +478,7 @@ function App() {
       setPeriods(items=>items.map(period=>period.id===periodDialog.periodId?{...period,name}:period))
       try {
         const { supabase } = await import('./supabaseClient')
-        await supabase.from('periods').update({ name }).eq('id', periodDialog.periodId)
+        await supabase.from('periods').upsert({ id: periodDialog.periodId, name })
       } catch (err) {
         console.error('Failed to rename period in Supabase:', err)
       }
