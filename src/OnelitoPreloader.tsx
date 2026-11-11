@@ -739,9 +739,9 @@ export default function OnelitoPreloader({
           0% { transform: translateX(-100%); }
           100% { transform: translateX(200%); }
         }
-        .koi-ripple-1 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite; }
-        .koi-ripple-2 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 1.3s; }
-        .koi-ripple-3 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 2.6s; }
+        .koi-ripple-1 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite both; }
+        .koi-ripple-2 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 1.3s both; }
+        .koi-ripple-3 { animation: rippleExpand 4s cubic-bezier(0.16, 1, 0.3, 1) infinite 2.6s both; }
         .koi-logo-float { animation: floatPulse 4.5s ease-in-out infinite; }
         .koi-shimmer { animation: shimmerSlide 1.6s infinite; }
       `}</style>
