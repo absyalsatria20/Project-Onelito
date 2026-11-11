@@ -28,9 +28,19 @@ create table if not exists fish_records (
   created_at timestamp with time zone default timezone('utc'::text, now()) not null
 );
 
+create table if not exists profiles (
+  id text primary key,
+  username text not null default 'adelia',
+  title text not null default 'Workspace Administrator',
+  avatar text default '',
+  password_hash text not null default 'adelia',
+  created_at timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
 -- Enable Row Level Security (RLS)
 alter table periods enable row level security;
 alter table fish_records enable row level security;
+alter table profiles enable row level security;
 
 -- Policies for public access (or authenticated admin)
 create policy "Allow public read periods" on periods for select using (true);
@@ -42,3 +52,8 @@ create policy "Allow public read fish_records" on fish_records for select using 
 create policy "Allow public insert fish_records" on fish_records for insert with check (true);
 create policy "Allow public update fish_records" on fish_records for update using (true);
 create policy "Allow public delete fish_records" on fish_records for delete using (true);
+
+create policy "Allow public read profiles" on profiles for select using (true);
+create policy "Allow public insert profiles" on profiles for insert with check (true);
+create policy "Allow public update profiles" on profiles for update using (true);
+create policy "Allow public delete profiles" on profiles for delete using (true);
