@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { Check, ChevronDown, ChevronsRight, ChevronRight, Fish, FileText, ImagePlus, LogOut, Moon, MoreHorizontal, Pencil, Plus, Search, Eye, EyeOff, Settings, Sun, Trash2, User, X, Camera, Shield, Key, Download, Upload, Database } from 'lucide-react'
 import { downloadRekapPdf } from './exportPdf'
 import ThemeToggle from './ThemeToggle'
+import OnelitoPreloader from './OnelitoPreloader'
 import './App.css'
 import './animations.css'
 import './Sidebar.css'
@@ -205,6 +206,7 @@ function App() {
     localStorage.setItem('fish-active-period', activePeriodId)
   }, [activePeriodId])
   const [isLoading, setIsLoading] = useState(true)
+  const [loadProgress, setLoadProgress] = useState(15)
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
   const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
@@ -214,6 +216,7 @@ function App() {
     let channel: any
     (async () => {
       try {
+        setLoadProgress(40)
         const { supabase } = await import('./supabaseClient')
         const fetchData = async () => {
           const { data, error } = await supabase.from('periods').select('*, fish_records(*)').order('created_at', { ascending: true })
@@ -248,6 +251,7 @@ function App() {
         }
 
         await fetchData()
+        setLoadProgress(80)
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
@@ -270,6 +274,7 @@ function App() {
       } catch (err) {
         console.error('Failed to load from Supabase or setup realtime:', err)
       } finally {
+        setLoadProgress(100)
         setIsLoading(false)
       }
     })()
@@ -557,31 +562,12 @@ function App() {
 
   if (isLoading) {
     return (
-      <div style={{
-        position: 'fixed',
-        inset: 0,
-        background: theme === 'dark' ? '#0f172a' : '#f8fafc',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '20px',
-        zIndex: 99999,
-        color: theme === 'dark' ? '#f8fafc' : '#0f172a',
-        fontFamily: 'Inter, system-ui, sans-serif'
-      }}>
-        <img src="/logo-onelito.png" alt="Logo" style={{ width: '80px', height: 'auto', objectFit: 'contain' }} />
-        <div style={{
-          width: '36px',
-          height: '36px',
-          border: '3px solid var(--line, #cbd5e1)',
-          borderTopColor: '#3b82f6',
-          borderRadius: '50%',
-          animation: 'spin 0.8s linear infinite'
-        }} />
-        <p style={{ fontSize: '14px', fontWeight: 500, opacity: 0.8 }}>Memuat data database Onelito...</p>
-        <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
-      </div>
+      <OnelitoPreloader
+        progress={loadProgress}
+        isLoaded={!isLoading}
+        logoSrc="/logo-vertical.png"
+        onFinish={() => setIsLoading(false)}
+      />
     )
   }
 
