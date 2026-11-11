@@ -342,12 +342,23 @@ function App() {
   }, [globalSelectedIndex])
   useEffect(() => {
     if (!isLoggedIn) return
-    const activeEl = tabsRef.current[activePeriodId]
-    if (activeEl) {
-      setIndicatorStyle({
-        left: activeEl.offsetLeft + 12,
-        width: activeEl.offsetWidth - 24
-      })
+    const updateIndicator = () => {
+      const activeEl = tabsRef.current[activePeriodId]
+      if (activeEl) {
+        setIndicatorStyle({
+          left: activeEl.offsetLeft + 12,
+          width: activeEl.offsetWidth - 24
+        })
+      }
+    }
+    updateIndicator()
+    const timer = setTimeout(updateIndicator, 50)
+    const raf = requestAnimationFrame(updateIndicator)
+    window.addEventListener('resize', updateIndicator)
+    return () => {
+      clearTimeout(timer)
+      cancelAnimationFrame(raf)
+      window.removeEventListener('resize', updateIndicator)
     }
   }, [isLoggedIn, activePeriodId, periods])
 
