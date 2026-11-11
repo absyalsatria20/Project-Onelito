@@ -1,5 +1,13 @@
 # Project Progress
 
+## 2026-11-10 — Mengosongkan Seluruh Data Proyek & Database
+- Change:
+  - Menghapus semua data awal/sampel (`initial` dan `sample2027`) dari kode.
+  - Mengosongkan state awal periode (`periods`) menjadi bersih (1 periode kosong).
+  - Menambahkan pembersihan otomatis tabel `periods` dan `fish_records` di Supabase pada saat aplikasi dimuat agar seluruh database dan workspace kosong bersih sesuai permintaan.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Sinkronisasi Penuh CRUD Periode & Ikan ke Database Supabase
 - Change:
   - Menghubungkan seluruh operasi CRUD (Create, Update, Delete) pada tabel `periods` dan `fish_records` ke Supabase.

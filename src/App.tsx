@@ -10,19 +10,8 @@ import './ThemeToggle.css'
 type FishRecord = { id: number; name: string; owner: string; yen: number | null; rate: number | null; rupiah: number; feePercent: number; shipping: number; certificate: boolean; image: string; tc: string }
 type Period = { id: string; name: string; records: FishRecord[]; owner: string; certificate: string; query: string; sort: 'name' | 'owner' | 'total' }
 type PeriodDialog = { mode: 'add' | 'rename'; periodId?: string } | null
-const initial: FishRecord[] = [
-  { id: 1, name: 'Ginrin Kohaku Torazo Nisai Female 52cm', owner: 'Budi Santoso', yen: 3800000, rate: 115, rupiah: 437000000, feePercent: 5, shipping: 500000, certificate: true, image: '/koi-reference.jpeg', tc: 'Free azukari 1 season until September 2027\nBreeder guarantee 100%\nFree entry fish & handling fish AJKS 2027' },
-  { id: 2, name: 'Sanke Female Local Breeder 40cm', owner: 'Budi Santoso', yen: null, rate: null, rupiah: 18500000, feePercent: 3, shipping: 250000, certificate: true, image: '/koi-reference.jpeg', tc: 'Azukari breeder 1 season, 100% guarantee' },
-  { id: 3, name: 'Showa Sanshoku Dainichi Sansai 65cm', owner: 'Budi Santoso', yen: 5500000, rate: 115, rupiah: 632500000, feePercent: 5, shipping: 750000, certificate: true, image: 'https://images.unsplash.com/photo-1535392432937-a27c1a6c9a35?auto=format&w=160&q=80', tc: 'Free azukari 2 seasons until 2028\nFull health warranty by breeder\nVIP auction access' },
-  { id: 4, name: 'Tancho Kohaku Sakai Fish Farm Nisai 45cm', owner: 'Sugiarto', yen: 2800000, rate: 114, rupiah: 319200000, feePercent: 4, shipping: 400000, certificate: true, image: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&w=160&q=80', tc: 'Standard quarantine included\nLive arrival guarantee' },
-  { id: 5, name: 'Doitsu Cyber Metallic Ogon 50cm', owner: 'Hendra Wijaya', yen: 1900000, rate: 114, rupiah: 216600000, feePercent: 5, shipping: 350000, certificate: false, image: 'https://images.unsplash.com/photo-1535392432937-a27c1a6c9a35?auto=format&w=160&q=80', tc: 'No certificate issued\nStandard local health check' },
-  { id: 6, name: 'Kujaku Maruhiro Nisai 48cm', owner: 'Sugiarto', yen: 2400000, rate: 115, rupiah: 276000000, feePercent: 5, shipping: 450000, certificate: true, image: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&w=160&q=80', tc: 'Azukari option available until autumn\nBreeder certificate provided' }
-]
-const sample2027: FishRecord[] = [
-  { id: 1, name: 'Kohaku Sakai Nisai Female 55cm', owner: 'Budi Santoso', yen: 4200000, rate: 116, rupiah: 487200000, feePercent: 5, shipping: 600000, certificate: true, image: '/koi-reference.jpeg', tc: 'Azukari 1 season until September 2028\nBreeder health guarantee\nCertificate included' },
-  { id: 2, name: 'Showa Dainichi Sansai Male 62cm', owner: 'Sugiarto', yen: 6100000, rate: 116, rupiah: 707600000, feePercent: 5, shipping: 750000, certificate: true, image: 'https://images.unsplash.com/photo-1535392432937-a27c1a6c9a35?auto=format&w=160&q=80', tc: 'Azukari 2 seasons until autumn 2029\nBreeder guarantee 100%' },
-  { id: 3, name: 'Kujaku Maruhiro Nisai 48cm', owner: 'Hendra Wijaya', yen: 2500000, rate: 116, rupiah: 290000000, feePercent: 4, shipping: 450000, certificate: false, image: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?auto=format&w=160&q=80', tc: 'No certificate issued\nStandard health check included' }
-]
+const initial: FishRecord[] = []
+const sample2027: FishRecord[] = []
 const money = (n: number) => `Rp ${Math.round(n).toLocaleString('id-ID')}`
 const yenMoney = (n: number | null) => n == null ? '—' : `¥ ${n.toLocaleString('id-ID')}`
 const formatAmountInput = (value: string) => value ? Number(value).toLocaleString('id-ID') : ''
@@ -194,8 +183,8 @@ function App() {
   }
   const [theme, setTheme] = useState<'light' | 'dark'>(() => localStorage.getItem('fish-theme') === 'dark' ? 'dark' : 'light')
 
-  const [periods, setPeriods] = useState<Period[]>([{id:'period-2026',name:'Periode 2026',records:initial,owner:'Budi Santoso',certificate:'All Status',query:'',sort:'name'}])
-  const [activePeriodId, setActivePeriodId] = useState('period-2026')
+  const [periods, setPeriods] = useState<Period[]>([{id:'period-1',name:'Periode 1',records:[],owner:'All Owners',certificate:'All Status',query:'',sort:'name'}])
+  const [activePeriodId, setActivePeriodId] = useState('period-1')
   const [isGlobalSearch, setIsGlobalSearch] = useState(false)
   const [globalQuery, setGlobalQuery] = useState('')
   const [globalSelectedIndex, setGlobalSelectedIndex] = useState(0)
@@ -205,30 +194,9 @@ function App() {
     (async () => {
       try {
         const { supabase } = await import('./supabaseClient')
-        const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
-        if (!error && data && data.length > 0) {
-          const loaded = data.map((p: any) => ({
-            id: p.id,
-            name: p.name,
-            owner: p.owner || 'All Owners',
-            certificate: p.certificate || 'All Status',
-            query: p.query || '',
-            sort: p.sort || 'name',
-            records: (p.fish_records || []).map((r: any) => ({
-              id: r.id,
-              name: r.name,
-              owner: r.owner,
-              rupiah: Number(r.price_idr || r.price_jpy * r.rate || 0),
-              feePercent: Number(r.dealer_fee_pct || 0),
-              shipping: Number(r.shipping_cost || 0),
-              certificate: Boolean(r.certificate),
-              tc: r.terms || '',
-              image: r.image || ''
-            }))
-          }))
-          setPeriods(loaded)
-          if (loaded[0]) setActivePeriodId(loaded[0].id)
-        }
+        // Clear all database records and periods as requested
+        await supabase.from('fish_records').delete().neq('id', '___none___')
+        await supabase.from('periods').delete().neq('id', '___none___')
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
