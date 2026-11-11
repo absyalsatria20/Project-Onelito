@@ -159,15 +159,25 @@ export default function OnelitoPreloader({
           this.joints[i].angle = Math.atan2(dy, dx);
         }
 
-        if (Math.random() < 0.12) {
+        if (Math.random() < 0.1) {
           const tailJoint = this.joints[this.segCount - 1];
           bubbles.push({
-            x: tailJoint.x + (Math.random() - 0.5) * 5,
-            y: tailJoint.y + (Math.random() - 0.5) * 5,
-            r: 1.1 + Math.random() * 1.5,
-            alpha: 0.35,
+            x: tailJoint.x + (Math.random() - 0.5) * 4,
+            y: tailJoint.y + (Math.random() - 0.5) * 4,
+            r: 1 + Math.random() * 1.3,
+            alpha: 0.3,
             color: this.variant === 'showa' ? '#D61F26' : '#888888',
           });
+          if (Math.random() < 0.3) {
+            ripples.push({
+              x: tailJoint.x,
+              y: tailJoint.y,
+              r: 2,
+              maxR: 25 + Math.random() * 12,
+              alpha: 0.2,
+              color: this.variant === 'showa' ? '#D61F26' : '#94A3B8',
+            });
+          }
         }
       }
 
