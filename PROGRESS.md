@@ -1,5 +1,12 @@
 # Project Progress
 
+## 2026-11-10 — Perbaikan Supabase Persistensi & Foreign Key pada Penambahan Ikan
+- Change:
+  - Menghapus perintah penghapusan data otomatis pada `useEffect` saat aplikasi dimuat, sehingga data yang tersimpan di Supabase tidak terhapus saat halaman direfresh.
+  - Menambahkan upsert otomatis untuk parent periode (`periods`) sebelum menyimpan record ikan (`fish_records`) guna memastikan foreign key constraint terpenuhi.
+- Files: `src/App.tsx`, `PROGRESS.md`
+- Verification: `npm run lint` & `npm run build` sukses (exit code 0), `git diff --check` bersih.
+
 ## 2026-11-10 — Mengosongkan Seluruh Data Proyek & Database
 - Change:
   - Menghapus semua data awal/sampel (`initial` dan `sample2027`) dari kode.

@@ -194,9 +194,32 @@ function App() {
     (async () => {
       try {
         const { supabase } = await import('./supabaseClient')
-        // Clear all database records and periods as requested
-        await supabase.from('fish_records').delete().neq('id', '___none___')
-        await supabase.from('periods').delete().neq('id', '___none___')
+        const { data, error } = await supabase.from('periods').select('*, fish_records(*)')
+        if (!error && data && data.length > 0) {
+          const loaded = data.map((p: any) => ({
+            id: p.id,
+            name: p.name,
+            owner: p.owner || 'All Owners',
+            certificate: p.certificate || 'All Status',
+            query: p.query || '',
+            sort: p.sort || 'name',
+            records: (p.fish_records || []).map((r: any) => ({
+              id: r.id,
+              name: r.name,
+              owner: r.owner,
+              yen: r.price_jpy ?? null,
+              rate: r.rate ?? null,
+              rupiah: Number(r.price_idr || r.price_jpy * r.rate || 0),
+              feePercent: Number(r.dealer_fee_pct || 0),
+              shipping: Number(r.shipping_cost || 0),
+              certificate: Boolean(r.certificate),
+              tc: r.terms || '',
+              image: r.image || ''
+            }))
+          }))
+          setPeriods(loaded)
+          if (loaded[0]) setActivePeriodId(loaded[0].id)
+        }
 
         const { data: profData } = await supabase.from('profiles').select('*').limit(1).maybeSingle()
         if (profData) {
@@ -205,7 +228,9 @@ function App() {
           if (profData.avatar) { setCurrentAvatar(profData.avatar); localStorage.setItem('fish-avatar', profData.avatar); }
           if (profData.password_hash) { setCurrentPassword(profData.password_hash); localStorage.setItem('fish-password', profData.password_hash); }
         }
-      } catch {}
+      } catch (err) {
+        console.error('Failed to load from Supabase:', err)
+      }
     })()
   }, [])
   const activePeriod = periods.find(period=>period.id===activePeriodId) ?? periods[0]
@@ -658,6 +683,14 @@ function App() {
 
       try {
         const { supabase } = await import('./supabaseClient')
+        await supabase.from('periods').upsert({
+          id: activePeriod.id,
+          name: activePeriod.name,
+          owner: activePeriod.owner,
+          certificate: activePeriod.certificate,
+          query: activePeriod.query,
+          sort: activePeriod.sort
+        })
         await supabase.from('fish_records').upsert({
           id: String(finalRecord.id),
           period_id: activePeriod.id,
