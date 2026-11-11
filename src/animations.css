@@ -217,12 +217,12 @@ tbody tr:nth-child(n+13){animation-delay:.68s}
 .dark .toast{background:#2a3b52;box-shadow:0 8px 32px rgba(0,0,0,.45)}
 .toast::after{content:'';position:absolute;left:0;bottom:0;right:0;height:2px;background:var(--blue);transform-origin:left;animation:progressShrink 2.6s linear both}
 .toast svg{flex:0 0 17px;animation:scaleBounce .4s cubic-bezier(.22,1,.36,1) both}
-.toast.error{background:linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);color:#991b1b;border:1px solid #fecaca;box-shadow:0 10px 36px rgba(239, 68, 68, 0.18);border-left:4px solid #dc2626}
-.dark .toast.error{background:linear-gradient(135deg, #7f1d1d 0%, #991b1b 100%);color:#fef2f2;border:1px solid #f87171;box-shadow:0 12px 40px rgba(239, 68, 68, 0.35);border-left:4px solid #fca5a5}
-.toast.error::after{background:#dc2626}
-.dark .toast.error::after{background:#fca5a5}
-.toast.error svg{color:#dc2626;background:rgba(220, 38, 38, 0.12);padding:3px;border-radius:50%;width:18px;height:18px;box-sizing:content-box}
-.dark .toast.error svg{color:#fef2f2;background:rgba(254, 242, 242, 0.2)}
+.toast.error{background:#ffffff;color:#1e293b;border:1px solid #f1f5f9;box-shadow:0 14px 40px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(239, 68, 68, 0.15);border-radius:12px;padding:12px 18px;gap:12px}
+.dark .toast.error{background:#1e293b;color:#f8fafc;border:1px solid #334155;box-shadow:0 16px 48px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(248, 113, 113, 0.25)}
+.toast.error::after{display:none}
+.dark .toast.error::after{display:none}
+.toast.error svg{color:#ef4444;background:#fef2f2;padding:6px;border-radius:8px;width:18px;height:18px;box-sizing:content-box;box-shadow:0 2px 8px rgba(239, 68, 68, 0.2)}
+.dark .toast.error svg{color:#f87171;background:rgba(239, 68, 68, 0.2);box-shadow:0 2px 8px rgba(0, 0, 0, 0.4)}
 
 /* --- G. STATUS BADGES --- */
 
